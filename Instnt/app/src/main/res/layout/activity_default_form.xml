@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DefaultFormActivity"
+    android:padding="20dp"
+    android:orientation="vertical">
+
+   <com.google.android.material.textfield.TextInputLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:background="@color/transparent">
+
+       <com.google.android.material.textfield.TextInputEditText
+           android:id="@+id/formid"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:hint="Form Key"
+           android:background="@color/transparent"/>
+   </com.google.android.material.textfield.TextInputLayout>
+
+    <Switch
+        android:layout_marginTop="10dp"
+        android:id="@+id/sandbox_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sandbox"
+        android:checked="true"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:text="JWT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:id="@+id/result"
+        android:text="No JWT"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textColor="@color/black"
+        android:background="@color/white_1"
+        android:padding="5dp"/>
+
+    <Button
+        android:layout_marginTop="20dp"
+        android:id="@+id/show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show"
+        android:layout_gravity="center_horizontal">
+
+    </Button>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,0 +1,3 @@
+rootProject.name = "Instnt"
+include ':app'
+include ':instntsdk'

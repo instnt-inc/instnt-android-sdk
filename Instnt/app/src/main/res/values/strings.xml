@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Instnt</string>
+    <string name="yes">Yes</string>
+    <string name="ok">Ok</string>
+    <string name="custom_form">Custom Form</string>
+    <string name="default_form">Default Form</string>
+    <string name="get_form_code">Get Form Code</string>
+    <string name="form_data">Form Data</string>
+    <string name="submit">Submit</string>
+    <string name="response">Response</string>
+    <string name="first_name">First Name</string>
+    <string name="surname">Surname</string>
+    <string name="email">Email</string>
+</resources>
