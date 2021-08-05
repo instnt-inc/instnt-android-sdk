@@ -69,21 +69,6 @@ public class FormActivity extends BaseActivity {
             inputView.input(paramMap);
         }
 
-        paramMap.put("form_key", formCodes.getId());
-
-        Map <String, Object> fingerMap = new HashMap<>();
-        fingerMap.put("requestId", formCodes.getFingerprint());
-        fingerMap.put("visitorId", formCodes.getFingerprint());
-        fingerMap.put("visitorFound", true);
-
-        paramMap.put("fingerprint", fingerMap);
-        paramMap.put("client_referer_url", formCodes.getBackendServiceURL());
-        try {
-            paramMap.put("client_referer_host", new URL(formCodes.getBackendServiceURL()).getHost());
-        } catch (MalformedURLException e) {
-            paramMap.put("client_referer_host", "");
-        }
-
         showProgressDialog(true);
 
         sdk.submitForm(formCodes.getSubmitURL(), paramMap, new SubmitCallback() {

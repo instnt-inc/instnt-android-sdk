@@ -55,6 +55,7 @@ public class CustomFormActivity extends BaseActivity implements SubmitCallback {
     private void initFormFields() {
         binding.container.removeAllViews();
 
+        //first name
         FormField fNameField = new FormField();
         fNameField.setInputType("text");
         fNameField.setName("firstName");
@@ -65,6 +66,7 @@ public class CustomFormActivity extends BaseActivity implements SubmitCallback {
 
         binding.container.addView(new TextInputView(this, fNameField));
 
+        //last name
         FormField sNameField = new FormField();
         sNameField.setInputType("text");
         sNameField.setName("surName");
@@ -75,6 +77,7 @@ public class CustomFormActivity extends BaseActivity implements SubmitCallback {
 
         binding.container.addView(new TextInputView(this, sNameField));
 
+        //email
         FormField emailField = new FormField();
         emailField.setInputType("email");
         emailField.setName("email");
@@ -84,6 +87,72 @@ public class CustomFormActivity extends BaseActivity implements SubmitCallback {
         emailField.setPlaceHolder("");
 
         binding.container.addView(new TextInputView(this, emailField));
+
+        //mobile number
+        FormField mobileField = new FormField();
+        mobileField.setInputType("phone");
+        mobileField.setName("mobileNumber");
+        mobileField.setRequired(true);
+        mobileField.setLabel(getString(R.string.mobile_number));
+        mobileField.setValue("");
+        mobileField.setPlaceHolder("");
+
+        binding.container.addView(new TextInputView(this, mobileField));
+
+        //address
+        FormField addressField = new FormField();
+        addressField.setInputType("text");
+        addressField.setName("physicalAddress");
+        addressField.setRequired(true);
+        addressField.setLabel(getString(R.string.address));
+        addressField.setValue("");
+        addressField.setPlaceHolder("");
+
+        binding.container.addView(new TextInputView(this, addressField));
+
+        //zip
+        FormField zipField = new FormField();
+        zipField.setInputType("text");
+        zipField.setName("zip");
+        zipField.setRequired(true);
+        zipField.setLabel(getString(R.string.zip_code));
+        zipField.setValue("");
+        zipField.setPlaceHolder("");
+
+        binding.container.addView(new TextInputView(this, zipField));
+
+        //city
+        FormField cityField = new FormField();
+        cityField.setInputType("text");
+        cityField.setName("city");
+        cityField.setRequired(true);
+        cityField.setLabel(getString(R.string.city));
+        cityField.setValue("");
+        cityField.setPlaceHolder("");
+
+        binding.container.addView(new TextInputView(this, cityField));
+
+        //state
+        FormField stateField = new FormField();
+        stateField.setInputType("text");
+        stateField.setName("state");
+        stateField.setRequired(true);
+        stateField.setLabel(getString(R.string.state));
+        stateField.setValue("");
+        stateField.setPlaceHolder("");
+
+        binding.container.addView(new TextInputView(this, stateField));
+
+        //country
+        FormField countryField = new FormField();
+        countryField.setInputType("text");
+        countryField.setName("country");
+        countryField.setRequired(true);
+        countryField.setLabel(getString(R.string.country));
+        countryField.setValue("");
+        countryField.setPlaceHolder("");
+
+        binding.container.addView(new TextInputView(this, countryField));
     }
 
     /**
@@ -123,22 +192,6 @@ public class CustomFormActivity extends BaseActivity implements SubmitCallback {
                 return;
 
             inputView.input(paramMap);
-        }
-
-        paramMap.put("form_key", formCodes.getId());
-
-        Map <String, Object> fingerMap = new HashMap<>();
-        fingerMap.put("requestId", formCodes.getFingerprint());
-        fingerMap.put("visitorId", formCodes.getFingerprint());
-        fingerMap.put("visitorFound", true);
-
-        paramMap.put("fingerprint", fingerMap);
-        paramMap.put("client_referer_url", formCodes.getBackendServiceURL());
-
-        try {
-            paramMap.put("client_referer_host", new URL(formCodes.getBackendServiceURL()).getHost());
-        } catch (MalformedURLException e) {
-            paramMap.put("client_referer_host", "");
         }
 
         showProgressDialog(true);

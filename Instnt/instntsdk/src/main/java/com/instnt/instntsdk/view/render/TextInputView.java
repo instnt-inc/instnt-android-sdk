@@ -34,15 +34,19 @@ public class TextInputView extends BaseInputView {
 
         switch (formField.getInputType()) {
             case "number":
-                valueView.setInputType(InputType.TYPE_CLASS_NUMBER);
+                valueView.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                break;
+
+            case "phone":
+                valueView.setRawInputType(InputType.TYPE_CLASS_PHONE);
                 break;
 
             case "email":
-                valueView.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                valueView.setRawInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 break;
 
             default:
-                valueView.setInputType(InputType.TYPE_CLASS_TEXT);
+                valueView.setRawInputType(InputType.TYPE_CLASS_TEXT);
                 break;
         }
     }

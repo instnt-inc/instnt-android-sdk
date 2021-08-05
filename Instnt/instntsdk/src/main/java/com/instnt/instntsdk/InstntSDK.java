@@ -12,6 +12,9 @@ import com.instnt.instntsdk.network.NetworkUtil;
 import com.instnt.instntsdk.utils.CommonUtils;
 import com.instnt.instntsdk.view.FormActivity;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 public class InstntSDK {
@@ -20,6 +23,7 @@ public class InstntSDK {
     private SubmitCallback submitCallback;
     private String formId;
     private boolean isSandbox;
+    private FormCodes formCodes;
 
     private static InstntSDK instance;
 
@@ -58,9 +62,13 @@ public class InstntSDK {
 
         networkModule.getFormFields(formId, isSandbox).subscribe(
                 success->{
+                    this.formCodes = success;
+
                     if (callback != null)
                         callback.onResult(true, success, "Success");
                 }, throwable -> {
+                    this.formCodes = null;
+
                     if (callback != null)
                         callback.onResult(false, null, CommonUtils.getErrorMessage(throwable));
                 }
@@ -69,6 +77,29 @@ public class InstntSDK {
 
     @SuppressLint("CheckResult")
     public void submitForm(String url, Map<String, Object> body, SubmitCallback callback) {
+        if (formCodes == null) {
+            if (callback != null) {
+                callback.didSubmit(null, "");
+            }
+            return;
+        }
+
+        body.put("form_key", formCodes.getId());
+
+        Map <String, Object> fingerMap = new HashMap<>();
+        fingerMap.put("requestId", formCodes.getFingerprint());
+        fingerMap.put("visitorId", formCodes.getFingerprint());
+        fingerMap.put("visitorFound", true);
+
+        body.put("fingerprint", fingerMap);
+        body.put("client_referer_url", formCodes.getBackendServiceURL());
+
+        try {
+            body.put("client_referer_host", new URL(formCodes.getBackendServiceURL()).getHost());
+        } catch (MalformedURLException e) {
+            body.put("client_referer_host", "");
+        }
+
         networkModule.submit(url, body, false).subscribe(
                 success->{
                     if (callback != null) {

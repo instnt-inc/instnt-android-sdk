@@ -71,41 +71,48 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/white_1"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingBottom="15dp"/>
-
-    <TextView
-        android:layout_marginTop="20dp"
-        android:text="@string/response"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:layout_centerVertical="true"/>
-
     <ScrollView
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/white_1"
-        >
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
 
-        <TextView
-            android:layout_marginTop="10dp"
-            android:id="@+id/result"
-            android:text="No Response"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="@color/black"
-            android:padding="5dp"
-            android:singleLine="false"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white_1"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="15dp"/>
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:text="@string/response"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/result"
+                android:text="No Response"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/black"
+                android:padding="5dp"
+                android:singleLine="false"
+                android:background="@color/white_1"
+                android:minHeight="300dp"/>
+
+        </LinearLayout>
+
     </ScrollView>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
