@@ -162,8 +162,8 @@ public class CustomFormActivity extends BaseActivity implements SubmitCallback {
         String formId = binding.formid.getText().toString().trim();
 
         showProgressDialog(true);
-        instantSDK.setup(formId, binding.sandboxSwitch.isChecked());
-        instantSDK.getFormData( new GetFormCallback() {
+
+        instantSDK.setup(formId, binding.sandboxSwitch.isChecked(),  new GetFormCallback() {
             @Override
             public void onResult(boolean success, FormCodes codes, String message) {
                 showProgressDialog(false);

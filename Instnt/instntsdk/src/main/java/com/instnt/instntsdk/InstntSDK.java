@@ -21,8 +21,6 @@ public class InstntSDK {
 
     private NetworkUtil networkModule;
     private SubmitCallback submitCallback;
-    private String formId;
-    private boolean isSandbox;
     private FormCodes formCodes;
 
     private static InstntSDK instance;
@@ -47,13 +45,8 @@ public class InstntSDK {
         return submitCallback;
     }
 
-    public void setup(String formId, boolean isSandbox) {
-        this.formId = formId;
-        this.isSandbox = isSandbox;
-    }
-
     @SuppressLint("CheckResult")
-    public void getFormData(GetFormCallback callback) {
+    public void setup(String formId, boolean isSandbox, GetFormCallback callback) {
 
         if (TextUtils.isEmpty(formId)){
             callback.onResult(false, null, "Empty Form Id!");
