@@ -1,11 +1,12 @@
 package com.instnt.sample;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
 
 import com.instnt.instntsdk.InstntSDK;
 import com.instnt.instntsdk.data.FormCodes;
 import com.instnt.instntsdk.data.FormSubmitData;
-import com.instnt.instntsdk.interfaces.GetFormCallback;
 import com.instnt.instntsdk.interfaces.SubmitCallback;
 import com.instnt.instntsdk.utils.CommonUtils;
 import com.instnt.instntsdk.view.BaseActivity;
@@ -39,24 +40,23 @@ public class DefaultFormActivity extends BaseActivity implements SubmitCallback 
     private void show() {
         String formId = binding.formid.getText().toString().trim();
 
-        showProgressDialog(true);
+        if (TextUtils.isEmpty(formId)) {
+            CommonUtils.showToast(this, "Empty Form Id!");
+            return;
+        }
 
-        instantSDK.setup(formId, binding.sandboxSwitch.isChecked(), new GetFormCallback() {
+        instantSDK.setup(formId, binding.sandboxSwitch.isChecked());
+
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onResult(boolean success, FormCodes codes, String message) {
-                showProgressDialog(false);
-
-                if (!success) {
-                    DialogUtils.showAlertDialog(DefaultFormActivity.this, "Failed", message, "Ok", false);
-                }else {
-                    showForm(codes);
-                }
+            public void run() {
+                showForm();
             }
-        });
+        }, 1500);
     }
 
-    private void showForm(FormCodes formCodes) {
-        instantSDK.showForm(this, formCodes, this);
+    private void showForm() {
+        instantSDK.showForm(this, this);
     }
 
     @Override

@@ -71,7 +71,7 @@ public class FormActivity extends BaseActivity {
 
         showProgressDialog(true);
 
-        sdk.submitForm(formCodes.getSubmitURL(), paramMap, new SubmitCallback() {
+        sdk.submitForm(paramMap, new SubmitCallback() {
             @Override
             public void didCancel() {
 

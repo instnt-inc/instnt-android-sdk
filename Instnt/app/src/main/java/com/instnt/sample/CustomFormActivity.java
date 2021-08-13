@@ -1,6 +1,7 @@
 package com.instnt.sample;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -8,7 +9,6 @@ import com.instnt.instntsdk.InstntSDK;
 import com.instnt.instntsdk.data.FormCodes;
 import com.instnt.instntsdk.data.FormField;
 import com.instnt.instntsdk.data.FormSubmitData;
-import com.instnt.instntsdk.interfaces.GetFormCallback;
 import com.instnt.instntsdk.interfaces.SubmitCallback;
 import com.instnt.instntsdk.utils.CommonUtils;
 import com.instnt.instntsdk.view.BaseActivity;
@@ -16,8 +16,6 @@ import com.instnt.instntsdk.view.render.BaseInputView;
 import com.instnt.instntsdk.view.render.TextInputView;
 import com.instnt.sample.databinding.ActivityCustomFormBinding;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +23,6 @@ public class CustomFormActivity extends BaseActivity implements SubmitCallback {
 
     private ActivityCustomFormBinding binding;
     private InstntSDK instantSDK;
-    private FormCodes formCodes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,23 +158,13 @@ public class CustomFormActivity extends BaseActivity implements SubmitCallback {
     private void getFormCodes() {
         String formId = binding.formid.getText().toString().trim();
 
-        showProgressDialog(true);
+        if (TextUtils.isEmpty(formId)) {
+            CommonUtils.showToast(this, "Empty Form Id!");
+            return;
+        }
 
-        instantSDK.setup(formId, binding.sandboxSwitch.isChecked(),  new GetFormCallback() {
-            @Override
-            public void onResult(boolean success, FormCodes codes, String message) {
-                showProgressDialog(false);
-
-                if (!success) {
-                    binding.submit.setEnabled(false);
-                    DialogUtils.showAlertDialog(CustomFormActivity.this, "Failed", message, "Ok", false);
-                }else {
-                    binding.submit.setEnabled(true);
-                    formCodes = codes;
-                    binding.result.setText(convertObjectToString(codes));
-                }
-            }
-        });
+        instantSDK.setup(formId, binding.sandboxSwitch.isChecked());
+        binding.submit.setEnabled(true);
     }
 
     /**
@@ -196,7 +183,7 @@ public class CustomFormActivity extends BaseActivity implements SubmitCallback {
 
         showProgressDialog(true);
 
-        instantSDK.submitForm(formCodes.getSubmitURL(), paramMap, this);
+        instantSDK.submitForm(paramMap, this);
     }
 
     @Override

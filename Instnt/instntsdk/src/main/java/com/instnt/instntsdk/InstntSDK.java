@@ -3,10 +3,8 @@ package com.instnt.instntsdk;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.text.TextUtils;
 
 import com.instnt.instntsdk.data.FormCodes;
-import com.instnt.instntsdk.interfaces.GetFormCallback;
 import com.instnt.instntsdk.interfaces.SubmitCallback;
 import com.instnt.instntsdk.network.NetworkUtil;
 import com.instnt.instntsdk.utils.CommonUtils;
@@ -46,30 +44,18 @@ public class InstntSDK {
     }
 
     @SuppressLint("CheckResult")
-    public void setup(String formId, boolean isSandbox, GetFormCallback callback) {
-
-        if (TextUtils.isEmpty(formId)){
-            callback.onResult(false, null, "Empty Form Id!");
-            return;
-        }
-
+    public void setup(String formId, boolean isSandbox) {
         networkModule.getFormFields(formId, isSandbox).subscribe(
-                success->{
+                success -> {
                     this.formCodes = success;
-
-                    if (callback != null)
-                        callback.onResult(true, success, "Success");
                 }, throwable -> {
                     this.formCodes = null;
-
-                    if (callback != null)
-                        callback.onResult(false, null, CommonUtils.getErrorMessage(throwable));
                 }
         );
     }
 
     @SuppressLint("CheckResult")
-    public void submitForm(String url, Map<String, Object> body, SubmitCallback callback) {
+    public void submitForm(Map<String, Object> body, SubmitCallback callback) {
         if (formCodes == null) {
             if (callback != null) {
                 callback.didSubmit(null, "");
@@ -93,7 +79,7 @@ public class InstntSDK {
             body.put("client_referer_host", "");
         }
 
-        networkModule.submit(url, body, false).subscribe(
+        networkModule.submit(formCodes.getSubmitURL(), body, false).subscribe(
                 success->{
                     if (callback != null) {
                         callback.didSubmit(success.getData(), "");
@@ -106,8 +92,16 @@ public class InstntSDK {
         );
     }
 
-    public void showForm(Activity activity, FormCodes formCodes, SubmitCallback callback) {
+    public void showForm(Activity activity, SubmitCallback callback) {
         this.submitCallback = callback;
+
+        if (formCodes == null) {
+            if (submitCallback != null) {
+                submitCallback.didSubmit(null, "");
+            }
+
+            return;
+        }
 
         Intent intent = new Intent(activity, FormActivity.class);
         intent.putExtra(FormActivity.FORM_CORDS, formCodes);
