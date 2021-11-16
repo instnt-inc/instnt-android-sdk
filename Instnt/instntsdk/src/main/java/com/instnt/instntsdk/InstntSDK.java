@@ -24,41 +24,6 @@ public class InstntSDK {
     private static InstntSDK instance;
 
     public static InstntSDK getInstance() {
-
-        String _OSVERSION = System.getProperty("os.version");
-        String _RELEASE = android.os.Build.VERSION.RELEASE;
-        String _DEVICE = android.os.Build.DEVICE;
-        String _MODEL = android.os.Build.MODEL;
-        String _PRODUCT = android.os.Build.PRODUCT;
-        String _BRAND = android.os.Build.BRAND;
-        String _DISPLAY = android.os.Build.DISPLAY;
-        String _CPU_ABI = android.os.Build.CPU_ABI;
-        String _CPU_ABI2 = android.os.Build.CPU_ABI2;
-        String _UNKNOWN = android.os.Build.UNKNOWN;
-        String _HARDWARE = android.os.Build.HARDWARE;
-        String _ID = android.os.Build.ID;
-        String _MANUFACTURER = android.os.Build.MANUFACTURER;
-        String _SERIAL = android.os.Build.SERIAL;
-        String _USER = android.os.Build.USER;
-        String _HOST = android.os.Build.HOST;
-
-        System.out.println("_OSVERSION: " + _OSVERSION);
-        System.out.println("_RELEASE: " + _RELEASE);
-        System.out.println("_DEVICE: " + _DEVICE);
-        System.out.println("_MODEL: " + _MODEL);
-        System.out.println("_PRODUCT: " + _PRODUCT);
-        System.out.println("_BRAND: " + _BRAND);
-        System.out.println("_DISPLAY: " + _DISPLAY);
-        System.out.println("_CPU_ABI: " + _CPU_ABI);
-        System.out.println("_CPU_ABI2: " + _CPU_ABI2);
-        System.out.println("_UNKNOWN: " + _UNKNOWN);
-        System.out.println("_HARDWARE: " + _HARDWARE);
-        System.out.println("_ID: " + _ID);
-        System.out.println("_MANUFACTURER: " + _MANUFACTURER);
-        System.out.println("_SERIAL: " + _SERIAL);
-        System.out.println("_USER: " + _USER);
-        System.out.println("_HOST: " + _HOST);
-
         if (instance == null) {
             instance = new InstntSDK();
         }
