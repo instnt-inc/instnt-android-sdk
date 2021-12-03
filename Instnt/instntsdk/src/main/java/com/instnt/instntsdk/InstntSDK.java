@@ -2,8 +2,10 @@ package com.instnt.instntsdk;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
+import com.instnt.instntsdk.authentication.Authentication;
 import com.instnt.instntsdk.data.FormCodes;
 import com.instnt.instntsdk.interfaces.SubmitCallback;
 import com.instnt.instntsdk.network.NetworkUtil;
@@ -18,6 +20,7 @@ import java.util.Map;
 public class InstntSDK {
 
     private NetworkUtil networkModule;
+    private Authentication authentication;
     private SubmitCallback submitCallback;
     private FormCodes formCodes;
 
@@ -41,6 +44,10 @@ public class InstntSDK {
 
     public SubmitCallback getSubmitCallback() {
         return submitCallback;
+    }
+
+    public void startAuthentication(Context baseContext) {
+        authentication = new Authentication(baseContext);
     }
 
     @SuppressLint("CheckResult")

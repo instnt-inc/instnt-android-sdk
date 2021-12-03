@@ -2,6 +2,8 @@ plugins {
     id 'com.android.library'
 }
 
+apply plugin: 'com.vanniktech.maven.publish'
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -67,4 +69,7 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+
+    implementation project(":vendorsdk")
+    implementation 'com.google.android.gms:play-services:6.5.87'
 }

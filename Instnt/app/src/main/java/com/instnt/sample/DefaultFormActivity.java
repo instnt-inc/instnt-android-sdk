@@ -1,8 +1,14 @@
 package com.instnt.sample;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.instnt.instntsdk.InstntSDK;
 import com.instnt.instntsdk.data.FormCodes;
@@ -18,6 +24,11 @@ public class DefaultFormActivity extends BaseActivity implements SubmitCallback 
     private InstntSDK instantSDK;
 
     @Override
+    public int checkSelfPermission(String permission) {
+        return super.checkSelfPermission(permission);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -27,12 +38,35 @@ public class DefaultFormActivity extends BaseActivity implements SubmitCallback 
         init();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        int MY_CAMERA_REQUEST_CODE = 100;
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_CAMERA_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                System.out.println("test1");
+                instantSDK.startAuthentication(getBaseContext());
+                //Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+            } else {
+                System.out.println("test2");
+                //Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     private void init() {
         instantSDK = InstntSDK.getInstance();
         binding.formid.setText("v876130100000");
         binding.show.setOnClickListener(v -> {
             show();
         });
+        int MY_CAMERA_REQUEST_CODE = 100;
+
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, MY_CAMERA_REQUEST_CODE);
+        } else {
+            instantSDK.startAuthentication(getBaseContext());
+        }
 
         instantSDK.setCallback(this);
     }

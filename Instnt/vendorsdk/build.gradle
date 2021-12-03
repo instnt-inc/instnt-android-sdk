@@ -1,0 +1,3 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('cfa-document-5.2.aar'))
+//artifacts.add("default", file('cfaselfie-4.1.aar'))

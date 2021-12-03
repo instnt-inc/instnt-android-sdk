@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">InstntSDK</string>
     <string name="cancel">Cancel</string>
+    <string name="DocumentScanLicenseKey" translatable="false">AwFuEf5j3YXwEACwj9eE4w6RGWQ0zgPbjGmu+Xw684ryGP3GicSEE7ZYB0FAhoikRH3imeR02U7kuT4OjVL5B1s3JhBrPY9KWU9sgCVmTIW0r7ehq9CvTjTBfaR7NTCV179MlNeDbEzwh5FSD8ROc3Zq</string>
 </resources>

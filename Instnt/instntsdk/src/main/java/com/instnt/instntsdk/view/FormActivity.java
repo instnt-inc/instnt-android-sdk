@@ -14,6 +14,7 @@ import com.instnt.instntsdk.interfaces.SubmitCallback;
 import com.instnt.instntsdk.view.render.BaseInputView;
 import com.instnt.instntsdk.view.render.CheckboxInputView;
 import com.instnt.instntsdk.view.render.DatePickerInputView;
+import com.instnt.instntsdk.view.render.OTPInputView;
 import com.instnt.instntsdk.view.render.SpinnerInputView;
 import com.instnt.instntsdk.view.render.TextInputView;
 
@@ -122,7 +123,11 @@ public class FormActivity extends BaseActivity {
             binding.container.addView(new DatePickerInputView(this, field));
         }else {
             //text
-            binding.container.addView(new TextInputView(this, field));
+            TextInputView textInputView = new TextInputView(this, field);
+            binding.container.addView(textInputView);
+            if(field.getName().toLowerCase().contains("mobile")) {
+                binding.container.addView(new OTPInputView(this, field, textInputView));
+            }
         }
     }
 

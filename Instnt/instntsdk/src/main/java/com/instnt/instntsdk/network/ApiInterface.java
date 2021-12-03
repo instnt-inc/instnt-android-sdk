@@ -3,6 +3,7 @@ package com.instnt.instntsdk.network;
 import com.instnt.instntsdk.data.FormCodes;
 import com.instnt.instntsdk.data.FormSubmitData;
 import com.instnt.instntsdk.data.FormSubmitResponse;
+import com.instnt.instntsdk.data.OTPResponse;
 
 import java.util.Map;
 
@@ -23,4 +24,8 @@ public interface ApiInterface {
     @Headers("Content-Type: application/json")
     @POST()
     Observable<FormSubmitResponse> submitForm(@Url String url, @Body Map<String, Object> body);
+
+    @Headers("Content-Type: application/json")
+    @POST()
+    Observable<OTPResponse> sendOTP(@Url String url, @Body Map<String, Object> body);
 }

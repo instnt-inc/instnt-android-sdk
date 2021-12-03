@@ -7,8 +7,12 @@ import com.google.gson.GsonBuilder;
 import com.instnt.instntsdk.data.FormCodes;
 import com.instnt.instntsdk.data.FormSubmitData;
 import com.instnt.instntsdk.data.FormSubmitResponse;
+import com.instnt.instntsdk.data.OTPResponse;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -92,6 +96,42 @@ public class NetworkUtil {
         ApiInterface apiInterface = isSandbox? sandboxApiInterface : productApiInterface;
 
         return apiInterface.submitForm(url, body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @SuppressLint("CheckResult")
+    public Observable<OTPResponse> sendOTP(String mobileNumber, boolean isSandbox) {
+        ApiInterface apiInterface = isSandbox? sandboxApiInterface : productApiInterface;
+
+        Map<String, String> innerBody = new HashMap<>();
+        innerBody.put("phoneNumber", mobileNumber);
+        JSONObject jsonObject = new JSONObject(innerBody);
+        Map<String, Object> body = new HashMap<>();
+        body.put("requestData", jsonObject.toString());
+        body.put("isVerify", false);
+
+        String url = RestUrl.BASE_URL + "otp/phone/send/v1.0";
+        return apiInterface.sendOTP(url, body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @SuppressLint("CheckResult")
+    public Observable<OTPResponse> verifyOTP(String mobileNumber, String enteredOTP, boolean isSandbox) {
+        ApiInterface apiInterface = isSandbox? sandboxApiInterface : productApiInterface;
+
+        Map<String, String> innerBody = new HashMap<>();
+        innerBody.put("phoneNumber", mobileNumber);
+        innerBody.put("otpCode", enteredOTP);
+
+        JSONObject jsonObject = new JSONObject(innerBody);
+        Map<String, Object> body = new HashMap<>();
+        body.put("requestData", jsonObject.toString());
+        body.put("isVerify", true);
+
+        String url = RestUrl.BASE_URL + "otp/phone/verify/v1.0";
+        return apiInterface.sendOTP(url, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
