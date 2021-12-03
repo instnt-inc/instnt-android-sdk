@@ -11,9 +11,9 @@ import com.idmetrics.dc.utils.DSHandlerListener;
 import com.idmetrics.dc.utils.DSOptions;
 import com.idmetrics.dc.utils.DSResult;
 
-public class Authentication {
+public class AuthenticID {
 
-    public Authentication(Context baseContext) {
+    public AuthenticID(Context baseContext) {
         processToCallScan(baseContext);
     }
 
