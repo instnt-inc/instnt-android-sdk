@@ -10,6 +10,8 @@ import com.idmetrics.dc.utils.DSID1Options;
 import com.idmetrics.dc.utils.DSOptions;
 import com.idmetrics.dc.utils.DSResult;
 
+import org.instant.accept.instntsdk.interfaces.InstntWrapper;
+
 public class AuthenticID {
 
     public AuthenticID(Context baseContext) {
@@ -31,6 +33,10 @@ public class AuthenticID {
             @Override
             public void handleScan(DSResult dsResult) {
                 System.out.println("test1");
+
+                InstntWrapper instntWrapper = new InstntWrapperImpl();
+                instntWrapper.initTransaction();
+                instntWrapper.documentUpload(dsResult);
             }
 
             @Override

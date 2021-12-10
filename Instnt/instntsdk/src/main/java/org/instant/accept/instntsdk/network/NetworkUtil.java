@@ -134,4 +134,29 @@ public class NetworkUtil {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+    @SuppressLint("CheckResult")
+    public Observable<Map<String, Object>> getUploadUrl(String instnttxnid, String docSuffix, boolean isSandbox) {
+        ApiInterface apiInterface = isSandbox? sandboxApiInterface : productApiInterface;
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("transaction_attachment_type", "IMAGE");
+        body.put("document_type", "DRIVERS_LICENSE");
+        body.put("doc_suffix", docSuffix);
+        body.put("instnttxnid", instnttxnid);
+
+        String url = RestUrl.BASE_URL + "/public/transactions/" + instnttxnid + "/attachments/";
+        return apiInterface.getUploadUrl(url, body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @SuppressLint("CheckResult")
+    public Observable<Map<String, Object>> uploadDocument(String presignedS3Url, byte[] imageData, boolean isSandbox) {
+        ApiInterface apiInterface = isSandbox? sandboxApiInterface : productApiInterface;
+
+        return apiInterface.uploadDocument(presignedS3Url, imageData)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }

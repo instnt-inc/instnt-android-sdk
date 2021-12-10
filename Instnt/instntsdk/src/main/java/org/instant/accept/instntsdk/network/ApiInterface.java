@@ -27,4 +27,12 @@ public interface ApiInterface {
     @Headers("Content-Type: application/json")
     @POST()
     Observable<OTPResponse> sendOTP(@Url String url, @Body Map<String, Object> body);
+
+    @Headers("Content-Type: application/json")
+    @POST()
+    Observable<Map<String, Object>> getUploadUrl(@Url String url, @Body Map<String, Object> body);
+
+    @Headers("Content-Type: image/jpeg")
+    @POST()
+    Observable<Map<String, Object>> uploadDocument(@Url String url, @Body byte[] body);
 }
