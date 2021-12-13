@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import org.instant.accept.instntsdk.InstntSDK;
 import org.instant.accept.instntsdk.data.FormSubmitData;
+import org.instant.accept.instntsdk.interfaces.Instnt;
 import org.instant.accept.instntsdk.interfaces.SubmitCallback;
 import org.instant.accept.instntsdk.utils.CommonUtils;
 import org.instant.accept.instntsdk.view.BaseActivity;
@@ -18,7 +19,7 @@ import org.instant.accept.sample.databinding.ActivityDefaultFormBinding;
 public class DefaultFormActivity extends BaseActivity implements SubmitCallback {
 
     private ActivityDefaultFormBinding binding;
-    private InstntSDK instantSDK;
+    private Instnt instantSDK;
 
     @Override
     public int checkSelfPermission(String permission) {
@@ -42,7 +43,7 @@ public class DefaultFormActivity extends BaseActivity implements SubmitCallback 
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 System.out.println("test1");
-                instantSDK.startAuthentication(getBaseContext());
+                instantSDK.scanAndUploadDocument(getBaseContext(), instantSDK.getTransactionID());
                 //Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
             } else {
                 System.out.println("test2");
@@ -62,7 +63,7 @@ public class DefaultFormActivity extends BaseActivity implements SubmitCallback 
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, MY_CAMERA_REQUEST_CODE);
         } else {
-            instantSDK.startAuthentication(getBaseContext());
+            instantSDK.scanAndUploadDocument(getBaseContext(), instantSDK.getTransactionID());
         }
 
         instantSDK.setCallback(this);

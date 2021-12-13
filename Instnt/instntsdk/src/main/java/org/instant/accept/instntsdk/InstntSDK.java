@@ -1,30 +1,31 @@
 package org.instant.accept.instntsdk;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 
-import org.instant.accept.instntsdk.authentication.AuthenticID;
-import org.instant.accept.instntsdk.data.FormCodes;
+import org.instant.accept.instntsdk.implementations.DocumentHandlerImpl;
+import org.instant.accept.instntsdk.implementations.FormHandlerImpl;
+import org.instant.accept.instntsdk.implementations.OTPHandlerImpl;
+import org.instant.accept.instntsdk.interfaces.DocumentHandler;
+import org.instant.accept.instntsdk.interfaces.FormHandler;
+import org.instant.accept.instntsdk.interfaces.Instnt;
+import org.instant.accept.instntsdk.interfaces.OTPHandler;
 import org.instant.accept.instntsdk.interfaces.SubmitCallback;
 import org.instant.accept.instntsdk.network.NetworkUtil;
 import org.instant.accept.instntsdk.utils.CommonUtils;
-import org.instant.accept.instntsdk.view.FormActivity;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
-public class InstntSDK {
-
-    private NetworkUtil networkModule;
-    private AuthenticID authentication;
-    private SubmitCallback submitCallback;
-    private FormCodes formCodes;
+public class InstntSDK implements Instnt {
 
     private static InstntSDK instance;
+    private DocumentHandler documentHandler;
+    private OTPHandler otpHandler;
+    private FormHandler formHandler;
+    private NetworkUtil networkModule;
+    //TODO passing it true because for testing purpose need to fire dev url, it should be false after the final testing
+    private boolean isSandbox = true;
+    private String instnttxnid;
 
     public static InstntSDK getInstance() {
         if (instance == null) {
@@ -34,84 +35,70 @@ public class InstntSDK {
         return instance;
     }
 
-    public InstntSDK() {
+    private InstntSDK() {
+        //first api to call
+        initTransaction();
         networkModule = new NetworkUtil();
+        documentHandler = new DocumentHandlerImpl();
+        otpHandler = new OTPHandlerImpl();
+        formHandler = new FormHandlerImpl();
     }
 
+    private void initTransaction() {
+
+        networkModule.getTransactionID(this.isSandbox, "v1633477069641729").subscribe(response->{
+
+            System.out.println("Response");
+            this.instnttxnid = (String) response.get("instnttxnid");
+        }, throwable -> {
+            //CommonUtils.showToast(getContext(), CommonUtils.getErrorMessage(throwable));
+            System.out.println(CommonUtils.getErrorMessage(throwable));
+        });
+    }
+
+    @Override
+    public void scanAndUploadDocument(Context context, String instnttxnid) {
+        documentHandler.scanAndUploadDocument(context, instnttxnid);
+    }
+
+    @Override
     public void setCallback(SubmitCallback callback) {
-        this.submitCallback = callback;
+        formHandler.setCallback(callback);
     }
 
+    @Override
     public SubmitCallback getSubmitCallback() {
-        return submitCallback;
+        return formHandler.getSubmitCallback();
     }
 
-    public void startAuthentication(Context baseContext) {
-        authentication = new AuthenticID(baseContext);
-    }
-
-    @SuppressLint("CheckResult")
+    @Override
     public void setup(String formId, boolean isSandbox) {
-        networkModule.getFormFields(formId, isSandbox).subscribe(
-                success -> {
-                    this.formCodes = success;
-                }, throwable -> {
-                    this.formCodes = null;
-                }
-        );
+        formHandler.setup(formId, isSandbox);
     }
 
-    @SuppressLint("CheckResult")
+    @Override
     public void submitForm(Map<String, Object> body, SubmitCallback callback) {
-        if (formCodes == null) {
-            if (callback != null) {
-                callback.didSubmit(null, "");
-            }
-            return;
-        }
-
-        body.put("form_key", formCodes.getId());
-
-        Map <String, Object> fingerMap = new HashMap<>();
-        fingerMap.put("requestId", formCodes.getFingerprint());
-        fingerMap.put("visitorId", formCodes.getFingerprint());
-        fingerMap.put("visitorFound", true);
-
-        body.put("fingerprint", fingerMap);
-        body.put("client_referer_url", formCodes.getBackendServiceURL());
-
-        try {
-            body.put("client_referer_host", new URL(formCodes.getBackendServiceURL()).getHost());
-        } catch (MalformedURLException e) {
-            body.put("client_referer_host", "");
-        }
-
-        networkModule.submit(formCodes.getSubmitURL(), body, false).subscribe(
-                success->{
-                    if (callback != null) {
-                        callback.didSubmit(success.getData(), "");
-                    }
-                }, throwable -> {
-                    if (callback != null) {
-                        callback.didSubmit(null, CommonUtils.getErrorMessage(throwable));
-                    }
-                }
-        );
+        formHandler.submitForm(body, callback);
     }
 
+    @Override
     public void showForm(Activity activity, SubmitCallback callback) {
-        this.submitCallback = callback;
-
-        if (formCodes == null) {
-            if (submitCallback != null) {
-                submitCallback.didSubmit(null, "");
-            }
-
-            return;
-        }
-
-        Intent intent = new Intent(activity, FormActivity.class);
-        intent.putExtra(FormActivity.FORM_CORDS, formCodes);
-        activity.startActivity(intent);
+        formHandler.showForm(activity, callback);
     }
+
+    @Override
+    public void send() {
+        otpHandler.send();
+    }
+
+    @Override
+    public void verify() {
+        otpHandler.verify();
+    }
+
+    @Override
+    public String getTransactionID() {
+        return this.instnttxnid;
+    }
+
 }

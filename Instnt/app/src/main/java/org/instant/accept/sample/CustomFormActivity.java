@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import org.instant.accept.instntsdk.InstntSDK;
 import org.instant.accept.instntsdk.data.FormField;
 import org.instant.accept.instntsdk.data.FormSubmitData;
+import org.instant.accept.instntsdk.interfaces.Instnt;
 import org.instant.accept.instntsdk.interfaces.SubmitCallback;
 import org.instant.accept.instntsdk.utils.CommonUtils;
 import org.instant.accept.instntsdk.view.BaseActivity;
@@ -21,7 +22,7 @@ import java.util.Map;
 public class CustomFormActivity extends BaseActivity implements SubmitCallback {
 
     private ActivityCustomFormBinding binding;
-    private InstntSDK instantSDK;
+    private Instnt instantSDK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

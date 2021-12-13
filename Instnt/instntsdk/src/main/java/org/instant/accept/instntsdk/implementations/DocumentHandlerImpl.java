@@ -1,30 +1,30 @@
-package org.instant.accept.instntsdk.authentication;
+package org.instant.accept.instntsdk.implementations;
 
+import android.content.Context;
+
+import com.idmetrics.dc.DSHandler;
+import com.idmetrics.dc.utils.DSCaptureMode;
+import com.idmetrics.dc.utils.DSError;
+import com.idmetrics.dc.utils.DSHandlerListener;
+import com.idmetrics.dc.utils.DSID1Options;
 import com.idmetrics.dc.utils.DSResult;
 
-import org.instant.accept.instntsdk.interfaces.InstntWrapper;
+import org.instant.accept.instntsdk.interfaces.DocumentHandler;
 import org.instant.accept.instntsdk.network.NetworkUtil;
 import org.instant.accept.instntsdk.utils.CommonUtils;
 
 import java.util.Map;
 
-public class InstntWrapperImpl implements InstntWrapper {
+public class DocumentHandlerImpl implements DocumentHandler {
 
     private NetworkUtil networkModule;
 
-    public InstntWrapperImpl() {
-        this.networkModule = new NetworkUtil();
+    public DocumentHandlerImpl() {
+        networkModule = new NetworkUtil();
     }
 
-    @Override
-    public void initTransaction() {
+    private void uploadAttachment(DSResult dsResult, String instnttxnid) {
 
-    }
-
-    @Override
-    public void documentUpload(DSResult dsResult) {
-
-        String instnttxnid = "51dc77ad-c65e-4f68-8296-8396bd207a84";
         boolean isSelfie = false;
         //TODO passing it true because for testing purpose need to fire dev url, it should be false after the final testing
         boolean isSandbox = true;
@@ -67,6 +67,36 @@ public class InstntWrapperImpl implements InstntWrapper {
             //CommonUtils.showToast(getContext(), CommonUtils.getErrorMessage(throwable));
             System.out.println(CommonUtils.getErrorMessage(throwable));
         });
+    }
+
+    @Override
+    public void scanAndUploadDocument(Context context, String instnttxnid) {
+
+        DSID1Options dsOptions = new DSID1Options();
+        dsOptions.licensingKey = "AwFuEf5j3YXwEACwj9eE4w6RGWQ0zgPbjGmu+Xw684ryGP3GicSEE7ZYB0FAhoikRH3imeR02U7kuT4OjVL5B1s3JhBrPY9KWU9sgCVmTIW0r7ehq9CvTjTBfaR7NTCV179MlNeDbEzwh5FSD8ROc3Zq";
+
+        DSHandler dsHandler = DSHandler.getInstance(context);
+        DSHandler.staticLicenseKey = "AwFuEf5j3YXwEACwj9eE4w6RGWQ0zgPbjGmu+Xw684ryGP3GicSEE7ZYB0FAhoikRH3imeR02U7kuT4OjVL5B1s3JhBrPY9KWU9sgCVmTIW0r7ehq9CvTjTBfaR7NTCV179MlNeDbEzwh5FSD8ROc3Zq";
+        dsHandler.options = dsOptions;
+        dsHandler.init(DSCaptureMode.Manual, new DSHandlerListener() {
+            @Override
+            public void handleScan(DSResult dsResult) {
+                System.out.println("test1");
+                uploadAttachment(dsResult, instnttxnid);
+            }
+
+            @Override
+            public void scanWasCancelled() {
+                System.out.println("test2");
+            }
+
+            @Override
+            public void captureError(DSError dsError) {
+                System.out.println("test3 : " + dsError.message);
+            }
+        });
+
+        dsHandler.start();
     }
 
 }

@@ -136,6 +136,23 @@ public class NetworkUtil {
     }
 
     @SuppressLint("CheckResult")
+    public Observable<Map<String, Object>> getTransactionID(boolean isSandbox, String formKey) {
+        ApiInterface apiInterface = isSandbox? sandboxApiInterface : productApiInterface;
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("form_key", formKey);
+        body.put("hide_form_fields", true);
+        body.put("idmetrics_version", "4.5.0.5");
+        body.put("format", "json");
+        body.put("redirect", false);
+
+        String url = RestUrl.BASE_URL + "/public/transactions/";
+        return apiInterface.getXNID(url, body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @SuppressLint("CheckResult")
     public Observable<Map<String, Object>> getUploadUrl(String instnttxnid, String docSuffix, boolean isSandbox) {
         ApiInterface apiInterface = isSandbox? sandboxApiInterface : productApiInterface;
 
