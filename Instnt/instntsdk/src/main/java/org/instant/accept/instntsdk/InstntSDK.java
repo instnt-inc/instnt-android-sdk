@@ -36,12 +36,12 @@ public class InstntSDK implements Instnt {
     }
 
     private InstntSDK() {
-        //first api to call
-        initTransaction();
         networkModule = new NetworkUtil();
         documentHandler = new DocumentHandlerImpl();
         otpHandler = new OTPHandlerImpl();
         formHandler = new FormHandlerImpl();
+        //first api to call
+        initTransaction();
     }
 
     private void initTransaction() {
