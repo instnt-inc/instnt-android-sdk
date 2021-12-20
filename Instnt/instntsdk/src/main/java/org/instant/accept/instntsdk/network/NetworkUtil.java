@@ -146,7 +146,7 @@ public class NetworkUtil {
         body.put("format", "json");
         body.put("redirect", false);
 
-        String url = RestUrl.BASE_URL + "/public/transactions/";
+        String url = RestUrl.BASE_URL + "transactions/";
         return apiInterface.getXNID(url, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -159,10 +159,9 @@ public class NetworkUtil {
         Map<String, Object> body = new HashMap<>();
         body.put("transaction_attachment_type", "IMAGE");
         body.put("document_type", "DRIVERS_LICENSE");
-        body.put("doc_suffix", docSuffix);
-        body.put("instnttxnid", instnttxnid);
+        body.put("transaction_status", "NEW");
 
-        String url = RestUrl.BASE_URL + "/public/transactions/" + instnttxnid + "/attachments/";
+        String url = RestUrl.BASE_URL + "transactions/" + instnttxnid + "/attachments/";
         return apiInterface.getUploadUrl(url, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

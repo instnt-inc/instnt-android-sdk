@@ -20,6 +20,7 @@ public class FormModeActivity extends BaseActivity {
 
         binding.defaultForm.setOnClickListener(v -> goDefault());
         binding.customForm.setOnClickListener(v -> goCustom());
+        binding.customStepForm.setOnClickListener(v -> goCustomStepForm());
     }
 
     private void goDefault() {
@@ -29,6 +30,11 @@ public class FormModeActivity extends BaseActivity {
 
     private void goCustom() {
         Intent intent = new Intent(this, CustomFormActivity.class);
+        startActivity(intent);
+    }
+
+    private void goCustomStepForm() {
+        Intent intent = new Intent(this, CustomStepFormActivity.class);
         startActivity(intent);
     }
 }
