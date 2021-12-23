@@ -30,12 +30,12 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class NetworkUtil {
 
-    private ApiInterface sandboxApiInterface;
-    private ApiInterface productApiInterface;
+    private String serverUrl;
 
-    public NetworkUtil() {
-        sandboxApiInterface = getApiService(true);
-        productApiInterface = getApiService(false);
+    public NetworkUtil(String serverUrl) {
+        this.serverUrl = serverUrl;
+//        sandboxApiInterface = getApiService(serverUrl);
+//        productApiInterface = getApiService(serverUrl);
     }
 
     private OkHttpClient getOkHttpClient(){
@@ -55,13 +55,13 @@ public class NetworkUtil {
                 .build();
     }
 
-    private Retrofit getRetrofit(OkHttpClient httpclient, boolean isSandbox){
+    private Retrofit getRetrofit(OkHttpClient httpclient, String serverUrl){
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
 
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(isSandbox? RestUrl.BASE_URL : RestUrl.PRODUCTION_URL)
+                .baseUrl(serverUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addConverterFactory(ScalarsConverterFactory.create()) //to send string as body
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
@@ -69,8 +69,8 @@ public class NetworkUtil {
         return builder.client(httpclient).build();
     }
 
-    private ApiInterface getApiService(boolean isSandbox) {
-        Retrofit retrofit = getRetrofit(getOkHttpClient(), isSandbox);
+    private ApiInterface getApiService(String serverUrl) {
+        Retrofit retrofit = getRetrofit(getOkHttpClient(), serverUrl);
 
         return retrofit.create(ApiInterface.class);
     }
@@ -82,8 +82,8 @@ public class NetworkUtil {
     }
 
     @SuppressLint("CheckResult")
-    public Observable<FormCodes> getFormFields(String formId, boolean isSandbox) {
-        ApiInterface apiInterface = isSandbox? sandboxApiInterface : productApiInterface;
+    public Observable<FormCodes> getFormFields(String formId) {
+        ApiInterface apiInterface = getApiService(this.serverUrl);
 
         return apiInterface.getFormCodes(formId, "json")
                 .subscribeOn(Schedulers.io())
@@ -92,7 +92,7 @@ public class NetworkUtil {
 
     @SuppressLint("CheckResult")
     public Observable<FormSubmitResponse> submit(String url, Map<String, Object> body, boolean isSandbox) {
-        ApiInterface apiInterface = isSandbox? sandboxApiInterface : productApiInterface;
+        ApiInterface apiInterface = getApiService(this.serverUrl);
 
         return apiInterface.submitForm(url, body)
                 .subscribeOn(Schedulers.io())
@@ -100,8 +100,8 @@ public class NetworkUtil {
     }
 
     @SuppressLint("CheckResult")
-    public Observable<OTPResponse> sendOTP(String mobileNumber, boolean isSandbox) {
-        ApiInterface apiInterface = isSandbox? sandboxApiInterface : productApiInterface;
+    public Observable<OTPResponse> sendOTP(String mobileNumber) {
+        ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, String> innerBody = new HashMap<>();
         innerBody.put("phoneNumber", mobileNumber);
@@ -110,15 +110,15 @@ public class NetworkUtil {
         body.put("requestData", jsonObject.toString());
         body.put("isVerify", false);
 
-        String url = RestUrl.BASE_URL + "otp/phone/send/v1.0";
+        String url = this.serverUrl + "otp/phone/send/v1.0";
         return apiInterface.sendOTP(url, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     @SuppressLint("CheckResult")
-    public Observable<OTPResponse> verifyOTP(String mobileNumber, String enteredOTP, boolean isSandbox) {
-        ApiInterface apiInterface = isSandbox? sandboxApiInterface : productApiInterface;
+    public Observable<OTPResponse> verifyOTP(String mobileNumber, String enteredOTP) {
+        ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, String> innerBody = new HashMap<>();
         innerBody.put("phoneNumber", mobileNumber);
@@ -129,15 +129,15 @@ public class NetworkUtil {
         body.put("requestData", jsonObject.toString());
         body.put("isVerify", true);
 
-        String url = RestUrl.BASE_URL + "otp/phone/verify/v1.0";
+        String url = this.serverUrl + "otp/phone/verify/v1.0";
         return apiInterface.sendOTP(url, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     @SuppressLint("CheckResult")
-    public Observable<Map<String, Object>> getTransactionID(boolean isSandbox, String formKey) {
-        ApiInterface apiInterface = isSandbox? sandboxApiInterface : productApiInterface;
+    public Observable<Map<String, Object>> getTransactionID(String formKey) {
+        ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, Object> body = new HashMap<>();
         body.put("form_key", formKey);
@@ -146,7 +146,7 @@ public class NetworkUtil {
         body.put("format", "json");
         body.put("redirect", false);
 
-        String url = RestUrl.BASE_URL + "transactions/";
+        String url = this.serverUrl + "transactions/";
         return apiInterface.getXNID(url, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -154,7 +154,7 @@ public class NetworkUtil {
 
     @SuppressLint("CheckResult")
     public Observable<Map<String, Object>> getUploadUrl(String instnttxnid, String docSuffix, boolean isSandbox) {
-        ApiInterface apiInterface = isSandbox? sandboxApiInterface : productApiInterface;
+        ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, Object> body = new HashMap<>();
         body.put("transaction_attachment_type", "IMAGE");
@@ -169,7 +169,7 @@ public class NetworkUtil {
 
     @SuppressLint("CheckResult")
     public Observable<Map<String, Object>> uploadDocument(String presignedS3Url, byte[] imageData, boolean isSandbox) {
-        ApiInterface apiInterface = isSandbox? sandboxApiInterface : productApiInterface;
+        ApiInterface apiInterface = getApiService(this.serverUrl);
 
         return apiInterface.uploadDocument(presignedS3Url, imageData)
                 .subscribeOn(Schedulers.io())

@@ -10,6 +10,7 @@ import org.instant.accept.instntsdk.data.FormField;
 import org.instant.accept.instntsdk.data.FormSubmitData;
 import org.instant.accept.instntsdk.interfaces.Instnt;
 import org.instant.accept.instntsdk.interfaces.SubmitCallback;
+import org.instant.accept.instntsdk.network.RestUrl;
 import org.instant.accept.instntsdk.utils.CommonUtils;
 import org.instant.accept.instntsdk.view.BaseActivity;
 import org.instant.accept.instntsdk.view.render.BaseInputView;
@@ -38,7 +39,7 @@ public class CustomFormActivity extends BaseActivity implements SubmitCallback {
         //init form fields
         initFormFields();
 
-        instantSDK = InstntSDK.getInstance();
+        instantSDK = InstntSDK.getInstance("v876130100000", RestUrl.SANDBOX_URL, getBaseContext());
         binding.formid.setText("v876130100000");
         binding.getFormCode.setOnClickListener(v -> {
             getFormCodes();
@@ -163,7 +164,7 @@ public class CustomFormActivity extends BaseActivity implements SubmitCallback {
             return;
         }
 
-        instantSDK.setup(formId, binding.sandboxSwitch.isChecked());
+        instantSDK.setup(formId);
         binding.submit.setEnabled(true);
     }
 

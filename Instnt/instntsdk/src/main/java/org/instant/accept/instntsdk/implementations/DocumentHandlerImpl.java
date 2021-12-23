@@ -19,8 +19,8 @@ public class DocumentHandlerImpl implements DocumentHandler {
 
     private NetworkUtil networkModule;
 
-    public DocumentHandlerImpl() {
-        networkModule = new NetworkUtil();
+    public DocumentHandlerImpl(NetworkUtil networkModule) {
+        this.networkModule = networkModule;
     }
 
     private void uploadAttachment(DSResult dsResult, String instnttxnid) {

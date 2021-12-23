@@ -21,8 +21,8 @@ public class FormHandlerImpl implements FormHandler {
     private FormCodes formCodes;
     private SubmitCallback submitCallback;
 
-    public FormHandlerImpl() {
-        networkModule = new NetworkUtil();
+    public FormHandlerImpl(NetworkUtil networkModule) {
+        this.networkModule = networkModule;
     }
 
     @Override
@@ -36,9 +36,9 @@ public class FormHandlerImpl implements FormHandler {
     }
 
     @Override
-    public void setup(String formId, boolean isSandbox) {
+    public void setup(String formId) {
 
-        networkModule.getFormFields(formId, isSandbox).subscribe(
+        networkModule.getFormFields(formId).subscribe(
                 success -> {
                     this.formCodes = success;
                 }, throwable -> {

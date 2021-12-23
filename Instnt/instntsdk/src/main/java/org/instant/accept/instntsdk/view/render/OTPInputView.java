@@ -8,6 +8,7 @@ import android.widget.TextView;
 import org.instant.accept.instntsdk.R;
 import org.instant.accept.instntsdk.data.FormField;
 import org.instant.accept.instntsdk.network.NetworkUtil;
+import org.instant.accept.instntsdk.network.RestUrl;
 import org.instant.accept.instntsdk.utils.CommonUtils;
 
 import java.util.Map;
@@ -22,7 +23,7 @@ public class OTPInputView extends BaseInputView {
 
     public OTPInputView(Context context, FormField formField, TextInputView textInputView) {
         super(context, formField);
-        networkModule = new NetworkUtil();
+        networkModule = new NetworkUtil(RestUrl.SANDBOX_URL);
         this.mobileTextInputView = textInputView;
     }
 
@@ -49,7 +50,7 @@ public class OTPInputView extends BaseInputView {
                 return;
             }
 
-            networkModule.sendOTP(mobileNumber, false).subscribe(otpResponse->{
+            networkModule.sendOTP(mobileNumber).subscribe(otpResponse->{
 
                 if(otpResponse != null && !otpResponse.getResponse().isValid()) {
                     CommonUtils.showToast(getContext(), otpResponse.getResponse().getErrors()[0]);
@@ -70,7 +71,7 @@ public class OTPInputView extends BaseInputView {
             String mobileNumber = this.mobileTextInputView.findViewById(R.id.value).toString();
             String enteredOTP = (String) enterOTPText.getText().toString();
 
-            networkModule.verifyOTP(mobileNumber, enteredOTP, false).subscribe(otpResponse->{
+            networkModule.verifyOTP(mobileNumber, enteredOTP).subscribe(otpResponse->{
 
                 if(otpResponse != null && !otpResponse.getResponse().isValid()) {
                     CommonUtils.showToast(getContext(), otpResponse.getResponse().getErrors()[0]);

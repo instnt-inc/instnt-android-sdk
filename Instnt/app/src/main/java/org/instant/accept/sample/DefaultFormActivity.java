@@ -12,6 +12,7 @@ import org.instant.accept.instntsdk.InstntSDK;
 import org.instant.accept.instntsdk.data.FormSubmitData;
 import org.instant.accept.instntsdk.interfaces.Instnt;
 import org.instant.accept.instntsdk.interfaces.SubmitCallback;
+import org.instant.accept.instntsdk.network.RestUrl;
 import org.instant.accept.instntsdk.utils.CommonUtils;
 import org.instant.accept.instntsdk.view.BaseActivity;
 import org.instant.accept.sample.databinding.ActivityDefaultFormBinding;
@@ -53,7 +54,7 @@ public class DefaultFormActivity extends BaseActivity implements SubmitCallback 
     }
 
     private void init() {
-        instantSDK = InstntSDK.getInstance();
+        instantSDK = InstntSDK.getInstance("v876130100000", RestUrl.SANDBOX_URL, getBaseContext());
         binding.formid.setText("v876130100000");
         binding.show.setOnClickListener(v -> {
             show();
@@ -77,7 +78,7 @@ public class DefaultFormActivity extends BaseActivity implements SubmitCallback 
             return;
         }
 
-        instantSDK.setup(formId, binding.sandboxSwitch.isChecked());
+        instantSDK.setup(formId);
 
         new Handler().postDelayed(new Runnable() {
             @Override

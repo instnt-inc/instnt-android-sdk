@@ -9,6 +9,7 @@ import org.instant.accept.instntsdk.data.FormRow;
 import org.instant.accept.instntsdk.data.FormSubmitData;
 import org.instant.accept.instntsdk.databinding.ActivityFormBinding;
 import org.instant.accept.instntsdk.interfaces.SubmitCallback;
+import org.instant.accept.instntsdk.network.RestUrl;
 import org.instant.accept.instntsdk.view.render.BaseInputView;
 import org.instant.accept.instntsdk.view.render.CheckboxInputView;
 import org.instant.accept.instntsdk.view.render.DatePickerInputView;
@@ -37,7 +38,7 @@ public class FormActivity extends BaseActivity {
 
         formCodes = (FormCodes)getIntent().getSerializableExtra(FORM_CORDS);
 
-        sdk = InstntSDK.getInstance();
+        sdk = InstntSDK.getInstance("v876130100000", RestUrl.SANDBOX_URL, getBaseContext());
         submitCallback = sdk.getSubmitCallback();
 
         init();

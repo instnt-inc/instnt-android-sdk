@@ -26,32 +26,38 @@ public class InstntSDK implements Instnt {
     //TODO passing it true because for testing purpose need to fire dev url, it should be false after the final testing
     private boolean isSandbox = true;
     private String instnttxnid;
+    private String serverUrl;
+    private String formKey;
 
-    public static InstntSDK getInstance() {
+    public static InstntSDK getInstance(String formKey, String serverUrl, Context context) {
         if (instance == null) {
-            instance = new InstntSDK();
+            instance = new InstntSDK(serverUrl);
         }
+
+        instance.formKey = formKey;
+        instance.serverUrl = serverUrl;
+        //first api to call
+        instance.initTransaction(context);
 
         return instance;
     }
 
-    private InstntSDK() {
-        networkModule = new NetworkUtil();
-        documentHandler = new DocumentHandlerImpl();
-        otpHandler = new OTPHandlerImpl();
-        formHandler = new FormHandlerImpl();
-        //first api to call
-        initTransaction();
+    private InstntSDK(String serverUrl) {
+
+        networkModule = new NetworkUtil(serverUrl);
+        documentHandler = new DocumentHandlerImpl(networkModule);
+        otpHandler = new OTPHandlerImpl(networkModule);
+        formHandler = new FormHandlerImpl(networkModule);
     }
 
-    private void initTransaction() {
+    private void initTransaction(Context context) {
 
-        networkModule.getTransactionID(this.isSandbox, "v1633477069641729").subscribe(response->{
+        networkModule.getTransactionID(this.formKey).subscribe(response->{
 
             System.out.println("Response");
             this.instnttxnid = (String) response.get("instnttxnid");
         }, throwable -> {
-            //CommonUtils.showToast(getContext(), CommonUtils.getErrorMessage(throwable));
+            CommonUtils.showToast(context, CommonUtils.getErrorMessage(throwable));
             System.out.println(CommonUtils.getErrorMessage(throwable));
         });
     }
@@ -72,8 +78,8 @@ public class InstntSDK implements Instnt {
     }
 
     @Override
-    public void setup(String formId, boolean isSandbox) {
-        formHandler.setup(formId, isSandbox);
+    public void setup(String formId) {
+        formHandler.setup(formId);
     }
 
     @Override
@@ -87,13 +93,13 @@ public class InstntSDK implements Instnt {
     }
 
     @Override
-    public void send() {
-        otpHandler.send();
+    public void sendOTP(String mobileNumber, Context context) {
+        otpHandler.sendOTP(mobileNumber, context);
     }
 
     @Override
-    public void verify() {
-        otpHandler.verify();
+    public void verifyOTP(String mobileNumber, String otpCode, Context context) {
+        otpHandler.verifyOTP(mobileNumber, otpCode, context);
     }
 
     @Override
