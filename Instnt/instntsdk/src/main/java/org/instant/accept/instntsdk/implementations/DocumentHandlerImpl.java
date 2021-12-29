@@ -13,6 +13,9 @@ import org.instant.accept.instntsdk.interfaces.DocumentHandler;
 import org.instant.accept.instntsdk.network.NetworkUtil;
 import org.instant.accept.instntsdk.utils.CommonUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Map;
 
 public class DocumentHandlerImpl implements DocumentHandler {
@@ -60,7 +63,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
         byte[] imageData = dsResult.image;
         String presignedS3Url = (String) response.get("s3_key");
 
-        networkModule.uploadDocument(presignedS3Url, imageData, isSandbox).subscribe(response2->{
+        networkModule.uploadDocument(fileName, presignedS3Url, imageData, isSandbox).subscribe(response2->{
 
             System.out.println("Response2");
         }, throwable -> {

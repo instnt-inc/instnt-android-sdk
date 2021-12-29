@@ -10,7 +10,14 @@ import org.instant.accept.instntsdk.data.OTPResponse;
 
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -19,10 +26,15 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -153,6 +165,40 @@ public class NetworkUtil {
     }
 
     @SuppressLint("CheckResult")
+    public Map<String, Object> getTransactionID1(String formKey) throws Exception {
+        ApiInterface apiInterface = getApiService(this.serverUrl);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("form_key", formKey);
+        body.put("hide_form_fields", true);
+        body.put("idmetrics_version", "4.5.0.5");
+        body.put("format", "json");
+        body.put("redirect", false);
+
+        String url = this.serverUrl + "transactions/";
+        Call<Map<String, Object>> callSync = apiInterface.getXNID1(url, body);
+        callSync.enqueue(new Callback<Map<String, Object>>() {
+
+            @Override
+            public void onResponse(Call<Map<String, Object>> call, retrofit2.Response<Map<String, Object>> response) {
+                Map<String, Object> myItem = response.body();
+                System.out.println("");
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                //Handle failure
+                System.out.println("");
+            }
+        });
+
+
+//        retrofit2.Response<Map<String, Object>> response = callSync.execute();
+//        Map<String, Object> apiResponse = response.body();
+        return null;
+    }
+
+    @SuppressLint("CheckResult")
     public Observable<Map<String, Object>> getUploadUrl(String instnttxnid, String docSuffix, boolean isSandbox) {
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
@@ -160,6 +206,7 @@ public class NetworkUtil {
         body.put("transaction_attachment_type", "IMAGE");
         body.put("document_type", "DRIVERS_LICENSE");
         body.put("transaction_status", "NEW");
+        body.put("doc_suffix", docSuffix);
 
         String url = RestUrl.BASE_URL + "transactions/" + instnttxnid + "/attachments/";
         return apiInterface.getUploadUrl(url, body)
@@ -168,11 +215,14 @@ public class NetworkUtil {
     }
 
     @SuppressLint("CheckResult")
-    public Observable<Map<String, Object>> uploadDocument(String presignedS3Url, byte[] imageData, boolean isSandbox) {
+    public Observable<Map<String, Object>> uploadDocument(String fileName, String presignedS3Url, byte[] imageData, boolean isSandbox) {
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
-        return apiInterface.uploadDocument(presignedS3Url, imageData)
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageData);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", fileName, requestFile);
+        return apiInterface.uploadDocument(presignedS3Url, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
 }
