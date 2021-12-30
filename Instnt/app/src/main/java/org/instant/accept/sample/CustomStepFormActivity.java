@@ -2,7 +2,10 @@ package org.instant.accept.sample;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -11,6 +14,7 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import org.instant.accept.instntsdk.interfaces.CallbackHandler;
 import org.instant.accept.instntsdk.model.FormField;
 import org.instant.accept.instntsdk.model.FormSubmitData;
 import org.instant.accept.instntsdk.InstntSDK;
@@ -20,15 +24,17 @@ import org.instant.accept.instntsdk.view.BaseActivity;
 import org.instant.accept.instntsdk.view.render.TextInputView;
 import org.instant.accept.sample.databinding.ActivityCustomStepFormBinding;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CustomStepFormActivity extends BaseActivity implements SubmitCallback {
+public class CustomStepFormActivity extends BaseActivity implements SubmitCallback, CallbackHandler {
 
     private ActivityCustomStepFormBinding binding;
     private InstntSDK instantSDK;
     private int currentStep = 1;
-    private int maxSteps = 7;
+    private int maxSteps = 9;
     private String formKey;
 
     @Override
@@ -56,6 +62,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         //init form fields
         initFormFields();
         instantSDK = InstntSDK.setup(this.formKey, serverUrl, getBaseContext());
+        instantSDK.initTransaction();
         getFormCodes();
 
         binding.previous.setOnClickListener(v -> nextStep(false));
@@ -63,6 +70,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
 //        binding.verifyDocument.setOnClickListener(v -> verifyDocument());
 
         instantSDK.setCallback(this);
+        instantSDK.setCallbackHandler(this);
     }
 
     private void verifyDocument() {
@@ -203,6 +211,19 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
                 binding.containerStep5.setVisibility(View.GONE);
                 binding.containerStep6.setVisibility(View.GONE);
                 binding.containerStep7.setVisibility(View.VISIBLE);
+                break;
+            }
+
+            case 8: {
+
+                scanDocument();
+                break;
+            }
+
+            case 9: {
+
+                this.instantSDK.verifyDocuments("License");
+                this.submit();
                 break;
             }
         }
@@ -390,7 +411,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
      * submit form
      */
     private void submit() {
-//        Map<String, Object> paramMap = new HashMap<>();
+        Map<String, Object> paramMap = new HashMap<>();
 //        for (int i = 0; i<binding.container.getChildCount(); i++) {
 //            BaseInputView inputView = (BaseInputView)binding.container.getChildAt(i);
 //
@@ -401,8 +422,8 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
 //        }
 //
 //        showProgressDialog(true);
-//
-//        instantSDK.submitForm(paramMap, this);
+
+        instantSDK.submitForm(paramMap, this);
     }
 
     @Override
@@ -430,5 +451,23 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         String result = gson.toJson(obj);
         Log.e("Super", "Result = " + result);
         return result;
+    }
+
+    @Override
+    public void successCallBack(byte[] imageData) {
+
+        Bitmap bm = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        binding.imageData.setMinimumHeight(dm.heightPixels);
+        binding.imageData.setMinimumWidth(dm.widthPixels);
+        binding.imageData.setImageBitmap(bm);
+        binding.imageData.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void errorCallBack() {
+
     }
 }

@@ -212,12 +212,35 @@ public class NetworkUtil {
     }
 
     @SuppressLint("CheckResult")
-    public Observable<Map<String, Object>> uploadDocument(String fileName, String presignedS3Url, byte[] imageData, boolean isSandbox) {
+    public void uploadDocument(String fileName, String presignedS3Url, byte[] imageData, boolean isSandbox) {
+        ApiInterface apiInterface = getApiService(this.serverUrl);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageData);
+        Call<Void> call = apiInterface.uploadDocument(presignedS3Url, requestFile);
+        call.enqueue(new Callback<Void>() {
+
+            @Override
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                System.out.println("success");
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                System.out.println("error");
+            }
+        });
+    }
+
+    @SuppressLint("CheckResult")
+    public Observable<Map<String, Object>> verifyDocuments(String documentType, String formKey, String instnttxnid) {
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageData);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("file", fileName, requestFile);
-        return apiInterface.uploadDocument(presignedS3Url, body)
+        Map<String, Object> body = new HashMap<>();
+        body.put("formKey", formKey);
+        body.put("documentType", documentType);
+        body.put("instnttxnid", instnttxnid);
+
+        String url = this.serverUrl + "docverify/authenticate/v1.0";
+        return apiInterface.verifyDocuments(url, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

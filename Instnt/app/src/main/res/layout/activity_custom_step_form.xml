@@ -194,6 +194,15 @@
                 android:paddingBottom="15dp"
                 android:visibility="gone">
 
+                <ImageView
+                    android:id="@+id/imageData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/white"
+                    android:contentDescription="Test"
+                    android:visibility="gone"
+                    />
+
                 <TextView
                     android:layout_marginTop="20dp"
                     android:text="Review your picture and proceed Full document image is visible Text in the document is clear and readable No glare or shadow"

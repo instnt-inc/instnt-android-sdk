@@ -7,6 +7,7 @@ import org.instant.accept.instntsdk.InstntSDK;
 import org.instant.accept.instntsdk.implementations.DocumentHandlerImpl;
 import org.instant.accept.instntsdk.implementations.FormHandlerImpl;
 import org.instant.accept.instntsdk.implementations.OTPHandlerImpl;
+import org.instant.accept.instntsdk.interfaces.CallbackHandler;
 import org.instant.accept.instntsdk.interfaces.DocumentHandler;
 import org.instant.accept.instntsdk.interfaces.FormHandler;
 import org.instant.accept.instntsdk.interfaces.OTPHandler;
@@ -37,10 +38,6 @@ public class InstntSDKImpl implements InstntSDK {
         formHandler = new FormHandlerImpl(networkModule);
     }
 
-//    public void setInstance(InstntSDK instntSDK) {
-//        instance = (InstntSDKImpl) instntSDK;
-//    }
-
     @Override
     public void setServerURL(String serverURL) {
         networkModule.setServerUrl(serverURL);
@@ -50,6 +47,7 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void setFormKey(String formKey) {
         this.formKey = formKey;
+        this.documentHandler.setFormKey(formKey);
     }
 
     @Override
@@ -57,36 +55,21 @@ public class InstntSDKImpl implements InstntSDK {
         this.context = context;
     }
 
-//    @Override
-//    public InstntSDKImpl getInstance(String formKey, String serverUrl, Context context) {
-//        if (instance == null) {
-//            instance = new InstntSDKImpl(serverUrl);
-//        }
-//
-//        instance.formKey = formKey;
-//        instance.serverUrl = serverUrl;
-//        //first api to call
-//        instance.initTransaction(context);
-//
-//        return instance;
-//    }
-
-    InstntSDKImpl(String serverUrl) {
-
-//        networkModule = new NetworkUtil(serverUrl);
-//        documentHandler = new DocumentHandlerImpl(networkModule);
-//        otpHandler = new OTPHandlerImpl(networkModule);
-//        formHandler = new FormHandlerImpl(networkModule);
+    @Override
+    public void setInstnttxnid(String instnttxnid) {
+        this.instnttxnid = instnttxnid;
+        this.documentHandler.setInstnttxnid(instnttxnid);
     }
 
-    private void initTransaction(Context context) {
+    @Override
+    public void initTransaction() {
 
         networkModule.getTransactionID(this.formKey).subscribe(response->{
 
             System.out.println("Response");
-            this.instnttxnid = (String) response.get("instnttxnid");
+            this.setInstnttxnid((String) response.get("instnttxnid"));
         }, throwable -> {
-            CommonUtils.showToast(context, CommonUtils.getErrorMessage(throwable));
+            CommonUtils.showToast(this.context, CommonUtils.getErrorMessage(throwable));
             System.out.println(CommonUtils.getErrorMessage(throwable));
         });
     }
@@ -97,8 +80,18 @@ public class InstntSDKImpl implements InstntSDK {
     }
 
     @Override
+    public void verifyDocuments(String documentType) {
+        this.documentHandler.verifyDocuments(documentType);
+    }
+
+    @Override
     public void setCallback(SubmitCallback callback) {
         formHandler.setCallback(callback);
+    }
+
+    @Override
+    public void setCallbackHandler(CallbackHandler callbackHandler) {
+        documentHandler.setCallbackHandler(callbackHandler);
     }
 
     @Override
@@ -135,7 +128,4 @@ public class InstntSDKImpl implements InstntSDK {
     public String getTransactionID() {
         return this.instnttxnid;
     }
-
-
-
 }

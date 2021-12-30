@@ -8,6 +8,7 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -45,12 +46,10 @@ public interface ApiInterface {
     @POST()
     Observable<Map<String, Object>> getUploadUrl(@Url String url, @Body Map<String, Object> body);
 
-//    @Headers({"Accept: application/json", "Content-Type: image/jpeg"})
-    @Headers("Content-Type: image/jpeg")
-    @PUT()
-    @Multipart
-//    Observable<Map<String, Object>> uploadDocument(@Url String url, @Part("file\"; filename=\"test.jpg\" ") RequestBody file);
-    Observable<Map<String, Object>> uploadDocument(@Url String url, @Part MultipartBody.Part file);
-//    Call<Map<String, Object>> uploadDocument(@Url String url, @Part MultipartBody.Part file);
-//    Observable<Map<String, Object>> uploadDocument(@Url String url, @PartMap Map<String, RequestBody> map);
+    @PUT
+    Call<Void> uploadDocument(@Url String url, @Body RequestBody image);
+
+    @Headers("Content-Type: application/json")
+    @POST()
+    Observable<Map<String, Object>> verifyDocuments(@Url String url, @Body Map<String, Object> body);
 }
