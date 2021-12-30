@@ -1,4 +1,4 @@
-package org.instant.accept.instntsdk.view.render;
+package org.instant.accept.sample.view.render;
 
 import android.app.DatePickerDialog;
 import android.content.Context;

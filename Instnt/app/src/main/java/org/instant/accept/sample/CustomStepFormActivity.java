@@ -20,9 +20,9 @@ import org.instant.accept.instntsdk.model.FormSubmitData;
 import org.instant.accept.instntsdk.InstntSDK;
 import org.instant.accept.instntsdk.interfaces.SubmitCallback;
 import org.instant.accept.instntsdk.utils.CommonUtils;
-import org.instant.accept.instntsdk.view.BaseActivity;
-import org.instant.accept.instntsdk.view.render.TextInputView;
 import org.instant.accept.sample.databinding.ActivityCustomStepFormBinding;
+import org.instant.accept.sample.view.BaseActivity;
+import org.instant.accept.sample.view.render.TextInputView;
 
 import java.util.HashMap;
 import java.util.Map;

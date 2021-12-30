@@ -8,7 +8,6 @@ import org.instant.accept.instntsdk.interfaces.FormHandler;
 import org.instant.accept.instntsdk.interfaces.SubmitCallback;
 import org.instant.accept.instntsdk.network.NetworkUtil;
 import org.instant.accept.instntsdk.utils.CommonUtils;
-import org.instant.accept.instntsdk.view.FormActivity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -99,8 +98,8 @@ public class FormHandlerImpl implements FormHandler {
             return;
         }
 
-        Intent intent = new Intent(activity, FormActivity.class);
-        intent.putExtra(FormActivity.FORM_CORDS, formCodes);
-        activity.startActivity(intent);
+//        Intent intent = new Intent(activity, FormActivity.class);
+//        intent.putExtra(FormActivity.FORM_CORDS, formCodes);
+//        activity.startActivity(intent);
     }
 }

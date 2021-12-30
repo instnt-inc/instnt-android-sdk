@@ -3,11 +3,10 @@ package org.instant.accept.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 
 import org.instant.accept.instntsdk.utils.CommonUtils;
-import org.instant.accept.instntsdk.view.BaseActivity;
 import org.instant.accept.sample.databinding.ActivityFormInitializationBinding;
+import org.instant.accept.sample.view.BaseActivity;
 
 public class FormInitializationActivity extends BaseActivity {
 

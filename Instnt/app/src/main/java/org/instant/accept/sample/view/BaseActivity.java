@@ -1,4 +1,4 @@
-package org.instant.accept.instntsdk.view;
+package org.instant.accept.sample.view;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
