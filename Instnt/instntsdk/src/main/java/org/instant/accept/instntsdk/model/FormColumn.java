@@ -1,4 +1,4 @@
-package org.instant.accept.instntsdk.data;
+package org.instant.accept.instntsdk.model;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -5,8 +5,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.instant.accept.instntsdk.InstntSDK;
 import org.instant.accept.instntsdk.R;
-import org.instant.accept.instntsdk.data.FormField;
+import org.instant.accept.instntsdk.model.FormField;
 import org.instant.accept.instntsdk.network.NetworkUtil;
 import org.instant.accept.instntsdk.network.RestUrl;
 import org.instant.accept.instntsdk.utils.CommonUtils;
@@ -23,7 +24,9 @@ public class OTPInputView extends BaseInputView {
 
     public OTPInputView(Context context, FormField formField, TextInputView textInputView) {
         super(context, formField);
-        networkModule = new NetworkUtil(RestUrl.SANDBOX_URL);
+
+        networkModule = new NetworkUtil(); // this should call only instnt SDK interface  TODO
+        networkModule.setServerUrl(RestUrl.SANDBOX_URL);
         this.mobileTextInputView = textInputView;
     }
 
@@ -49,6 +52,8 @@ public class OTPInputView extends BaseInputView {
                 CommonUtils.showToast(getContext(), "Please enter a valid number with country code");
                 return;
             }
+
+            //InstntSDK.instance.sendOTP(mobileNumber);
 
             networkModule.sendOTP(mobileNumber).subscribe(otpResponse->{
 

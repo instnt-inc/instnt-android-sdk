@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.CheckBox;
 
 import org.instant.accept.instntsdk.R;
-import org.instant.accept.instntsdk.data.FormField;
+import org.instant.accept.instntsdk.model.FormField;
 
 import java.util.Map;
 

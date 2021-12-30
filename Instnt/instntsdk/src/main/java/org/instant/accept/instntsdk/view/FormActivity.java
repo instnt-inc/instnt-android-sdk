@@ -3,10 +3,10 @@ package org.instant.accept.instntsdk.view;
 import android.os.Bundle;
 
 import org.instant.accept.instntsdk.InstntSDK;
-import org.instant.accept.instntsdk.data.FormCodes;
-import org.instant.accept.instntsdk.data.FormField;
-import org.instant.accept.instntsdk.data.FormRow;
-import org.instant.accept.instntsdk.data.FormSubmitData;
+import org.instant.accept.instntsdk.model.FormCodes;
+import org.instant.accept.instntsdk.model.FormField;
+import org.instant.accept.instntsdk.model.FormRow;
+import org.instant.accept.instntsdk.model.FormSubmitData;
 import org.instant.accept.instntsdk.databinding.ActivityFormBinding;
 import org.instant.accept.instntsdk.interfaces.SubmitCallback;
 import org.instant.accept.instntsdk.network.RestUrl;
@@ -38,7 +38,7 @@ public class FormActivity extends BaseActivity {
 
         formCodes = (FormCodes)getIntent().getSerializableExtra(FORM_CORDS);
 
-        sdk = InstntSDK.getInstance("v876130100000", RestUrl.SANDBOX_URL, getBaseContext());
+        sdk = InstntSDK.setup("v876130100000", RestUrl.SANDBOX_URL, getBaseContext());
         submitCallback = sdk.getSubmitCallback();
 
         init();

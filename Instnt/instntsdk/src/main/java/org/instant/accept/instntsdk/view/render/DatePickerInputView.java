@@ -8,8 +8,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import org.instant.accept.instntsdk.R;
-import org.instant.accept.instntsdk.data.FormField;
-import org.instant.accept.instntsdk.databinding.ChildDateBinding;
+import org.instant.accept.instntsdk.model.FormField;
 import org.instant.accept.instntsdk.utils.DateUtil;
 
 import java.util.Calendar;

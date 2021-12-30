@@ -7,7 +7,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.widget.LinearLayout;
 
-import org.instant.accept.instntsdk.data.FormField;
+import org.instant.accept.instntsdk.model.FormField;
 
 import java.util.Map;
 

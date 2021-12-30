@@ -8,7 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.instant.accept.instntsdk.R;
-import org.instant.accept.instntsdk.data.FormField;
+import org.instant.accept.instntsdk.model.FormField;
 
 import java.util.Map;
 import java.util.regex.Matcher;

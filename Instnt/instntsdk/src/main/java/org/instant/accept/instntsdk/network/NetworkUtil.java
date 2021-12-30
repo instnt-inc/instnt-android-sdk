@@ -4,20 +4,14 @@ import android.annotation.SuppressLint;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.instant.accept.instntsdk.data.FormCodes;
-import org.instant.accept.instntsdk.data.FormSubmitResponse;
-import org.instant.accept.instntsdk.data.OTPResponse;
+
+import org.instant.accept.instntsdk.model.FormCodes;
+import org.instant.accept.instntsdk.model.FormSubmitResponse;
+import org.instant.accept.instntsdk.model.OTPResponse;
 
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -44,10 +38,13 @@ public class NetworkUtil {
 
     private String serverUrl;
 
-    public NetworkUtil(String serverUrl) {
+    public void setServerUrl(String serverUrl) {
+
         this.serverUrl = serverUrl;
-//        sandboxApiInterface = getApiService(serverUrl);
-//        productApiInterface = getApiService(serverUrl);
+    }
+
+    public NetworkUtil() {
+
     }
 
     private OkHttpClient getOkHttpClient(){

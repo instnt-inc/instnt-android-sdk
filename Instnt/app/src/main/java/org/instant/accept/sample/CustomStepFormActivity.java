@@ -11,10 +11,9 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import org.instant.accept.instntsdk.model.FormField;
+import org.instant.accept.instntsdk.model.FormSubmitData;
 import org.instant.accept.instntsdk.InstntSDK;
-import org.instant.accept.instntsdk.data.FormField;
-import org.instant.accept.instntsdk.data.FormSubmitData;
-import org.instant.accept.instntsdk.interfaces.Instnt;
 import org.instant.accept.instntsdk.interfaces.SubmitCallback;
 import org.instant.accept.instntsdk.utils.CommonUtils;
 import org.instant.accept.instntsdk.view.BaseActivity;
@@ -27,7 +26,7 @@ import java.util.regex.Pattern;
 public class CustomStepFormActivity extends BaseActivity implements SubmitCallback {
 
     private ActivityCustomStepFormBinding binding;
-    private Instnt instantSDK;
+    private InstntSDK instantSDK;
     private int currentStep = 1;
     private int maxSteps = 7;
     private String formKey;
@@ -56,7 +55,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
 
         //init form fields
         initFormFields();
-        instantSDK = InstntSDK.getInstance(this.formKey, serverUrl, getBaseContext());
+        instantSDK = InstntSDK.setup(this.formKey, serverUrl, getBaseContext());
         getFormCodes();
 
         binding.previous.setOnClickListener(v -> nextStep(false));

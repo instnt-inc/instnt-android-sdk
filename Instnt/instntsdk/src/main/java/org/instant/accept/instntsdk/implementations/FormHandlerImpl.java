@@ -3,7 +3,7 @@ package org.instant.accept.instntsdk.implementations;
 import android.app.Activity;
 import android.content.Intent;
 
-import org.instant.accept.instntsdk.data.FormCodes;
+import org.instant.accept.instntsdk.model.FormCodes;
 import org.instant.accept.instntsdk.interfaces.FormHandler;
 import org.instant.accept.instntsdk.interfaces.SubmitCallback;
 import org.instant.accept.instntsdk.network.NetworkUtil;

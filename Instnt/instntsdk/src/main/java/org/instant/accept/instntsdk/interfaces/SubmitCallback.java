@@ -1,6 +1,6 @@
 package org.instant.accept.instntsdk.interfaces;
 
-import org.instant.accept.instntsdk.data.FormSubmitData;
+import org.instant.accept.instntsdk.model.FormSubmitData;
 
 public interface SubmitCallback {
     void didCancel();

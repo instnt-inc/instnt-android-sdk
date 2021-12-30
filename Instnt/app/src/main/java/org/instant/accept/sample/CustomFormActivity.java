@@ -5,10 +5,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+
+import org.instant.accept.instntsdk.model.FormField;
+import org.instant.accept.instntsdk.model.FormSubmitData;
 import org.instant.accept.instntsdk.InstntSDK;
-import org.instant.accept.instntsdk.data.FormField;
-import org.instant.accept.instntsdk.data.FormSubmitData;
-import org.instant.accept.instntsdk.interfaces.Instnt;
 import org.instant.accept.instntsdk.interfaces.SubmitCallback;
 import org.instant.accept.instntsdk.network.RestUrl;
 import org.instant.accept.instntsdk.utils.CommonUtils;
@@ -23,7 +23,7 @@ import java.util.Map;
 public class CustomFormActivity extends BaseActivity implements SubmitCallback {
 
     private ActivityCustomFormBinding binding;
-    private Instnt instantSDK;
+    private InstntSDK instantSDK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,10 @@ public class CustomFormActivity extends BaseActivity implements SubmitCallback {
         //init form fields
         initFormFields();
 
-        instantSDK = InstntSDK.getInstance("v876130100000", RestUrl.SANDBOX_URL, getBaseContext());
+//        InstntSDK instntSDK = new InstntSDKImpl();
+//        instntSDK.getInstance("v876130100000", RestUrl.SANDBOX_URL, getBaseContext());
+
+        instantSDK = InstntSDK.setup("v876130100000", RestUrl.SANDBOX_URL, getBaseContext());
         binding.formid.setText("v876130100000");
         binding.getFormCode.setOnClickListener(v -> {
             getFormCodes();
