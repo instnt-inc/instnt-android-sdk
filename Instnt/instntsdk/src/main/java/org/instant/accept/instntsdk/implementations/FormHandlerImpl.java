@@ -47,7 +47,7 @@ public class FormHandlerImpl implements FormHandler {
     }
 
     @Override
-    public void submitForm(Map<String, Object> body, SubmitCallback callback) {
+    public void submitData(Map<String, Object> body, SubmitCallback callback) {
 
         if (formCodes == null) {
             if (callback != null) {

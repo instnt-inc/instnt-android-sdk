@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 
 import org.instant.accept.instntsdk.InstntSDK;
-import org.instant.accept.instntsdk.implementations.DocumentHandlerImpl;
-import org.instant.accept.instntsdk.implementations.FormHandlerImpl;
-import org.instant.accept.instntsdk.implementations.OTPHandlerImpl;
 import org.instant.accept.instntsdk.interfaces.CallbackHandler;
 import org.instant.accept.instntsdk.interfaces.DocumentHandler;
 import org.instant.accept.instntsdk.interfaces.FormHandler;
@@ -75,8 +72,8 @@ public class InstntSDKImpl implements InstntSDK {
     }
 
     @Override
-    public void scanAndUploadDocument(Context context, String instnttxnid) {
-        documentHandler.scanAndUploadDocument(context, instnttxnid);
+    public void uploadAttachment(Context context, String instnttxnid) {
+        documentHandler.uploadAttachment(context, instnttxnid);
     }
 
     @Override
@@ -105,8 +102,8 @@ public class InstntSDKImpl implements InstntSDK {
     }
 
     @Override
-    public void submitForm(Map<String, Object> body, SubmitCallback callback) {
-        formHandler.submitForm(body, callback);
+    public void submitData(Map<String, Object> body, SubmitCallback callback) {
+        formHandler.submitData(body, callback);
     }
 
     @Override

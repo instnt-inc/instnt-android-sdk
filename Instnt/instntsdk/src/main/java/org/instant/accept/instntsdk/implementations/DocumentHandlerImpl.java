@@ -86,7 +86,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
     }
 
     @Override
-    public void scanAndUploadDocument(Context context, String instnttxnid) {
+    public void uploadAttachment(Context context, String instnttxnid) {
 
         DSID1Options dsOptions = new DSID1Options();
         dsOptions.licensingKey = "AwFuEf5j3YXwEACwj9eE4w6RGWQ0zgPbjGmu+Xw684ryGP3GicSEE7ZYB0FAhoikRH3imeR02U7kuT4OjVL5B1s3JhBrPY9KWU9sgCVmTIW0r7ehq9CvTjTBfaR7NTCV179MlNeDbEzwh5FSD8ROc3Zq";

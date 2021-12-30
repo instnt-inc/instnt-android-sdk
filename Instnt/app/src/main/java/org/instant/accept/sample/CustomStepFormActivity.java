@@ -61,7 +61,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
 
         //init form fields
         initFormFields();
-        instantSDK = InstntSDK.setup(this.formKey, serverUrl, getBaseContext());
+        instantSDK = InstntSDK.init(this.formKey, serverUrl, getBaseContext());
         instantSDK.initTransaction();
         getFormCodes();
 
@@ -75,7 +75,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
 
     private void verifyDocument() {
 
-        this.instantSDK.scanAndUploadDocument(getBaseContext(), this.instantSDK.getTransactionID());
+        this.instantSDK.uploadAttachment(getBaseContext(), this.instantSDK.getTransactionID());
     }
 
     private void nextStep(boolean isNext) {
@@ -236,7 +236,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, MY_CAMERA_REQUEST_CODE);
         } else {
-            instantSDK.scanAndUploadDocument(getBaseContext(), instantSDK.getTransactionID());
+            instantSDK.uploadAttachment(getBaseContext(), instantSDK.getTransactionID());
         }
     }
 
@@ -247,7 +247,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 System.out.println("test1");
-                instantSDK.scanAndUploadDocument(getBaseContext(), instantSDK.getTransactionID());
+                instantSDK.uploadAttachment(getBaseContext(), instantSDK.getTransactionID());
                 //Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
             } else {
                 System.out.println("test2");
@@ -423,7 +423,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
 //
 //        showProgressDialog(true);
 
-        instantSDK.submitForm(paramMap, this);
+        instantSDK.submitData(paramMap, this);
     }
 
     @Override
