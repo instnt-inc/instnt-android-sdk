@@ -10,7 +10,11 @@ import com.idmetrics.dc.utils.DSError;
 import com.idmetrics.dc.utils.DSHandlerListener;
 import com.idmetrics.dc.utils.DSID1Options;
 import com.idmetrics.dc.utils.DSID1Type;
+import com.idmetrics.dc.utils.DSOptions;
+import com.idmetrics.dc.utils.DSPassportOptions;
 import com.idmetrics.dc.utils.DSResult;
+import com.idmetrics.dc.utils.DSSide;
+import com.idmetrics.dc.utils.FlashCapture;
 
 import org.instant.accept.instntsdk.interfaces.CallbackHandler;
 import org.instant.accept.instntsdk.interfaces.DocumentHandler;
@@ -34,50 +38,86 @@ public class DocumentHandlerImpl implements DocumentHandler {
     private CallbackHandler callbackHandler;
     private String formKey;
     private String instnttxnid;
+    private Context context;
 
     public DocumentHandlerImpl(NetworkUtil networkModule) {
         this.networkModule = networkModule;
     }
 
-    private void uploadAttachment(DSResult dsResult, String instnttxnid) {
+    private void uploadAttachment(DSResult dsResult, String instnttxnid, boolean ifFront) {
 
         boolean isSelfie = false;
-        //TODO passing it true because for testing purpose need to fire dev url, it should be false after the final testing
-        boolean isSandbox = true;
-        String documentSide = "Back";
         String docSuffix = "F";
 
-        if(documentSide != null && documentSide.equalsIgnoreCase("back"))
+        if(!ifFront)
             docSuffix = "B";
 
         if(isSelfie)
             docSuffix = "S";
 
-        getUploadUrlAndUploadDoc(dsResult, docSuffix, instnttxnid, isSandbox);
+        getUploadUrlAndUploadDoc(dsResult, docSuffix, instnttxnid);
     }
 
-    private void getUploadUrlAndUploadDoc(DSResult dsResult, String docSuffix, String instnttxnid, boolean isSandbox) {
+    private void getUploadUrlAndUploadDoc(DSResult dsResult, String docSuffix, String instnttxnid) {
 
         //Get presigned s3 url method on which file should upload
-        //First get upload presigned s3 url
-        networkModule.getUploadUrl(instnttxnid, docSuffix, isSandbox).subscribe(response->{
+        networkModule.getUploadUrl(instnttxnid, docSuffix).subscribe(response->{
 
-            System.out.println("Response");
-            uploadDocumentAfterGetUrl(dsResult, response, docSuffix, instnttxnid, isSandbox);
+            uploadDocumentAfterGetUrl(dsResult, response, docSuffix, instnttxnid);
         }, throwable -> {
             //CommonUtils.showToast(getContext(), CommonUtils.getErrorMessage(throwable));
             System.out.println(CommonUtils.getErrorMessage(throwable));
         });
     }
 
-    private void uploadDocumentAfterGetUrl(DSResult dsResult, Map<String, Object> response, String docSuffix, String instnttxnid, boolean isSandbox) {
+    private void uploadDocumentAfterGetUrl(DSResult dsResult, Map<String, Object> response, String docSuffix, String instnttxnid) {
 
-        String fileName = instnttxnid + docSuffix + ".jpg";
-        byte[] imageData = dsResult.image;
-        String presignedS3Url = (String) response.get("s3_key");
+        networkModule.uploadDocument(instnttxnid + docSuffix + ".jpg", (String) response.get("s3_key"), dsResult.image);
+        this.callbackHandler.successCallBack(dsResult.image);
+    }
 
-        networkModule.uploadDocument(fileName, presignedS3Url, imageData, isSandbox);
-        this.callbackHandler.successCallBack(imageData);
+    private DSOptions getOptionsByDocumentType(boolean isFront, String documentType) {
+
+        DSID1Type dsid1Type = null;
+
+        try {
+            dsid1Type = DSID1Type.valueOf(documentType);
+        } catch (Exception e) {
+            dsid1Type = DSID1Type.License;
+        }
+
+        switch (dsid1Type) {
+
+            case License: {
+
+                DSID1Options dsid1Options = new DSID1Options();
+                dsid1Options.type = DSID1Type.License;
+                dsid1Options.side = (isFront ? DSSide.Front : DSSide.Back);
+                dsid1Options.detectFace = isFront;
+                //dsid1Options.enableFlashCapture = if(applicationSettings.flashCaptureEnabled) FlashCapture.Both else FlashCapture.None
+                dsid1Options.enableFlashCapture = FlashCapture.None;
+                //dsid1Options.imageCompressionQuality = applicationSettings.imageCompression / 100.0;
+                dsid1Options.showReviewScreen = true;
+                //dsid1Options.targetDPI = (isBarcodeRetake ? 900 : 600);
+                dsid1Options.targetDPI = 600;
+                //dsid1Options.detectBarcodeOrMRZ = !applicationSettings.ignoreBarcode
+                return dsid1Options;
+            }
+
+            case PassportCard: {
+
+                DSPassportOptions options = new DSPassportOptions();
+                //options.enableFlashCapture = if(applicationSettings.flashCaptureEnabled) FlashCapture.Both else FlashCapture.None
+                options.enableFlashCapture = FlashCapture.None;
+                //options.imageCompressionQuality = applicationSettings.imageCompression / 100.0
+                options.showReviewScreen = true;
+                //options.detectMRZ = applicationSettings.mrzCheckEnabled
+                options.targetDPI = 600;
+                return options;
+            }
+        }
+
+        return new DSOptions();
     }
 
     @Override
@@ -86,19 +126,20 @@ public class DocumentHandlerImpl implements DocumentHandler {
     }
 
     @Override
-    public void uploadAttachment(Context context, String instnttxnid) {
+    public void uploadAttachment(boolean ifFront, String documentType) {
 
-        DSID1Options dsOptions = new DSID1Options();
+        String instnttxnid = this.instnttxnid;
+        DSOptions dsOptions = getOptionsByDocumentType(ifFront, documentType);
         dsOptions.licensingKey = "AwFuEf5j3YXwEACwj9eE4w6RGWQ0zgPbjGmu+Xw684ryGP3GicSEE7ZYB0FAhoikRH3imeR02U7kuT4OjVL5B1s3JhBrPY9KWU9sgCVmTIW0r7ehq9CvTjTBfaR7NTCV179MlNeDbEzwh5FSD8ROc3Zq";
-        //dsOptions.type = DSID1Type.License;
 
-        DSHandler dsHandler = DSHandler.getInstance(context);
+        DSHandler dsHandler = DSHandler.getInstance(this.context);
         DSHandler.staticLicenseKey = "AwFuEf5j3YXwEACwj9eE4w6RGWQ0zgPbjGmu+Xw684ryGP3GicSEE7ZYB0FAhoikRH3imeR02U7kuT4OjVL5B1s3JhBrPY9KWU9sgCVmTIW0r7ehq9CvTjTBfaR7NTCV179MlNeDbEzwh5FSD8ROc3Zq";
         dsHandler.options = dsOptions;
+
         dsHandler.init(DSCaptureMode.Manual, new DSHandlerListener() {
             @Override
             public void handleScan(DSResult dsResult) {
-                uploadAttachment(dsResult, instnttxnid);
+                uploadAttachment(dsResult, instnttxnid, ifFront);
             }
 
             @Override
@@ -135,5 +176,10 @@ public class DocumentHandlerImpl implements DocumentHandler {
     @Override
     public void setInstnttxnid(String instnttxnid) {
         this.instnttxnid = instnttxnid;
+    }
+
+    @Override
+    public void setContext(Context context) {
+        this.context = context;
     }
 }

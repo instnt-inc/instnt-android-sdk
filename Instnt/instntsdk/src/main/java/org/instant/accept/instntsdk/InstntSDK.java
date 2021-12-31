@@ -29,6 +29,7 @@ public interface InstntSDK extends DocumentHandler, OTPHandler, FormHandler {
         instance.setServerURL(serverUrl);
         instance.setFormKey(formKey);
         instance.setContext(context);
+        instance.initTransaction();
         return instance;
     }
 }

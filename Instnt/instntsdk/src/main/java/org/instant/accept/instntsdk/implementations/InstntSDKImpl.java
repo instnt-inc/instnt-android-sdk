@@ -16,15 +16,11 @@ import java.util.Map;
 
 public class InstntSDKImpl implements InstntSDK {
 
-    //private InstntSDKImpl instance;
     private DocumentHandler documentHandler;
     private OTPHandler otpHandler;
     private FormHandler formHandler;
     private NetworkUtil networkModule;
-    //TODO passing it true because for testing purpose need to fire dev url, it should be false after the final testing
-    private boolean isSandbox = true;
     private String instnttxnid;
-    private String serverURL;
     private String formKey;
     private Context context;
 
@@ -38,7 +34,6 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void setServerURL(String serverURL) {
         networkModule.setServerUrl(serverURL);
-        this.serverURL = serverURL;
     }
 
     @Override
@@ -50,6 +45,8 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void setContext(Context context) {
         this.context = context;
+        this.documentHandler.setContext(context);
+        this.otpHandler.setContext(context);
     }
 
     @Override
@@ -72,8 +69,8 @@ public class InstntSDKImpl implements InstntSDK {
     }
 
     @Override
-    public void uploadAttachment(Context context, String instnttxnid) {
-        documentHandler.uploadAttachment(context, instnttxnid);
+    public void uploadAttachment(boolean isFront, String documentType) {
+        documentHandler.uploadAttachment(isFront, documentType);
     }
 
     @Override
@@ -112,13 +109,13 @@ public class InstntSDKImpl implements InstntSDK {
     }
 
     @Override
-    public void sendOTP(String mobileNumber, Context context) {
-        otpHandler.sendOTP(mobileNumber, context);
+    public void sendOTP(String mobileNumber) {
+        otpHandler.sendOTP(mobileNumber);
     }
 
     @Override
-    public void verifyOTP(String mobileNumber, String otpCode, Context context) {
-        otpHandler.verifyOTP(mobileNumber, otpCode, context);
+    public void verifyOTP(String mobileNumber, String otpCode) {
+        otpHandler.verifyOTP(mobileNumber, otpCode);
     }
 
     @Override

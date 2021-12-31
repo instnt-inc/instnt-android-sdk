@@ -9,6 +9,7 @@ import org.instant.accept.instntsdk.utils.CommonUtils;
 
 public class OTPHandlerImpl implements OTPHandler {
 
+    private Context context;
     private NetworkUtil networkModule;
 
     public OTPHandlerImpl(NetworkUtil networkModule) {
@@ -16,21 +17,21 @@ public class OTPHandlerImpl implements OTPHandler {
     }
 
     @Override
-    public void sendOTP(String mobileNumber, Context context) {
+    public void sendOTP(String mobileNumber) {
 
         networkModule.sendOTP(mobileNumber).subscribe(otpResponse->{
 
             if(otpResponse != null && !otpResponse.getResponse().isValid()) {
-                CommonUtils.showToast(context, otpResponse.getResponse().getErrors()[0]);
+                CommonUtils.showToast(this.context, otpResponse.getResponse().getErrors()[0]);
                 return;
             }
         }, throwable -> {
-            CommonUtils.showToast(context, CommonUtils.getErrorMessage(throwable));
+            CommonUtils.showToast(this.context, CommonUtils.getErrorMessage(throwable));
         });
     }
 
     @Override
-    public void verifyOTP(String mobileNumber, String otpCode, Context context) {
+    public void verifyOTP(String mobileNumber, String otpCode) {
 
         networkModule.verifyOTP(mobileNumber, otpCode).subscribe(otpResponse->{
 
@@ -44,5 +45,10 @@ public class OTPHandlerImpl implements OTPHandler {
         }, throwable -> {
             CommonUtils.showToast(context, CommonUtils.getErrorMessage(throwable));
         });
+    }
+
+    @Override
+    public void setContext(Context context) {
+        this.context = context;
     }
 }

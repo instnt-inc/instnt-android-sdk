@@ -196,7 +196,7 @@ public class NetworkUtil {
     }
 
     @SuppressLint("CheckResult")
-    public Observable<Map<String, Object>> getUploadUrl(String instnttxnid, String docSuffix, boolean isSandbox) {
+    public Observable<Map<String, Object>> getUploadUrl(String instnttxnid, String docSuffix) {
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, Object> body = new HashMap<>();
@@ -212,7 +212,7 @@ public class NetworkUtil {
     }
 
     @SuppressLint("CheckResult")
-    public void uploadDocument(String fileName, String presignedS3Url, byte[] imageData, boolean isSandbox) {
+    public void uploadDocument(String fileName, String presignedS3Url, byte[] imageData) {
         ApiInterface apiInterface = getApiService(this.serverUrl);
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageData);
         Call<Void> call = apiInterface.uploadDocument(presignedS3Url, requestFile);

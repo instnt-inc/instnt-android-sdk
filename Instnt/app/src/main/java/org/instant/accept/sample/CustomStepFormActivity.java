@@ -31,6 +31,9 @@ import java.util.regex.Pattern;
 
 public class CustomStepFormActivity extends BaseActivity implements SubmitCallback, CallbackHandler {
 
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
+    private boolean isFront;
+    private String documentType;
     private ActivityCustomStepFormBinding binding;
     private InstntSDK instantSDK;
     private int currentStep = 1;
@@ -62,20 +65,13 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         //init form fields
         initFormFields();
         instantSDK = InstntSDK.init(this.formKey, serverUrl, getBaseContext());
-        instantSDK.initTransaction();
         getFormCodes();
 
         binding.previous.setOnClickListener(v -> nextStep(false));
         binding.next.setOnClickListener(v -> nextStep(true));
-//        binding.verifyDocument.setOnClickListener(v -> verifyDocument());
 
         instantSDK.setCallback(this);
         instantSDK.setCallbackHandler(this);
-    }
-
-    private void verifyDocument() {
-
-        this.instantSDK.uploadAttachment(getBaseContext(), this.instantSDK.getTransactionID());
     }
 
     private void nextStep(boolean isNext) {
@@ -203,7 +199,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
 
                 binding.headText1.setText("Review Capture Image");
                 binding.headText2.setVisibility(View.GONE);
-                scanDocument();
+                scanDocument(true, "License");
                 binding.containerStep1.setVisibility(View.GONE);
                 binding.containerStep2.setVisibility(View.GONE);
                 binding.containerStep3.setVisibility(View.GONE);
@@ -216,7 +212,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
 
             case 8: {
 
-                scanDocument();
+                scanDocument(false, "License");
                 break;
             }
 
@@ -229,30 +225,12 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         }
     }
 
-    private void scanDocument() {
-
-        int MY_CAMERA_REQUEST_CODE = 100;
-
+    private void scanDocument(boolean isFront, String documentType) {
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            this.isFront = isFront;
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, MY_CAMERA_REQUEST_CODE);
         } else {
-            instantSDK.uploadAttachment(getBaseContext(), instantSDK.getTransactionID());
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        int MY_CAMERA_REQUEST_CODE = 100;
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_CAMERA_REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                System.out.println("test1");
-                instantSDK.uploadAttachment(getBaseContext(), instantSDK.getTransactionID());
-                //Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
-            } else {
-                System.out.println("test2");
-                //Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
-            }
+            instantSDK.uploadAttachment(isFront, documentType);
         }
     }
 
@@ -269,7 +247,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
             return;
         }
 
-        this.instantSDK.sendOTP(mobileNumber, getBaseContext());
+        this.instantSDK.sendOTP(mobileNumber);
     }
 
     private void verifyOTP() {
@@ -282,7 +260,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         TextView otpText = view1.findViewById(org.instant.accept.instntsdk.R.id.value);
         String otpCode = otpText.getText() == null ? null : otpText.getText().toString();
 
-        this.instantSDK.verifyOTP(mobileNumber, otpCode, getBaseContext());
+        this.instantSDK.verifyOTP(mobileNumber, otpCode);
     }
 
     private static boolean isValidE123(String s) {
@@ -397,6 +375,8 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         binding.containerStep5.addView(new TextInputView(this, zipCode));
         binding.containerStep5.addView(new TextInputView(this, country));
         //END-------Step 5--------//
+
+        binding.driverLicense.setChecked(true);
     }
 
     /**
@@ -426,6 +406,28 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         instantSDK.submitData(paramMap, this);
     }
 
+    private String convertObjectToString(Object obj) {
+        Gson gson = new Gson();
+        String result = gson.toJson(obj);
+        Log.e("Super", "Result = " + result);
+        return result;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_CAMERA_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                System.out.println("test1");
+                instantSDK.uploadAttachment(this.isFront, this.documentType);
+                //Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+            } else {
+                System.out.println("test2");
+                //Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     @Override
     public void didCancel() {
         //binding.result.setText("No JWT");
@@ -444,13 +446,6 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
 //            binding.result.setText(data.getJwt());
 //            CommonUtils.showToast(this, data.getDecision());
 //        }
-    }
-
-    private String convertObjectToString(Object obj) {
-        Gson gson = new Gson();
-        String result = gson.toJson(obj);
-        Log.e("Super", "Result = " + result);
-        return result;
     }
 
     @Override
