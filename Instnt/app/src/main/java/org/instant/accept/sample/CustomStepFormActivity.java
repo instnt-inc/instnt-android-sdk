@@ -14,14 +14,14 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import org.instant.accept.instntsdk.enums.CallbackType;
 import org.instant.accept.instntsdk.interfaces.CallbackHandler;
 import org.instant.accept.instntsdk.model.FormField;
-import org.instant.accept.instntsdk.model.FormSubmitData;
 import org.instant.accept.instntsdk.InstntSDK;
-import org.instant.accept.instntsdk.interfaces.SubmitCallback;
 import org.instant.accept.instntsdk.utils.CommonUtils;
 import org.instant.accept.sample.databinding.ActivityCustomStepFormBinding;
 import org.instant.accept.sample.view.BaseActivity;
+import org.instant.accept.sample.view.render.BaseInputView;
 import org.instant.accept.sample.view.render.TextInputView;
 
 import java.util.HashMap;
@@ -29,9 +29,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CustomStepFormActivity extends BaseActivity implements SubmitCallback, CallbackHandler {
+public class CustomStepFormActivity extends BaseActivity implements CallbackHandler {
 
     private static final int MY_CAMERA_REQUEST_CODE = 100;
+    private boolean isAutoUpload = true;
     private boolean isFront;
     private String documentType;
     private ActivityCustomStepFormBinding binding;
@@ -70,7 +71,6 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         binding.previous.setOnClickListener(v -> nextStep(false));
         binding.next.setOnClickListener(v -> nextStep(true));
 
-        instantSDK.setCallback(this);
         instantSDK.setCallbackHandler(this);
     }
 
@@ -107,13 +107,13 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
                 binding.headText1.setText("Instnt Signup Demo");
                 binding.headText2.setVisibility(View.VISIBLE);
 
-                binding.containerStep1.setVisibility(View.VISIBLE);
-                binding.containerStep2.setVisibility(View.GONE);
-                binding.containerStep3.setVisibility(View.GONE);
-                binding.containerStep4.setVisibility(View.GONE);
-                binding.containerStep5.setVisibility(View.GONE);
-                binding.containerStep6.setVisibility(View.GONE);
-                binding.containerStep7.setVisibility(View.GONE);
+                binding.containerStep1Declaration.setVisibility(View.VISIBLE);
+                binding.containerStep2Name.setVisibility(View.GONE);
+                binding.containerStep3Contact.setVisibility(View.GONE);
+                binding.containerStep4Otp.setVisibility(View.GONE);
+                binding.containerStep5Address.setVisibility(View.GONE);
+                binding.containerStep6Choosedoctype.setVisibility(View.GONE);
+                binding.containerStep7Review.setVisibility(View.GONE);
                 break;
             }
 
@@ -122,13 +122,13 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
                 binding.headText1.setText("Enter your name");
                 binding.headText2.setVisibility(View.GONE);
 
-                binding.containerStep1.setVisibility(View.GONE);
-                binding.containerStep2.setVisibility(View.VISIBLE);
-                binding.containerStep3.setVisibility(View.GONE);
-                binding.containerStep4.setVisibility(View.GONE);
-                binding.containerStep5.setVisibility(View.GONE);
-                binding.containerStep6.setVisibility(View.GONE);
-                binding.containerStep7.setVisibility(View.GONE);
+                binding.containerStep1Declaration.setVisibility(View.GONE);
+                binding.containerStep2Name.setVisibility(View.VISIBLE);
+                binding.containerStep3Contact.setVisibility(View.GONE);
+                binding.containerStep4Otp.setVisibility(View.GONE);
+                binding.containerStep5Address.setVisibility(View.GONE);
+                binding.containerStep6Choosedoctype.setVisibility(View.GONE);
+                binding.containerStep7Review.setVisibility(View.GONE);
                 break;
             }
 
@@ -137,13 +137,13 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
                 binding.headText1.setText("Enter your contact information");
                 binding.headText2.setVisibility(View.GONE);
 
-                binding.containerStep1.setVisibility(View.GONE);
-                binding.containerStep2.setVisibility(View.GONE);
-                binding.containerStep3.setVisibility(View.VISIBLE);
-                binding.containerStep4.setVisibility(View.GONE);
-                binding.containerStep5.setVisibility(View.GONE);
-                binding.containerStep6.setVisibility(View.GONE);
-                binding.containerStep7.setVisibility(View.GONE);
+                binding.containerStep1Declaration.setVisibility(View.GONE);
+                binding.containerStep2Name.setVisibility(View.GONE);
+                binding.containerStep3Contact.setVisibility(View.VISIBLE);
+                binding.containerStep4Otp.setVisibility(View.GONE);
+                binding.containerStep5Address.setVisibility(View.GONE);
+                binding.containerStep6Choosedoctype.setVisibility(View.GONE);
+                binding.containerStep7Review.setVisibility(View.GONE);
                 break;
             }
 
@@ -153,13 +153,13 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
                 binding.headText2.setVisibility(View.GONE);
 
                 sendOTP();
-                binding.containerStep1.setVisibility(View.GONE);
-                binding.containerStep2.setVisibility(View.GONE);
-                binding.containerStep3.setVisibility(View.GONE);
-                binding.containerStep4.setVisibility(View.VISIBLE);
-                binding.containerStep5.setVisibility(View.GONE);
-                binding.containerStep6.setVisibility(View.GONE);
-                binding.containerStep7.setVisibility(View.GONE);
+                binding.containerStep1Declaration.setVisibility(View.GONE);
+                binding.containerStep2Name.setVisibility(View.GONE);
+                binding.containerStep3Contact.setVisibility(View.GONE);
+                binding.containerStep4Otp.setVisibility(View.VISIBLE);
+                binding.containerStep5Address.setVisibility(View.GONE);
+                binding.containerStep6Choosedoctype.setVisibility(View.GONE);
+                binding.containerStep7Review.setVisibility(View.GONE);
                 break;
             }
 
@@ -169,13 +169,13 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
                 binding.headText2.setVisibility(View.GONE);
 
                 verifyOTP();
-                binding.containerStep1.setVisibility(View.GONE);
-                binding.containerStep2.setVisibility(View.GONE);
-                binding.containerStep3.setVisibility(View.GONE);
-                binding.containerStep4.setVisibility(View.GONE);
-                binding.containerStep5.setVisibility(View.VISIBLE);
-                binding.containerStep6.setVisibility(View.GONE);
-                binding.containerStep7.setVisibility(View.GONE);
+                binding.containerStep1Declaration.setVisibility(View.GONE);
+                binding.containerStep2Name.setVisibility(View.GONE);
+                binding.containerStep3Contact.setVisibility(View.GONE);
+                binding.containerStep4Otp.setVisibility(View.GONE);
+                binding.containerStep5Address.setVisibility(View.VISIBLE);
+                binding.containerStep6Choosedoctype.setVisibility(View.GONE);
+                binding.containerStep7Review.setVisibility(View.GONE);
                 break;
             }
 
@@ -185,13 +185,13 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
                 binding.headText2.setText("As an added layer of security, we need to verify your identity before approving your application");
                 binding.headText2.setVisibility(View.VISIBLE);
 
-                binding.containerStep1.setVisibility(View.GONE);
-                binding.containerStep2.setVisibility(View.GONE);
-                binding.containerStep3.setVisibility(View.GONE);
-                binding.containerStep4.setVisibility(View.GONE);
-                binding.containerStep5.setVisibility(View.GONE);
-                binding.containerStep6.setVisibility(View.VISIBLE);
-                binding.containerStep7.setVisibility(View.GONE);
+                binding.containerStep1Declaration.setVisibility(View.GONE);
+                binding.containerStep2Name.setVisibility(View.GONE);
+                binding.containerStep3Contact.setVisibility(View.GONE);
+                binding.containerStep4Otp.setVisibility(View.GONE);
+                binding.containerStep5Address.setVisibility(View.GONE);
+                binding.containerStep6Choosedoctype.setVisibility(View.VISIBLE);
+                binding.containerStep7Review.setVisibility(View.GONE);
                 break;
             }
 
@@ -199,20 +199,22 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
 
                 binding.headText1.setText("Review Capture Image");
                 binding.headText2.setVisibility(View.GONE);
-                scanDocument(true, "License");
-                binding.containerStep1.setVisibility(View.GONE);
-                binding.containerStep2.setVisibility(View.GONE);
-                binding.containerStep3.setVisibility(View.GONE);
-                binding.containerStep4.setVisibility(View.GONE);
-                binding.containerStep5.setVisibility(View.GONE);
-                binding.containerStep6.setVisibility(View.GONE);
-                binding.containerStep7.setVisibility(View.VISIBLE);
+                this.isFront = true;
+                scanDocument("License");
+                binding.containerStep1Declaration.setVisibility(View.GONE);
+                binding.containerStep2Name.setVisibility(View.GONE);
+                binding.containerStep3Contact.setVisibility(View.GONE);
+                binding.containerStep4Otp.setVisibility(View.GONE);
+                binding.containerStep5Address.setVisibility(View.GONE);
+                binding.containerStep6Choosedoctype.setVisibility(View.GONE);
+                binding.containerStep7Review.setVisibility(View.VISIBLE);
                 break;
             }
 
             case 8: {
 
-                scanDocument(false, "License");
+                this.isFront = false;
+                scanDocument("License");
                 break;
             }
 
@@ -225,19 +227,18 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         }
     }
 
-    private void scanDocument(boolean isFront, String documentType) {
+    private void scanDocument(String documentType) {
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            this.isFront = isFront;
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, MY_CAMERA_REQUEST_CODE);
         } else {
-            instantSDK.uploadAttachment(isFront, documentType);
+            instantSDK.scanDocument(this.isFront, this.isAutoUpload, documentType);
         }
     }
 
     private void sendOTP() {
 
         //Call send otp api
-        View view = binding.containerStep3.getChildAt(0);
+        View view = binding.containerStep3Contact.getChildAt(0);
         TextView mobile = view.findViewById(org.instant.accept.instntsdk.R.id.value);
         String mobileNumber = mobile.getText() == null ? null : mobile.getText().toString();
 
@@ -252,11 +253,11 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
 
     private void verifyOTP() {
 
-        View view = binding.containerStep3.getChildAt(0);
+        View view = binding.containerStep3Contact.getChildAt(0);
         TextView mobile = view.findViewById(org.instant.accept.instntsdk.R.id.value);
         String mobileNumber = mobile.getText() == null ? null : mobile.getText().toString();
 
-        View view1 = binding.containerStep4.getChildAt(1);
+        View view1 = binding.containerStep4Otp.getChildAt(1);
         TextView otpText = view1.findViewById(org.instant.accept.instntsdk.R.id.value);
         String otpCode = otpText.getText() == null ? null : otpText.getText().toString();
 
@@ -283,7 +284,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         fNameField.setValue("");
         fNameField.setPlaceHolder("");
 
-        binding.containerStep2.addView(new TextInputView(this, fNameField));
+        binding.containerStep2Name.addView(new TextInputView(this, fNameField));
 
         //last name
         FormField sNameField = new FormField();
@@ -294,7 +295,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         sNameField.setValue("");
         sNameField.setPlaceHolder("");
 
-        binding.containerStep2.addView(new TextInputView(this, sNameField));
+        binding.containerStep2Name.addView(new TextInputView(this, sNameField));
 
         //mobile number
         FormField mobileField = new FormField();
@@ -305,7 +306,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         mobileField.setValue("");
         mobileField.setPlaceHolder("");
 
-        binding.containerStep3.addView(new TextInputView(this, mobileField));
+        binding.containerStep3Contact.addView(new TextInputView(this, mobileField));
 
         //email
         FormField emailField = new FormField();
@@ -316,7 +317,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         emailField.setValue("");
         emailField.setPlaceHolder("");
 
-        binding.containerStep3.addView(new TextInputView(this, emailField));
+        binding.containerStep3Contact.addView(new TextInputView(this, emailField));
 
         FormField otpField = new FormField();
         otpField.setInputType("text");
@@ -326,7 +327,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         otpField.setValue("");
         otpField.setPlaceHolder("");
 
-        binding.containerStep4.addView(new TextInputView(this, otpField));
+        binding.containerStep4Otp.addView(new TextInputView(this, otpField));
 
         //-------Step 5--------//
         FormField address = new FormField();
@@ -369,14 +370,23 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         country.setValue("");
         country.setPlaceHolder("");
 
-        binding.containerStep5.addView(new TextInputView(this, address));
-        binding.containerStep5.addView(new TextInputView(this, city));
-        binding.containerStep5.addView(new TextInputView(this, state));
-        binding.containerStep5.addView(new TextInputView(this, zipCode));
-        binding.containerStep5.addView(new TextInputView(this, country));
+        binding.containerStep5Address.addView(new TextInputView(this, address));
+        binding.containerStep5Address.addView(new TextInputView(this, city));
+        binding.containerStep5Address.addView(new TextInputView(this, state));
+        binding.containerStep5Address.addView(new TextInputView(this, zipCode));
+        binding.containerStep5Address.addView(new TextInputView(this, country));
         //END-------Step 5--------//
 
         binding.driverLicense.setChecked(true);
+
+        if(this.isAutoUpload) {
+            binding.uploadDocBtn.setVisibility(View.GONE);
+        } else {
+            binding.uploadDocBtn.setVisibility(View.VISIBLE);
+            binding.uploadDocBtn.setOnClickListener(v -> {
+                this.instantSDK.uploadAttachment(this.isFront);
+            });
+        }
     }
 
     /**
@@ -392,18 +402,31 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
      */
     private void submit() {
         Map<String, Object> paramMap = new HashMap<>();
-//        for (int i = 0; i<binding.container.getChildCount(); i++) {
-//            BaseInputView inputView = (BaseInputView)binding.container.getChildAt(i);
-//
-//            if (!inputView.checkValid())
-//                return;
-//
-//            inputView.input(paramMap);
-//        }
-//
-//        showProgressDialog(true);
+        for (int i = 0; i<binding.containerStep2Name.getChildCount(); i++) {
 
-        instantSDK.submitData(paramMap, this);
+            System.out.println("");
+            BaseInputView inputView = (BaseInputView) binding.containerStep2Name.getChildAt(i);
+            inputView.input(paramMap);
+            System.out.println("");
+        }
+
+        for (int i = 0; i<binding.containerStep3Contact.getChildCount(); i++) {
+
+            System.out.println("");
+            BaseInputView inputView = (BaseInputView) binding.containerStep3Contact.getChildAt(i);
+            inputView.input(paramMap);
+            System.out.println("");
+        }
+
+        for (int i = 0; i<binding.containerStep5Address.getChildCount(); i++) {
+
+            System.out.println("");
+            BaseInputView inputView = (BaseInputView) binding.containerStep5Address.getChildAt(i);
+            inputView.input(paramMap);
+            System.out.println("");
+        }
+
+        this.instantSDK.submitForm(paramMap);
     }
 
     private String convertObjectToString(Object obj) {
@@ -419,7 +442,7 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 System.out.println("test1");
-                instantSDK.uploadAttachment(this.isFront, this.documentType);
+                instantSDK.scanDocument(this.isFront, this.isAutoUpload, this.documentType);
                 //Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
             } else {
                 System.out.println("test2");
@@ -429,40 +452,34 @@ public class CustomStepFormActivity extends BaseActivity implements SubmitCallba
     }
 
     @Override
-    public void didCancel() {
-        //binding.result.setText("No JWT");
-        CommonUtils.showToast(this, "User Cancelled");
+    public void successCallBack(Object data, String message, CallbackType callbackType) {
+
+        switch (callbackType) {
+
+            case SUCCESS_IMAGE_UPLOAD: {
+
+                byte[] imageData = (byte[]) data;
+                Bitmap bm = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                DisplayMetrics dm = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+                binding.imageData.setMinimumHeight(dm.heightPixels);
+                binding.imageData.setMinimumWidth(dm.widthPixels);
+                binding.imageData.setImageBitmap(bm);
+                binding.imageData.setVisibility(View.VISIBLE);
+                break;
+            }
+        }
     }
 
     @Override
-    public void didSubmit(FormSubmitData data, String errMessage) {
-//        showProgressDialog(false);
-//
-//        if (data == null) {
-//            //api call is failed
-//            binding.result.setText(errMessage);
-//            CommonUtils.showToast(this, errMessage);
-//        }else {
-//            binding.result.setText(data.getJwt());
-//            CommonUtils.showToast(this, data.getDecision());
-//        }
-    }
+    public void errorCallBack(String message, CallbackType callbackType) {
 
-    @Override
-    public void successCallBack(byte[] imageData) {
-
-        Bitmap bm = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-        binding.imageData.setMinimumHeight(dm.heightPixels);
-        binding.imageData.setMinimumWidth(dm.widthPixels);
-        binding.imageData.setImageBitmap(bm);
-        binding.imageData.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void errorCallBack() {
-
+        switch (callbackType) {
+            case ERROR_FORM_SUBMIT: {
+                CommonUtils.showToast(this, message);
+                break;
+            }
+        }
     }
 }

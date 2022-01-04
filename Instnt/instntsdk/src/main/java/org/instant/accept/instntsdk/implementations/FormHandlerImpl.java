@@ -3,6 +3,8 @@ package org.instant.accept.instntsdk.implementations;
 import android.app.Activity;
 import android.content.Intent;
 
+import org.instant.accept.instntsdk.enums.CallbackType;
+import org.instant.accept.instntsdk.interfaces.CallbackHandler;
 import org.instant.accept.instntsdk.model.FormCodes;
 import org.instant.accept.instntsdk.interfaces.FormHandler;
 import org.instant.accept.instntsdk.interfaces.SubmitCallback;
@@ -18,20 +20,10 @@ public class FormHandlerImpl implements FormHandler {
 
     private NetworkUtil networkModule;
     private FormCodes formCodes;
-    private SubmitCallback submitCallback;
+    private CallbackHandler callbackHandler;
 
     public FormHandlerImpl(NetworkUtil networkModule) {
         this.networkModule = networkModule;
-    }
-
-    @Override
-    public void setCallback(SubmitCallback callback) {
-        this.submitCallback = callback;
-    }
-
-    @Override
-    public SubmitCallback getSubmitCallback() {
-        return submitCallback;
     }
 
     @Override
@@ -46,15 +38,8 @@ public class FormHandlerImpl implements FormHandler {
         );
     }
 
-    @Override
-    public void submitData(Map<String, Object> body, SubmitCallback callback) {
 
-        if (formCodes == null) {
-            if (callback != null) {
-                callback.didSubmit(null, "");
-            }
-            return;
-        }
+    public void submitForm(Map<String, Object> body) {
 
         body.put("form_key", formCodes.getId());
 
@@ -72,34 +57,15 @@ public class FormHandlerImpl implements FormHandler {
             body.put("client_referer_host", "");
         }
 
-        networkModule.submit(formCodes.getSubmitURL(), body, false).subscribe(
-                success->{
-                    if (callback != null) {
-                        callback.didSubmit(success.getData(), "");
-                    }
-                }, throwable -> {
-                    if (callback != null) {
-                        callback.didSubmit(null, CommonUtils.getErrorMessage(throwable));
-                    }
-                }
-        );
+        networkModule.submit(formCodes.getSubmitURL(), body).subscribe( success-> {
+            this.callbackHandler.successCallBack(success.getData(), "", CallbackType.SUCCESS_FORM_SUBMIT);
+        }, throwable -> {
+            this.callbackHandler.errorCallBack("Some problem occurred when try to submit form", CallbackType.ERROR_FORM_SUBMIT);
+        });
     }
 
     @Override
-    public void showForm(Activity activity, SubmitCallback callback) {
-
-        this.submitCallback = callback;
-
-        if (formCodes == null) {
-            if (submitCallback != null) {
-                submitCallback.didSubmit(null, "");
-            }
-
-            return;
-        }
-
-//        Intent intent = new Intent(activity, FormActivity.class);
-//        intent.putExtra(FormActivity.FORM_CORDS, formCodes);
-//        activity.startActivity(intent);
+    public void setCallbackHandler(CallbackHandler callbackHandler) {
+        this.callbackHandler = callbackHandler;
     }
 }

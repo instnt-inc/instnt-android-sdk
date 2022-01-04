@@ -1,6 +1,5 @@
 package org.instant.accept.instntsdk.implementations;
 
-import android.app.Activity;
 import android.content.Context;
 
 import org.instant.accept.instntsdk.InstntSDK;
@@ -8,7 +7,6 @@ import org.instant.accept.instntsdk.interfaces.CallbackHandler;
 import org.instant.accept.instntsdk.interfaces.DocumentHandler;
 import org.instant.accept.instntsdk.interfaces.FormHandler;
 import org.instant.accept.instntsdk.interfaces.OTPHandler;
-import org.instant.accept.instntsdk.interfaces.SubmitCallback;
 import org.instant.accept.instntsdk.network.NetworkUtil;
 import org.instant.accept.instntsdk.utils.CommonUtils;
 
@@ -69,8 +67,8 @@ public class InstntSDKImpl implements InstntSDK {
     }
 
     @Override
-    public void uploadAttachment(boolean isFront, String documentType) {
-        documentHandler.uploadAttachment(isFront, documentType);
+    public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType) {
+        documentHandler.scanDocument(isFront, isAutoUpload, documentType);
     }
 
     @Override
@@ -79,18 +77,9 @@ public class InstntSDKImpl implements InstntSDK {
     }
 
     @Override
-    public void setCallback(SubmitCallback callback) {
-        formHandler.setCallback(callback);
-    }
-
-    @Override
     public void setCallbackHandler(CallbackHandler callbackHandler) {
-        documentHandler.setCallbackHandler(callbackHandler);
-    }
+        this.documentHandler.setCallbackHandler(callbackHandler);
 
-    @Override
-    public SubmitCallback getSubmitCallback() {
-        return formHandler.getSubmitCallback();
     }
 
     @Override
@@ -99,13 +88,8 @@ public class InstntSDKImpl implements InstntSDK {
     }
 
     @Override
-    public void submitData(Map<String, Object> body, SubmitCallback callback) {
-        formHandler.submitData(body, callback);
-    }
-
-    @Override
-    public void showForm(Activity activity, SubmitCallback callback) {
-        formHandler.showForm(activity, callback);
+    public void submitForm(Map<String, Object> body) {
+        this.formHandler.submitForm(body);
     }
 
     @Override

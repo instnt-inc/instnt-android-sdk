@@ -48,7 +48,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/container_step1"
+                android:id="@+id/container_step1_declaration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -99,7 +99,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/container_step2"
+                android:id="@+id/container_step2_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -110,7 +110,7 @@
                 android:visibility="gone"/>
 
             <LinearLayout
-                android:id="@+id/container_step3"
+                android:id="@+id/container_step3_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -121,7 +121,7 @@
                 android:visibility="gone"/>
 
             <LinearLayout
-                android:id="@+id/container_step4"
+                android:id="@+id/container_step4_otp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -141,7 +141,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/container_step5"
+                android:id="@+id/container_step5_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -154,7 +154,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/container_step6"
+                android:id="@+id/container_step6_choosedoctype"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -184,7 +184,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/container_step7"
+                android:id="@+id/container_step7_review"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -218,6 +218,16 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
                     android:layout_centerVertical="true"/>
+
+                <Button
+                    android:id="@+id/upload_doc_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Upload Document"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentEnd="true"
+                    android:textAllCaps="false"
+                    android:enabled="false"/>
 
             </LinearLayout>
 

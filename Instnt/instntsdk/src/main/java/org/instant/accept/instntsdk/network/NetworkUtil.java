@@ -100,7 +100,7 @@ public class NetworkUtil {
     }
 
     @SuppressLint("CheckResult")
-    public Observable<FormSubmitResponse> submit(String url, Map<String, Object> body, boolean isSandbox) {
+    public Observable<FormSubmitResponse> submit(String url, Map<String, Object> body) {
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         return apiInterface.submitForm(url, body)

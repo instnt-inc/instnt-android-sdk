@@ -1,8 +1,6 @@
 package org.instant.accept.instntsdk.implementations;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import com.idmetrics.dc.DSHandler;
 import com.idmetrics.dc.utils.DSCaptureMode;
@@ -16,21 +14,13 @@ import com.idmetrics.dc.utils.DSResult;
 import com.idmetrics.dc.utils.DSSide;
 import com.idmetrics.dc.utils.FlashCapture;
 
+import org.instant.accept.instntsdk.enums.CallbackType;
 import org.instant.accept.instntsdk.interfaces.CallbackHandler;
 import org.instant.accept.instntsdk.interfaces.DocumentHandler;
-import org.instant.accept.instntsdk.interfaces.SubmitCallback;
 import org.instant.accept.instntsdk.network.NetworkUtil;
 import org.instant.accept.instntsdk.utils.CommonUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URI;
 import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class DocumentHandlerImpl implements DocumentHandler {
 
@@ -39,6 +29,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
     private String formKey;
     private String instnttxnid;
     private Context context;
+    private DSResult dsResult;
 
     public DocumentHandlerImpl(NetworkUtil networkModule) {
         this.networkModule = networkModule;
@@ -73,7 +64,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
     private void uploadDocumentAfterGetUrl(DSResult dsResult, Map<String, Object> response, String docSuffix, String instnttxnid) {
 
         networkModule.uploadDocument(instnttxnid + docSuffix + ".jpg", (String) response.get("s3_key"), dsResult.image);
-        this.callbackHandler.successCallBack(dsResult.image);
+        this.callbackHandler.successCallBack(dsResult.image, "", CallbackType.SUCCESS_IMAGE_UPLOAD);
     }
 
     private DSOptions getOptionsByDocumentType(boolean isFront, String documentType) {
@@ -126,9 +117,9 @@ public class DocumentHandlerImpl implements DocumentHandler {
     }
 
     @Override
-    public void uploadAttachment(boolean ifFront, String documentType) {
+    public void scanDocument(boolean ifFront, boolean isAutoUpload, String documentType) {
 
-        String instnttxnid = this.instnttxnid;
+        DocumentHandlerImpl documentHandler = this;
         DSOptions dsOptions = getOptionsByDocumentType(ifFront, documentType);
         dsOptions.licensingKey = "AwFuEf5j3YXwEACwj9eE4w6RGWQ0zgPbjGmu+Xw684ryGP3GicSEE7ZYB0FAhoikRH3imeR02U7kuT4OjVL5B1s3JhBrPY9KWU9sgCVmTIW0r7ehq9CvTjTBfaR7NTCV179MlNeDbEzwh5FSD8ROc3Zq";
 
@@ -139,7 +130,11 @@ public class DocumentHandlerImpl implements DocumentHandler {
         dsHandler.init(DSCaptureMode.Manual, new DSHandlerListener() {
             @Override
             public void handleScan(DSResult dsResult) {
-                uploadAttachment(dsResult, instnttxnid, ifFront);
+
+                documentHandler.dsResult = dsResult;
+
+                if(isAutoUpload)
+                    uploadAttachment(dsResult, documentHandler.instnttxnid, ifFront);
             }
 
             @Override
@@ -154,6 +149,12 @@ public class DocumentHandlerImpl implements DocumentHandler {
         });
 
         dsHandler.start();
+    }
+
+    @Override
+    public void uploadAttachment(boolean ifFront) {
+
+        uploadAttachment(this.dsResult, this.instnttxnid, ifFront);
     }
 
     @Override

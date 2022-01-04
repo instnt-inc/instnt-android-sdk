@@ -1,8 +1,9 @@
 package org.instant.accept.instntsdk.interfaces;
 
+import org.instant.accept.instntsdk.enums.CallbackType;
 import org.instant.accept.instntsdk.model.FormSubmitData;
 
 public interface CallbackHandler {
-    void successCallBack(byte[] imageData);
-    void errorCallBack();
+    void successCallBack(Object data, String message, CallbackType callbackType);
+    void errorCallBack(String message, CallbackType callbackType);
 }
