@@ -72,6 +72,11 @@ public class InstntSDKImpl implements InstntSDK {
     }
 
     @Override
+    public void uploadAttachment(boolean ifFront) {
+        this.documentHandler.uploadAttachment(ifFront);
+    }
+
+    @Override
     public void verifyDocuments(String documentType) {
         this.documentHandler.verifyDocuments(documentType);
     }
