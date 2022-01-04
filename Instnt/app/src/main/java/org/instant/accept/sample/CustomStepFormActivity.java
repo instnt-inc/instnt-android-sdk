@@ -364,9 +364,9 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
         FormField country = new FormField();
         country.setInputType("text");
-        country.setName("zipcode");
+        country.setName("country");
         country.setRequired(true);
-        country.setLabel("Zip Code");
+        country.setLabel("Country");
         country.setValue("");
         country.setPlaceHolder("");
 
