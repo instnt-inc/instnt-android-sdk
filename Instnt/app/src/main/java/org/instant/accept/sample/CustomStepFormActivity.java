@@ -403,27 +403,18 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
     private void submit() {
         Map<String, Object> paramMap = new HashMap<>();
         for (int i = 0; i<binding.containerStep2Name.getChildCount(); i++) {
-
-            System.out.println("");
             BaseInputView inputView = (BaseInputView) binding.containerStep2Name.getChildAt(i);
             inputView.input(paramMap);
-            System.out.println("");
         }
 
         for (int i = 0; i<binding.containerStep3Contact.getChildCount(); i++) {
-
-            System.out.println("");
             BaseInputView inputView = (BaseInputView) binding.containerStep3Contact.getChildAt(i);
             inputView.input(paramMap);
-            System.out.println("");
         }
 
         for (int i = 0; i<binding.containerStep5Address.getChildCount(); i++) {
-
-            System.out.println("");
             BaseInputView inputView = (BaseInputView) binding.containerStep5Address.getChildAt(i);
             inputView.input(paramMap);
-            System.out.println("");
         }
 
         this.instantSDK.submitForm(paramMap);
