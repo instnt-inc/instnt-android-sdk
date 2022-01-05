@@ -116,21 +116,14 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 7: {
 
-                nextStep(isNext);
-                break;
-            }
-
-            case 8: {
-
                 this.isFront = false;
                 scanDocument("License");
                 break;
             }
 
-            case 9: {
+            case 8: {
 
-                this.instantSDK.verifyDocuments("License");
-                this.submit();
+                nextStep(isNext);
                 break;
             }
         }
@@ -270,12 +263,10 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
             }
 
             case 8: {
-
                 break;
             }
 
             case 9: {
-
                 this.instantSDK.verifyDocuments("License");
                 this.submit();
                 break;
