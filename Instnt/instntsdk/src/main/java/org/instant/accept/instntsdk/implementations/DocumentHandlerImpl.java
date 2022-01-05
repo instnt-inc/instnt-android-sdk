@@ -135,16 +135,19 @@ public class DocumentHandlerImpl implements DocumentHandler {
 
                 if(isAutoUpload)
                     uploadAttachment(dsResult, documentHandler.instnttxnid, ifFront);
+
+                documentHandler.callbackHandler.successCallBack(null, "Document scanned successfully", CallbackType.SUCCESS_DOC_SCAN);
             }
 
             @Override
             public void scanWasCancelled() {
-                System.out.println("test2");
+
+                documentHandler.callbackHandler.errorCallBack("Please approve scan", CallbackType.ERROR_DOC_SCAN_CANCELLED);
             }
 
             @Override
             public void captureError(DSError dsError) {
-                System.out.println("test3 : " + dsError.message);
+                documentHandler.callbackHandler.errorCallBack(dsError.message, CallbackType.ERROR_DOC_SCAN_NOT_CAPTURED);
             }
         });
 

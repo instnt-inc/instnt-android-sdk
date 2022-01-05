@@ -65,13 +65,75 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
         //init form fields
         initFormFields();
-        instantSDK = InstntSDK.init(this.formKey, serverUrl, getBaseContext());
+        instantSDK = InstntSDK.init(this.formKey, serverUrl, getBaseContext(), this);
         getFormCodes();
-
         binding.previous.setOnClickListener(v -> nextStep(false));
-        binding.next.setOnClickListener(v -> nextStep(true));
+        binding.next.setOnClickListener(v -> validateCurrentStep(true));
+    }
 
-        instantSDK.setCallbackHandler(this);
+    private void validateCurrentStep(boolean isNext) {
+
+        switch (this.currentStep) {
+
+            case 1: {
+
+                nextStep(isNext);
+                break;
+            }
+
+            case 2: {
+
+                nextStep(isNext);
+                break;
+            }
+
+            case 3: {
+
+                showProgressDialog(true);
+                sendOTP();
+                break;
+            }
+
+            case 4: {
+
+                showProgressDialog(true);
+                verifyOTP();
+                break;
+            }
+
+            case 5: {
+
+                nextStep(isNext);
+                break;
+            }
+
+            case 6: {
+
+                this.isFront = true;
+                scanDocument("License");
+                break;
+            }
+
+            case 7: {
+
+                nextStep(isNext);
+                break;
+            }
+
+            case 8: {
+
+                this.isFront = false;
+                scanDocument("License");
+                break;
+            }
+
+            case 9: {
+
+                this.instantSDK.verifyDocuments("License");
+                this.submit();
+                break;
+            }
+        }
     }
 
     private void nextStep(boolean isNext) {
@@ -152,7 +214,6 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
                 binding.headText1.setText("Enter OTP");
                 binding.headText2.setVisibility(View.GONE);
 
-                sendOTP();
                 binding.containerStep1Declaration.setVisibility(View.GONE);
                 binding.containerStep2Name.setVisibility(View.GONE);
                 binding.containerStep3Contact.setVisibility(View.GONE);
@@ -168,7 +229,6 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
                 binding.headText1.setText("Enter your address");
                 binding.headText2.setVisibility(View.GONE);
 
-                verifyOTP();
                 binding.containerStep1Declaration.setVisibility(View.GONE);
                 binding.containerStep2Name.setVisibility(View.GONE);
                 binding.containerStep3Contact.setVisibility(View.GONE);
@@ -199,8 +259,6 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
                 binding.headText1.setText("Review Capture Image");
                 binding.headText2.setVisibility(View.GONE);
-                this.isFront = true;
-                scanDocument("License");
                 binding.containerStep1Declaration.setVisibility(View.GONE);
                 binding.containerStep2Name.setVisibility(View.GONE);
                 binding.containerStep3Contact.setVisibility(View.GONE);
@@ -213,8 +271,6 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 8: {
 
-                this.isFront = false;
-                scanDocument("License");
                 break;
             }
 
@@ -244,6 +300,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
         //Validate number
         if (!isValidE123(mobileNumber)) {
+            showProgressDialog(false);
             CommonUtils.showToast(getBaseContext(), "Please enter a valid number with country code");
             return;
         }
@@ -321,7 +378,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
         FormField otpField = new FormField();
         otpField.setInputType("text");
-        otpField.setName("otp");
+        otpField.setName("otpCode");
         otpField.setRequired(true);
         otpField.setLabel("OTP Code");
         otpField.setValue("");
@@ -332,7 +389,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         //-------Step 5--------//
         FormField address = new FormField();
         address.setInputType("text");
-        address.setName("address");
+        address.setName("physicalAddress");
         address.setRequired(true);
         address.setLabel("Address");
         address.setValue("");
@@ -356,7 +413,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
         FormField zipCode = new FormField();
         zipCode.setInputType("text");
-        zipCode.setName("zipcode");
+        zipCode.setName("zip");
         zipCode.setRequired(true);
         zipCode.setLabel("Zip Code");
         zipCode.setValue("");
@@ -460,6 +517,14 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
                 binding.imageData.setVisibility(View.VISIBLE);
                 break;
             }
+
+            case SUCCESS_SEND_OTP:
+            case SUCCESS_VERIFY_OTP:
+            case SUCCESS_DOC_SCAN: {
+                showProgressDialog(false);
+                nextStep(true);
+                break;
+            }
         }
     }
 
@@ -467,7 +532,13 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
     public void errorCallBack(String message, CallbackType callbackType) {
 
         switch (callbackType) {
-            case ERROR_FORM_SUBMIT: {
+            case ERROR_FORM_SUBMIT:
+            case ERROR_INIT_TRANSACTION:
+            case ERROR_SEND_OTP:
+            case ERROR_VERIFY_OTP:
+            case ERROR_DOC_SCAN_CANCELLED:
+            case ERROR_DOC_SCAN_NOT_CAPTURED: {
+                showProgressDialog(false);
                 CommonUtils.showToast(this, message);
                 break;
             }

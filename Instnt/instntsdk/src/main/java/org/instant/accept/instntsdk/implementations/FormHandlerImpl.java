@@ -11,8 +11,10 @@ import org.instant.accept.instntsdk.interfaces.SubmitCallback;
 import org.instant.accept.instntsdk.network.NetworkUtil;
 import org.instant.accept.instntsdk.utils.CommonUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +23,7 @@ public class FormHandlerImpl implements FormHandler {
     private NetworkUtil networkModule;
     private FormCodes formCodes;
     private CallbackHandler callbackHandler;
+    private String instnttxnid;
 
     public FormHandlerImpl(NetworkUtil networkModule) {
         this.networkModule = networkModule;
@@ -38,9 +41,16 @@ public class FormHandlerImpl implements FormHandler {
         );
     }
 
-
     public void submitForm(Map<String, Object> body) {
 
+        try {
+            body.put("mobileNumber", URLEncoder.encode((String) body.get("mobileNumber"), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        body.put("signature", this.instnttxnid);
+        body.put("OTPSignature", this.instnttxnid);
         body.put("form_key", formCodes.getId());
 
         Map <String, Object> fingerMap = new HashMap<>();
@@ -67,5 +77,10 @@ public class FormHandlerImpl implements FormHandler {
     @Override
     public void setCallbackHandler(CallbackHandler callbackHandler) {
         this.callbackHandler = callbackHandler;
+    }
+
+    @Override
+    public void setInstnttxnid(String instnttxnid) {
+        this.instnttxnid = instnttxnid;
     }
 }

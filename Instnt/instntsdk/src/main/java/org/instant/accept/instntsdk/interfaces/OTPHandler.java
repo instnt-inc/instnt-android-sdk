@@ -5,5 +5,7 @@ import android.content.Context;
 public interface OTPHandler {
     void sendOTP(String mobileNumber);
     void verifyOTP(String mobileNumber, String otpCode);
-    void setContext(Context context);
+
+    void setInstnttxnid(String instnttxnid);
+    void setCallbackHandler(CallbackHandler callbackHandler);
 }

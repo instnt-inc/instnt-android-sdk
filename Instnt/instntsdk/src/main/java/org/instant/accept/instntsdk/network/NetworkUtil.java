@@ -109,7 +109,7 @@ public class NetworkUtil {
     }
 
     @SuppressLint("CheckResult")
-    public Observable<OTPResponse> sendOTP(String mobileNumber) {
+    public Observable<OTPResponse> sendOTP(String mobileNumber, String instnttxnid) {
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, String> innerBody = new HashMap<>();
@@ -118,6 +118,7 @@ public class NetworkUtil {
         Map<String, Object> body = new HashMap<>();
         body.put("requestData", jsonObject.toString());
         body.put("isVerify", false);
+        body.put("instnttxnid", instnttxnid);
 
         String url = this.serverUrl + "otp/phone/send/v1.0";
         return apiInterface.sendOTP(url, body)
@@ -126,7 +127,7 @@ public class NetworkUtil {
     }
 
     @SuppressLint("CheckResult")
-    public Observable<OTPResponse> verifyOTP(String mobileNumber, String enteredOTP) {
+    public Observable<OTPResponse> verifyOTP(String mobileNumber, String enteredOTP, String instnttxnid) {
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, String> innerBody = new HashMap<>();
@@ -137,6 +138,8 @@ public class NetworkUtil {
         Map<String, Object> body = new HashMap<>();
         body.put("requestData", jsonObject.toString());
         body.put("isVerify", true);
+        body.put("instnttxnid", instnttxnid);
+        body.put("signature", instnttxnid);
 
         String url = this.serverUrl + "otp/phone/verify/v1.0";
         return apiInterface.sendOTP(url, body)
