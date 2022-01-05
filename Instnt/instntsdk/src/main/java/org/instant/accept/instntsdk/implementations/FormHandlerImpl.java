@@ -70,7 +70,7 @@ public class FormHandlerImpl implements FormHandler {
         networkModule.submit(formCodes.getSubmitURL(), body).subscribe( success-> {
             this.callbackHandler.successCallBack(success.getData(), "", CallbackType.SUCCESS_FORM_SUBMIT);
         }, throwable -> {
-            this.callbackHandler.errorCallBack("Some problem occurred when try to submit form", CallbackType.ERROR_FORM_SUBMIT);
+            this.callbackHandler.errorCallBack(CommonUtils.getErrorMessage(throwable), CallbackType.ERROR_FORM_SUBMIT);
         });
     }
 
