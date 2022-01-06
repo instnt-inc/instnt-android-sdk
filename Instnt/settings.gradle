@@ -1,3 +1,4 @@
 rootProject.name = "Instnt"
 include ':app'
 include ':instntsdk'
+include ':vendorsdk'
