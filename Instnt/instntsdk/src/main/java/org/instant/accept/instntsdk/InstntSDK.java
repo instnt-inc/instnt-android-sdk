@@ -25,14 +25,11 @@ public interface InstntSDK extends DocumentHandler, OTPHandler, FormHandler {
 
     void setFormKey(String formKey);
 
-    void setContext(Context context);
-
     void setInstnttxnid(String instnttxnid);
 
-    public static InstntSDK init(String formKey, String serverUrl, Context context, CallbackHandler callbackHandler) {
+    public static InstntSDK init(String formKey, String serverUrl, CallbackHandler callbackHandler) {
         instance.setServerURL(serverUrl);
         instance.setFormKey(formKey);
-        instance.setContext(context);
         instance.setCallbackHandler(callbackHandler);
         instance.initTransaction();
         instance.setupWorkflowDetail();

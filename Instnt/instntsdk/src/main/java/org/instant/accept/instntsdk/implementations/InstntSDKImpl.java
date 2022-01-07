@@ -22,7 +22,6 @@ public class InstntSDKImpl implements InstntSDK {
     private NetworkUtil networkModule;
     private String instnttxnid;
     private String formKey;
-    private Context context;
     private CallbackHandler callbackHandler;
     private FormCodes formCodes;
 
@@ -45,12 +44,6 @@ public class InstntSDKImpl implements InstntSDK {
     }
 
     @Override
-    public void setContext(Context context) {
-        this.context = context;
-        this.documentHandler.setContext(context);
-    }
-
-    @Override
     public void setInstnttxnid(String instnttxnid) {
         this.instnttxnid = instnttxnid;
         this.documentHandler.setInstnttxnid(instnttxnid);
@@ -68,19 +61,15 @@ public class InstntSDKImpl implements InstntSDK {
     public void initTransaction() {
 
         networkModule.getTransactionID(this.formKey).subscribe(response->{
-
-            System.out.println("Response");
             this.setInstnttxnid((String) response.get("instnttxnid"));
         }, throwable -> {
-            CommonUtils.showToast(this.context, CommonUtils.getErrorMessage(throwable));
-            System.out.println(CommonUtils.getErrorMessage(throwable));
             this.callbackHandler.errorCallBack("Transaction initialization failed", CallbackType.ERROR_INIT_TRANSACTION);
         });
     }
 
     @Override
-    public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType) {
-        documentHandler.scanDocument(isFront, isAutoUpload, documentType);
+    public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context) {
+        documentHandler.scanDocument(isFront, isAutoUpload, documentType, context);
     }
 
     @Override

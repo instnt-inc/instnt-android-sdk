@@ -28,7 +28,6 @@ public class DocumentHandlerImpl implements DocumentHandler {
     private CallbackHandler callbackHandler;
     private String formKey;
     private String instnttxnid;
-    private Context context;
     private DSResult dsResult;
 
     public DocumentHandlerImpl(NetworkUtil networkModule) {
@@ -117,13 +116,13 @@ public class DocumentHandlerImpl implements DocumentHandler {
     }
 
     @Override
-    public void scanDocument(boolean ifFront, boolean isAutoUpload, String documentType) {
+    public void scanDocument(boolean ifFront, boolean isAutoUpload, String documentType, Context context) {
 
         DocumentHandlerImpl documentHandler = this;
         DSOptions dsOptions = getOptionsByDocumentType(ifFront, documentType);
         dsOptions.licensingKey = "AwFuEf5j3YXwEACwj9eE4w6RGWQ0zgPbjGmu+Xw684ryGP3GicSEE7ZYB0FAhoikRH3imeR02U7kuT4OjVL5B1s3JhBrPY9KWU9sgCVmTIW0r7ehq9CvTjTBfaR7NTCV179MlNeDbEzwh5FSD8ROc3Zq";
 
-        DSHandler dsHandler = DSHandler.getInstance(this.context);
+        DSHandler dsHandler = DSHandler.getInstance(context);
         DSHandler.staticLicenseKey = "AwFuEf5j3YXwEACwj9eE4w6RGWQ0zgPbjGmu+Xw684ryGP3GicSEE7ZYB0FAhoikRH3imeR02U7kuT4OjVL5B1s3JhBrPY9KWU9sgCVmTIW0r7ehq9CvTjTBfaR7NTCV179MlNeDbEzwh5FSD8ROc3Zq";
         dsHandler.options = dsOptions;
 
@@ -180,10 +179,5 @@ public class DocumentHandlerImpl implements DocumentHandler {
     @Override
     public void setInstnttxnid(String instnttxnid) {
         this.instnttxnid = instnttxnid;
-    }
-
-    @Override
-    public void setContext(Context context) {
-        this.context = context;
     }
 }
