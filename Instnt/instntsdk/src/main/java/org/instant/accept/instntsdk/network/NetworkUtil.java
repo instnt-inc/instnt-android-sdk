@@ -165,40 +165,6 @@ public class NetworkUtil {
     }
 
     @SuppressLint("CheckResult")
-    public Map<String, Object> getTransactionID1(String formKey) throws Exception {
-        ApiInterface apiInterface = getApiService(this.serverUrl);
-
-        Map<String, Object> body = new HashMap<>();
-        body.put("form_key", formKey);
-        body.put("hide_form_fields", true);
-        body.put("idmetrics_version", "4.5.0.5");
-        body.put("format", "json");
-        body.put("redirect", false);
-
-        String url = this.serverUrl + "transactions/";
-        Call<Map<String, Object>> callSync = apiInterface.getXNID1(url, body);
-        callSync.enqueue(new Callback<Map<String, Object>>() {
-
-            @Override
-            public void onResponse(Call<Map<String, Object>> call, retrofit2.Response<Map<String, Object>> response) {
-                Map<String, Object> myItem = response.body();
-                System.out.println("");
-            }
-
-            @Override
-            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
-                //Handle failure
-                System.out.println("");
-            }
-        });
-
-
-//        retrofit2.Response<Map<String, Object>> response = callSync.execute();
-//        Map<String, Object> apiResponse = response.body();
-        return null;
-    }
-
-    @SuppressLint("CheckResult")
     public Observable<Map<String, Object>> getUploadUrl(String instnttxnid, String docSuffix) {
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
