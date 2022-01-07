@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.instant.accept.sample">
+    package="org.instnt.accept.sample">
 
     <application
         android:allowBackup="true"
@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Instnt">
-        <activity android:name=".FormInitializationActivity"
+        <activity android:name="org.instnt.accept.sample.FormInitializationActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,7 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CustomStepFormActivity"
+        <activity android:name="org.instnt.accept.sample.CustomStepFormActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
     </application>
