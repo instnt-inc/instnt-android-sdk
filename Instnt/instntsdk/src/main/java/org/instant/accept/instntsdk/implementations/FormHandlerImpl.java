@@ -30,17 +30,6 @@ public class FormHandlerImpl implements FormHandler {
     }
 
     @Override
-    public void setup(String formId) {
-
-        networkModule.getFormFields(formId).subscribe(
-                success -> {
-                    this.formCodes = success;
-                }, throwable -> {
-                    this.formCodes = null;
-                }
-        );
-    }
-
     public void submitForm(Map<String, Object> body) {
 
         try {
@@ -82,5 +71,10 @@ public class FormHandlerImpl implements FormHandler {
     @Override
     public void setInstnttxnid(String instnttxnid) {
         this.instnttxnid = instnttxnid;
+    }
+
+    @Override
+    public void setWorkFlowDetail(FormCodes formCodes) {
+        this.formCodes = formCodes;
     }
 }

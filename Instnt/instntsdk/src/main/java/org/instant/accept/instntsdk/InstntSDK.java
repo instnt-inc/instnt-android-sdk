@@ -11,9 +11,13 @@ import org.instant.accept.instntsdk.interfaces.SubmitCallback;
 
 public interface InstntSDK extends DocumentHandler, OTPHandler, FormHandler {
 
-    public void initTransaction();
+    void initTransaction();
+
+    void setupWorkflowDetail();
 
     String getTransactionID();
+
+    boolean isOTPverificationEnable();
 
     static InstntSDK instance = new InstntSDKImpl();
 
@@ -31,6 +35,7 @@ public interface InstntSDK extends DocumentHandler, OTPHandler, FormHandler {
         instance.setContext(context);
         instance.setCallbackHandler(callbackHandler);
         instance.initTransaction();
+        instance.setupWorkflowDetail();
         return instance;
     }
 }

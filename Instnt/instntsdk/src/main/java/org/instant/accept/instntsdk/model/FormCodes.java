@@ -67,7 +67,7 @@ public class FormCodes implements Serializable {
     @SerializedName("signature")
     private String signature;
 
-    @SerializedName("otpVerification")
+    @SerializedName("otp_verification")
     private boolean otp_verification;
 
     public String getId() {

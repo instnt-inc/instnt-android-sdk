@@ -1,6 +1,7 @@
 package org.instant.accept.sample;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -63,10 +64,8 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
             return;
         }
 
-        //init form fields
-        initFormFields();
+        showProgressDialog(true);
         instantSDK = InstntSDK.init(this.formKey, serverUrl, getBaseContext(), this);
-        getFormCodes();
         binding.previous.setOnClickListener(v -> nextStep(false));
         binding.next.setOnClickListener(v -> validateCurrentStep(true));
     }
@@ -89,8 +88,14 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 3: {
 
-                showProgressDialog(true);
-                sendOTP();
+                //Check if otp verification enable
+                if(this.instantSDK.isOTPverificationEnable()) {
+                    showProgressDialog(true);
+                    sendOTP();
+                } else {
+                    nextStep(isNext);
+                }
+
                 break;
             }
 
@@ -205,16 +210,22 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 4: {
 
-                binding.headText1.setText("Enter OTP");
-                binding.headText2.setVisibility(View.GONE);
+                if(this.instantSDK.isOTPverificationEnable()) {
+                    binding.headText1.setText("Enter OTP");
+                    binding.headText2.setVisibility(View.GONE);
 
-                binding.containerStep1Declaration.setVisibility(View.GONE);
-                binding.containerStep2Name.setVisibility(View.GONE);
-                binding.containerStep3Contact.setVisibility(View.GONE);
-                binding.containerStep4Otp.setVisibility(View.VISIBLE);
-                binding.containerStep5Address.setVisibility(View.GONE);
-                binding.containerStep6Choosedoctype.setVisibility(View.GONE);
-                binding.containerStep7Review.setVisibility(View.GONE);
+                    binding.containerStep1Declaration.setVisibility(View.GONE);
+                    binding.containerStep2Name.setVisibility(View.GONE);
+                    binding.containerStep3Contact.setVisibility(View.GONE);
+                    binding.containerStep4Otp.setVisibility(View.VISIBLE);
+                    binding.containerStep5Address.setVisibility(View.GONE);
+                    binding.containerStep6Choosedoctype.setVisibility(View.GONE);
+                    binding.containerStep7Review.setVisibility(View.GONE);
+                } else {
+                    binding.containerStep4Otp.removeAllViews();
+                    nextStep(isNext);
+                }
+
                 break;
             }
 
@@ -266,12 +277,6 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
             case 8: {
                 break;
             }
-
-//            case 9: {
-//                this.instantSDK.verifyDocuments("License");
-//                this.submit();
-//                break;
-//            }
         }
     }
 
@@ -324,6 +329,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         //binding.containerStep2.removeAllViews();
         //binding.containerStep3.removeAllViews();
 
+        //-------Step 2--------//
         //first name
         FormField fNameField = new FormField();
         fNameField.setInputType("text");
@@ -332,8 +338,6 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         fNameField.setLabel(getString(R.string.first_name));
         fNameField.setValue("");
         fNameField.setPlaceHolder("");
-
-        binding.containerStep2Name.addView(new TextInputView(this, fNameField));
 
         //last name
         FormField sNameField = new FormField();
@@ -344,8 +348,11 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         sNameField.setValue("");
         sNameField.setPlaceHolder("");
 
+        binding.containerStep2Name.addView(new TextInputView(this, fNameField));
         binding.containerStep2Name.addView(new TextInputView(this, sNameField));
+        //END-------Step 2--------//
 
+        //-------Step 3--------//
         //mobile number
         FormField mobileField = new FormField();
         mobileField.setInputType("phone");
@@ -354,8 +361,6 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         mobileField.setLabel(getString(R.string.mobile_number));
         mobileField.setValue("");
         mobileField.setPlaceHolder("");
-
-        binding.containerStep3Contact.addView(new TextInputView(this, mobileField));
 
         //email
         FormField emailField = new FormField();
@@ -366,8 +371,11 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         emailField.setValue("");
         emailField.setPlaceHolder("");
 
+        binding.containerStep3Contact.addView(new TextInputView(this, mobileField));
         binding.containerStep3Contact.addView(new TextInputView(this, emailField));
+        //END-------Step 3--------//
 
+        //-------Step 4--------//
         FormField otpField = new FormField();
         otpField.setInputType("text");
         otpField.setName("otpCode");
@@ -377,6 +385,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         otpField.setPlaceHolder("");
 
         binding.containerStep4Otp.addView(new TextInputView(this, otpField));
+        //END-------Step 4--------//
 
         //-------Step 5--------//
         FormField address = new FormField();
@@ -439,14 +448,6 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
     }
 
     /**
-     * get form data
-     */
-    private void getFormCodes() {
-
-        instantSDK.setup(formKey);
-    }
-
-    /**
      * submit form
      */
     private void submit() {
@@ -481,11 +482,8 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                System.out.println("test1");
                 instantSDK.scanDocument(this.isFront, this.isAutoUpload, this.documentType);
-                //Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
             } else {
-                System.out.println("test2");
                 //Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
             }
         }
@@ -517,6 +515,12 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
                 nextStep(true);
                 break;
             }
+            case SUCCESS_GET_WORKFLOW_DETAIL: {
+                showProgressDialog(false);
+                //init form fields
+                initFormFields();
+                break;
+            }
         }
     }
 
@@ -532,6 +536,12 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
             case ERROR_DOC_SCAN_NOT_CAPTURED: {
                 showProgressDialog(false);
                 CommonUtils.showToast(this, message);
+                break;
+            }
+            case ERROR_GET_WORKFLOW_DETAIL: {
+                CommonUtils.showToast(this, message);
+                Intent intent = new Intent(this, FormInitializationActivity.class);
+                startActivity(intent);
                 break;
             }
         }

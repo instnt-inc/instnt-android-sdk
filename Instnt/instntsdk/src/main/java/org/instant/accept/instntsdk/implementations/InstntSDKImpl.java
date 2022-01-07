@@ -8,6 +8,7 @@ import org.instant.accept.instntsdk.interfaces.CallbackHandler;
 import org.instant.accept.instntsdk.interfaces.DocumentHandler;
 import org.instant.accept.instntsdk.interfaces.FormHandler;
 import org.instant.accept.instntsdk.interfaces.OTPHandler;
+import org.instant.accept.instntsdk.model.FormCodes;
 import org.instant.accept.instntsdk.network.NetworkUtil;
 import org.instant.accept.instntsdk.utils.CommonUtils;
 
@@ -23,6 +24,7 @@ public class InstntSDKImpl implements InstntSDK {
     private String formKey;
     private Context context;
     private CallbackHandler callbackHandler;
+    private FormCodes formCodes;
 
     public InstntSDKImpl() {
         networkModule = new NetworkUtil();
@@ -54,6 +56,12 @@ public class InstntSDKImpl implements InstntSDK {
         this.documentHandler.setInstnttxnid(instnttxnid);
         this.otpHandler.setInstnttxnid(instnttxnid);
         this.formHandler.setInstnttxnid(instnttxnid);
+    }
+
+    @Override
+    public void setWorkFlowDetail(FormCodes formCodes) {
+        this.formCodes = formCodes;
+        this.formHandler.setWorkFlowDetail(formCodes);
     }
 
     @Override
@@ -94,8 +102,16 @@ public class InstntSDKImpl implements InstntSDK {
     }
 
     @Override
-    public void setup(String formId) {
-        formHandler.setup(formId);
+    public void setupWorkflowDetail() {
+        networkModule.getFormFields(this.formKey).subscribe(
+            success -> {
+                this.setWorkFlowDetail(success);
+                this.formCodes = success;
+                this.callbackHandler.successCallBack(null, "Workflow detail fetched successfully", CallbackType.SUCCESS_GET_WORKFLOW_DETAIL);
+            }, throwable -> {
+                this.callbackHandler.errorCallBack(CommonUtils.getErrorMessage(throwable), CallbackType.ERROR_GET_WORKFLOW_DETAIL);
+            }
+        );
     }
 
     @Override
@@ -116,5 +132,10 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public String getTransactionID() {
         return this.instnttxnid;
+    }
+
+    @Override
+    public boolean isOTPverificationEnable() {
+        return this.formCodes.isOtp_verification();
     }
 }
