@@ -16,6 +16,8 @@ public interface InstntSDK extends DocumentHandler, OTPHandler, FormHandler {
 
     boolean isOTPverificationEnable();
 
+    boolean isDocumentVerificationEnable();
+
     static InstntSDK instance = new InstntSDKImpl();
 
     void setServerURL(String serverURL);

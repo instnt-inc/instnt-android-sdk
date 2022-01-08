@@ -114,15 +114,25 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 6: {
 
-                this.isFront = true;
-                scanDocument("License");
+                if(this.instantSDK.isDocumentVerificationEnable()) {
+                    this.isFront = true;
+                    scanDocument("License");
+                } else {
+                    nextStep(isNext);
+                }
+
                 break;
             }
 
             case 7: {
 
-                this.isFront = false;
-                scanDocument("License");
+                if(this.instantSDK.isDocumentVerificationEnable()) {
+                    this.isFront = false;
+                    scanDocument("License");
+                } else {
+                    nextStep(isNext);
+                }
+
                 break;
             }
 
@@ -246,31 +256,41 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 6: {
 
-                binding.headText1.setText("Choose the document type");
-                binding.headText2.setText("As an added layer of security, we need to verify your identity before approving your application");
-                binding.headText2.setVisibility(View.VISIBLE);
+                if(this.instantSDK.isDocumentVerificationEnable()) {
+                    binding.headText1.setText("Choose the document type");
+                    binding.headText2.setText("As an added layer of security, we need to verify your identity before approving your application");
+                    binding.headText2.setVisibility(View.VISIBLE);
 
-                binding.containerStep1Declaration.setVisibility(View.GONE);
-                binding.containerStep2Name.setVisibility(View.GONE);
-                binding.containerStep3Contact.setVisibility(View.GONE);
-                binding.containerStep4Otp.setVisibility(View.GONE);
-                binding.containerStep5Address.setVisibility(View.GONE);
-                binding.containerStep6Choosedoctype.setVisibility(View.VISIBLE);
-                binding.containerStep7Review.setVisibility(View.GONE);
+                    binding.containerStep1Declaration.setVisibility(View.GONE);
+                    binding.containerStep2Name.setVisibility(View.GONE);
+                    binding.containerStep3Contact.setVisibility(View.GONE);
+                    binding.containerStep4Otp.setVisibility(View.GONE);
+                    binding.containerStep5Address.setVisibility(View.GONE);
+                    binding.containerStep6Choosedoctype.setVisibility(View.VISIBLE);
+                    binding.containerStep7Review.setVisibility(View.GONE);
+                } else {
+                    nextStep(isNext);
+                }
+
                 break;
             }
 
             case 7: {
 
-                binding.headText1.setText("Review Capture Image");
-                binding.headText2.setVisibility(View.GONE);
-                binding.containerStep1Declaration.setVisibility(View.GONE);
-                binding.containerStep2Name.setVisibility(View.GONE);
-                binding.containerStep3Contact.setVisibility(View.GONE);
-                binding.containerStep4Otp.setVisibility(View.GONE);
-                binding.containerStep5Address.setVisibility(View.GONE);
-                binding.containerStep6Choosedoctype.setVisibility(View.GONE);
-                binding.containerStep7Review.setVisibility(View.VISIBLE);
+                if(this.instantSDK.isDocumentVerificationEnable()) {
+                    binding.headText1.setText("Review Capture Image");
+                    binding.headText2.setVisibility(View.GONE);
+                    binding.containerStep1Declaration.setVisibility(View.GONE);
+                    binding.containerStep2Name.setVisibility(View.GONE);
+                    binding.containerStep3Contact.setVisibility(View.GONE);
+                    binding.containerStep4Otp.setVisibility(View.GONE);
+                    binding.containerStep5Address.setVisibility(View.GONE);
+                    binding.containerStep6Choosedoctype.setVisibility(View.GONE);
+                    binding.containerStep7Review.setVisibility(View.VISIBLE);
+                } else {
+                    nextStep(isNext);
+                }
+
                 break;
             }
 
