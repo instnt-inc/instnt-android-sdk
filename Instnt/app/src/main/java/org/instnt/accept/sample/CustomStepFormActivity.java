@@ -19,6 +19,7 @@ import org.instnt.accept.instntsdk.enums.CallbackType;
 import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
 import org.instnt.accept.instntsdk.model.FormField;
 import org.instnt.accept.instntsdk.InstntSDK;
+import org.instnt.accept.instntsdk.model.FormSubmitData;
 import org.instnt.accept.instntsdk.utils.CommonUtils;
 import org.instnt.accept.sample.databinding.ActivityCustomStepFormBinding;
 import org.instnt.accept.sample.view.BaseActivity;
@@ -68,6 +69,13 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         instantSDK = InstntSDK.init(this.formKey, serverUrl, this);
         binding.previous.setOnClickListener(v -> nextStep(false));
         binding.next.setOnClickListener(v -> validateCurrentStep(true));
+        binding.submitAnotherForm.setOnClickListener(v -> reInitForm());
+    }
+
+    private void reInitForm() {
+
+        Intent intent = new Intent(this, FormInitializationActivity.class);
+        startActivity(intent);
     }
 
     private void validateCurrentStep(boolean isNext) {
@@ -185,6 +193,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
                 binding.containerStep5Address.setVisibility(View.GONE);
                 binding.containerStep6Choosedoctype.setVisibility(View.GONE);
                 binding.containerStep7Review.setVisibility(View.GONE);
+                binding.containerStep8Success.setVisibility(View.GONE);
                 break;
             }
 
@@ -200,6 +209,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
                 binding.containerStep5Address.setVisibility(View.GONE);
                 binding.containerStep6Choosedoctype.setVisibility(View.GONE);
                 binding.containerStep7Review.setVisibility(View.GONE);
+                binding.containerStep8Success.setVisibility(View.GONE);
                 break;
             }
 
@@ -215,6 +225,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
                 binding.containerStep5Address.setVisibility(View.GONE);
                 binding.containerStep6Choosedoctype.setVisibility(View.GONE);
                 binding.containerStep7Review.setVisibility(View.GONE);
+                binding.containerStep8Success.setVisibility(View.GONE);
                 break;
             }
 
@@ -231,6 +242,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
                     binding.containerStep5Address.setVisibility(View.GONE);
                     binding.containerStep6Choosedoctype.setVisibility(View.GONE);
                     binding.containerStep7Review.setVisibility(View.GONE);
+                    binding.containerStep8Success.setVisibility(View.GONE);
                 } else {
                     binding.containerStep4Otp.removeAllViews();
                     nextStep(isNext);
@@ -251,6 +263,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
                 binding.containerStep5Address.setVisibility(View.VISIBLE);
                 binding.containerStep6Choosedoctype.setVisibility(View.GONE);
                 binding.containerStep7Review.setVisibility(View.GONE);
+                binding.containerStep8Success.setVisibility(View.GONE);
                 break;
             }
 
@@ -268,6 +281,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
                     binding.containerStep5Address.setVisibility(View.GONE);
                     binding.containerStep6Choosedoctype.setVisibility(View.VISIBLE);
                     binding.containerStep7Review.setVisibility(View.GONE);
+                    binding.containerStep8Success.setVisibility(View.GONE);
                 } else {
                     nextStep(isNext);
                 }
@@ -287,16 +301,31 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
                     binding.containerStep5Address.setVisibility(View.GONE);
                     binding.containerStep6Choosedoctype.setVisibility(View.GONE);
                     binding.containerStep7Review.setVisibility(View.VISIBLE);
+                    binding.containerStep8Success.setVisibility(View.GONE);
                 } else {
-                    nextStep(isNext);
+                    this.currentStep = 8;
+                    validateCurrentStep(isNext);
                 }
 
                 break;
             }
 
-            case 8: {
+            case 9: {
+                binding.headText1.setVisibility(View.GONE);
+                binding.headText2.setVisibility(View.GONE);
+                binding.containerStep1Declaration.setVisibility(View.GONE);
+                binding.containerStep2Name.setVisibility(View.GONE);
+                binding.containerStep3Contact.setVisibility(View.GONE);
+                binding.containerStep4Otp.setVisibility(View.GONE);
+                binding.containerStep5Address.setVisibility(View.GONE);
+                binding.containerStep6Choosedoctype.setVisibility(View.GONE);
+                binding.containerStep7Review.setVisibility(View.GONE);
+                binding.containerStep8Success.setVisibility(View.VISIBLE);
+                binding.previous.setVisibility(View.GONE);
+                binding.next.setVisibility(View.GONE);
                 break;
             }
+
         }
     }
 
@@ -539,6 +568,13 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
                 showProgressDialog(false);
                 //init form fields
                 initFormFields();
+                break;
+            }
+            case SUCCESS_FORM_SUBMIT: {
+                showProgressDialog(false);
+                FormSubmitData formSubmitData = (FormSubmitData) data;
+                binding.successMessage.setText(formSubmitData.getUrl());
+                nextStep(true);
                 break;
             }
         }

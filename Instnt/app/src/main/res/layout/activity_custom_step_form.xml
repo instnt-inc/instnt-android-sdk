@@ -231,6 +231,37 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/container_step8_success"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white_1"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="15dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/successMessage"
+                    android:layout_marginTop="20dp"
+                    android:text=""
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:layout_centerVertical="true"/>
+
+                <Button
+                    android:id="@+id/submitAnotherForm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Submit Another Form"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentEnd="true"
+                    android:textAllCaps="false" />
+
+            </LinearLayout>
+
             <Button
                 android:id="@+id/previous"
                 android:layout_width="wrap_content"
