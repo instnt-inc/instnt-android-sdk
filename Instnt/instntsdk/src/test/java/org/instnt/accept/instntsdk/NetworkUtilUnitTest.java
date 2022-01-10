@@ -124,4 +124,79 @@ public class NetworkUtilUnitTest {
             assertEquals(mockOtpResponse.getResponse().isValid(), otpResponse.getResponse().isValid());
         });
     }
+
+    @Test
+    public void testVerifyOTP() {
+
+        OTPVerificationResult otpVerificationResult = new OTPVerificationResult();
+        otpVerificationResult.setId("VE141b7ed3f2610424998a662a8fd23149");
+        String[] errors = {};
+        otpVerificationResult.setErrors(errors);
+        otpVerificationResult.setValid(true);
+
+        OTPResponse mockOtpResponse = new OTPResponse();
+        mockOtpResponse.setResponse(otpVerificationResult);
+
+        expect(networkUtil.verifyOTP("+16102458140", "1234", INSTNTXNID)).andReturn(Observable.just(mockOtpResponse)).anyTimes();
+        replay(networkUtil);
+
+        networkUtil.verifyOTP("+16102458140", "1234", INSTNTXNID).subscribe(otpResponse -> {
+            assertNotNull(otpResponse);
+            assertEquals(mockOtpResponse.getResponse().getErrors().length, otpResponse.getResponse().getErrors().length);
+            assertEquals(mockOtpResponse.getResponse().getId(), otpResponse.getResponse().getId());
+            assertEquals(mockOtpResponse.getResponse().isValid(), otpResponse.getResponse().isValid());
+        });
+    }
+
+    @Test
+    public void testGetTransactionID() {
+
+        Map<String, Object> mockResponse = new HashMap<>();
+        mockResponse.put("instnttxnid", INSTNTXNID);
+
+        expect(networkUtil.getTransactionID(FORM_KEY)).andReturn(Observable.just(mockResponse)).anyTimes();
+        replay(networkUtil);
+
+        networkUtil.getTransactionID(FORM_KEY).subscribe(response -> {
+            assertNotNull(response);
+            assertEquals((String) mockResponse.get("instnttxnid"), (String) response.get("instnttxnid"));
+        });
+    }
+
+    @Test
+    public void testGetUploadUrl() {
+
+        Map<String, Object> mockResponse = new HashMap<>();
+        mockResponse.put("s3_key", "ThisIsTestS3Key");
+
+        expect(networkUtil.getUploadUrl(INSTNTXNID, "F")).andReturn(Observable.just(mockResponse)).anyTimes();
+        replay(networkUtil);
+
+        networkUtil.getUploadUrl(INSTNTXNID, "F").subscribe(response -> {
+            assertNotNull(response);
+            assertEquals((String) mockResponse.get("s3_key"), (String) response.get("s3_key"));
+        });
+    }
+
+    @Test
+    public void testUploadDocument() {
+
+        String fileName = INSTNTXNID + "F" + ".jpg";
+        String presignedS3Url = "ThisIsTestPresignedS3Url";
+        byte[] imageData = new byte[1024];
+
+        networkUtil.uploadDocument(fileName, presignedS3Url, imageData);
+    }
+
+    @Test
+    public void testVerifyDocuments() {
+
+        Map<String, Object> mockResponse = new HashMap<>();
+        expect(networkUtil.verifyDocuments("License", FORM_KEY, INSTNTXNID)).andReturn(Observable.just(mockResponse)).anyTimes();
+        replay(networkUtil);
+
+        networkUtil.verifyDocuments("License", FORM_KEY, INSTNTXNID).subscribe(response -> {
+            assertNotNull(response);
+        });
+    }
 }
