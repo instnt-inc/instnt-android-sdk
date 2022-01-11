@@ -32,6 +32,16 @@ public class InstntSDKImpl implements InstntSDK {
         formHandler = new FormHandlerImpl(networkModule);
     }
 
+    private void setupWorkflowDetail() {
+        networkModule.getFormFields(this.formKey).subscribe(success -> {
+            this.setWorkFlowDetail(success);
+            this.formCodes = success;
+            this.callbackHandler.successCallBack(null, "Workflow detail fetched successfully", CallbackType.SUCCESS_GET_WORKFLOW_DETAIL);
+        }, throwable -> {
+            this.callbackHandler.errorCallBack(CommonUtils.getErrorMessage(throwable), CallbackType.ERROR_GET_WORKFLOW_DETAIL);
+        });
+    }
+
     @Override
     public void setServerURL(String serverURL) {
         networkModule.setServerUrl(serverURL);
@@ -65,11 +75,13 @@ public class InstntSDKImpl implements InstntSDK {
         }, throwable -> {
             this.callbackHandler.errorCallBack("Transaction initialization failed", CallbackType.ERROR_INIT_TRANSACTION);
         });
+
+        setupWorkflowDetail();
     }
 
     @Override
-    public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context) {
-        documentHandler.scanDocument(isFront, isAutoUpload, documentType, context);
+    public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) {
+        documentHandler.scanDocument(isFront, isAutoUpload, documentType, context, documentVerifyLicenseKey);
     }
 
     @Override
@@ -88,19 +100,6 @@ public class InstntSDKImpl implements InstntSDK {
         this.documentHandler.setCallbackHandler(callbackHandler);
         this.formHandler.setCallbackHandler(callbackHandler);
         this.otpHandler.setCallbackHandler(callbackHandler);
-    }
-
-    @Override
-    public void setupWorkflowDetail() {
-        networkModule.getFormFields(this.formKey).subscribe(
-            success -> {
-                this.setWorkFlowDetail(success);
-                this.formCodes = success;
-                this.callbackHandler.successCallBack(null, "Workflow detail fetched successfully", CallbackType.SUCCESS_GET_WORKFLOW_DETAIL);
-            }, throwable -> {
-                this.callbackHandler.errorCallBack(CommonUtils.getErrorMessage(throwable), CallbackType.ERROR_GET_WORKFLOW_DETAIL);
-            }
-        );
     }
 
     @Override

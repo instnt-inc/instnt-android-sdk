@@ -243,7 +243,24 @@
                 android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/successMessage"
+                    android:id="@+id/decision"
+                    android:layout_marginTop="20dp"
+                    android:text="Decision : Accept"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    android:layout_marginTop="20dp"
+                    android:text="JWT : "
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    android:id="@+id/jwtToken"
                     android:layout_marginTop="20dp"
                     android:text=""
                     android:layout_width="match_parent"
@@ -262,25 +279,36 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/previous"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Previous"
-                android:layout_gravity="center_horizontal"
-                android:layout_alignParentEnd="true"
-                android:textAllCaps="false"
-                android:enabled="false"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+                <Button
+                    android:id="@+id/previous"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Previous"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentEnd="true"
+                    android:textAllCaps="false"
+                    android:enabled="false"
+                    android:layout_marginStart="90dp"
+                    android:layout_alignParentRight="false"
+                    />
 
-            <Button
-                android:id="@+id/next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Next"
-                android:layout_gravity="center_horizontal"
-                android:layout_alignParentEnd="true"
-                android:textAllCaps="false"
-                android:enabled="true"/>
+                <Button
+                    android:id="@+id/next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Next"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentEnd="true"
+                    android:textAllCaps="false"
+                    android:enabled="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_alignParentRight="true"
+                    />
+
+            </LinearLayout>
 
         </LinearLayout>
 

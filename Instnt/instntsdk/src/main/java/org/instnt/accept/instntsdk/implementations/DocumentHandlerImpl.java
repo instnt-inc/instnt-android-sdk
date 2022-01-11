@@ -116,14 +116,13 @@ public class DocumentHandlerImpl implements DocumentHandler {
     }
 
     @Override
-    public void scanDocument(boolean ifFront, boolean isAutoUpload, String documentType, Context context) {
+    public void scanDocument(boolean ifFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) {
 
         DocumentHandlerImpl documentHandler = this;
         DSOptions dsOptions = getOptionsByDocumentType(ifFront, documentType);
-        dsOptions.licensingKey = "AwG5mCdqXkmCj9oNEpGV8UauciP8s4cqFT848FfjUjwAZQJfa8ZvrEpmYsPME0RTo/Q0kRowDCGz7HPhfSdyeE7rOLtB3JAhuABdQ2R7dGhVy2EUdt5ENQBBIoveIZdf1pwVY2EUgDoGm8REDU+rr2C2";
 
         DSHandler dsHandler = DSHandler.getInstance(context);
-        DSHandler.staticLicenseKey = "AwG5mCdqXkmCj9oNEpGV8UauciP8s4cqFT848FfjUjwAZQJfa8ZvrEpmYsPME0RTo/Q0kRowDCGz7HPhfSdyeE7rOLtB3JAhuABdQ2R7dGhVy2EUdt5ENQBBIoveIZdf1pwVY2EUgDoGm8REDU+rr2C2";
+        DSHandler.staticLicenseKey = documentVerifyLicenseKey;
         dsHandler.options = dsOptions;
 
         dsHandler.init(DSCaptureMode.Manual, new DSHandlerListener() {

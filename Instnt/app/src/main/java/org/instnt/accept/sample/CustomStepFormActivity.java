@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
 public class CustomStepFormActivity extends BaseActivity implements CallbackHandler {
 
     private static final int MY_CAMERA_REQUEST_CODE = 100;
+    private static final String DOCUMENT_VERIFY_LICENSE_KEY = "AwG5mCdqXkmCj9oNEpGV8UauciP8s4cqFT848FfjUjwAZQJfa8ZvrEpmYsPME0RTo/Q0kRowDCGz7HPhfSdyeE7rOLtB3JAhuABdQ2R7dGhVy2EUdt5ENQBBIoveIZdf1pwVY2EUgDoGm8REDU+rr2C2";
     private boolean isAutoUpload = true;
     private boolean isFront;
     private String documentType;
@@ -146,6 +147,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 8: {
 
+                showProgressDialog(true);
                 this.instantSDK.verifyDocuments("License");
                 this.submit();
                 break;
@@ -333,7 +335,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, MY_CAMERA_REQUEST_CODE);
         } else {
-            instantSDK.scanDocument(this.isFront, this.isAutoUpload, documentType, getBaseContext());
+            instantSDK.scanDocument(this.isFront, this.isAutoUpload, documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
         }
     }
 
@@ -531,7 +533,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                instantSDK.scanDocument(this.isFront, this.isAutoUpload, this.documentType, getBaseContext());
+                instantSDK.scanDocument(this.isFront, this.isAutoUpload, this.documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
             } else {
                 //Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
             }
@@ -573,7 +575,8 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
             case SUCCESS_FORM_SUBMIT: {
                 showProgressDialog(false);
                 FormSubmitData formSubmitData = (FormSubmitData) data;
-                binding.successMessage.setText(formSubmitData.getUrl());
+                binding.decision.setText("Decision : " + formSubmitData.getDecision());
+                binding.jwtToken.setText(formSubmitData.getJwt());
                 nextStep(true);
                 break;
             }
