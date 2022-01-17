@@ -32,16 +32,6 @@ public class InstntSDKImpl implements InstntSDK {
         formHandler = new FormHandlerImpl(networkModule);
     }
 
-    private void setupWorkflowDetail() {
-        networkModule.getFormFields(this.formKey).subscribe(success -> {
-            this.setWorkFlowDetail(success);
-            this.formCodes = success;
-            this.callbackHandler.successCallBack(null, "Workflow detail fetched successfully", CallbackType.SUCCESS_GET_WORKFLOW_DETAIL);
-        }, throwable -> {
-            this.callbackHandler.errorCallBack(CommonUtils.getErrorMessage(throwable), CallbackType.ERROR_GET_WORKFLOW_DETAIL);
-        });
-    }
-
     @Override
     public void setServerURL(String serverURL) {
         networkModule.setServerUrl(serverURL);
@@ -71,12 +61,13 @@ public class InstntSDKImpl implements InstntSDK {
     public void initTransaction() {
 
         networkModule.getTransactionID(this.formKey).subscribe(response->{
-            this.setInstnttxnid((String) response.get("instnttxnid"));
+            this.setInstnttxnid(response.getInstnttxnid());
+            this.setWorkFlowDetail(response);
+            this.formCodes = response;
+            this.callbackHandler.successCallBack(null, "Transaction initialization successfully", CallbackType.SUCCESS_INIT_TRANSACTION);
         }, throwable -> {
             this.callbackHandler.errorCallBack("Transaction initialization failed", CallbackType.ERROR_INIT_TRANSACTION);
         });
-
-        setupWorkflowDetail();
     }
 
     @Override

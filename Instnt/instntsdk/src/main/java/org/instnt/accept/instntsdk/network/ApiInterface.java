@@ -20,9 +20,6 @@ import retrofit2.http.Url;
 
 public interface ApiInterface {
 
-    @GET(RestUrl.GET_FORM_CODES)
-    Observable<FormCodes> getFormCodes(@Path("key") String key, @Query("format") String format);
-
     @Headers("Content-Type: application/json")
     @POST()
     Observable<FormSubmitResponse> submitForm(@Url String url, @Body Map<String, Object> body);
@@ -33,7 +30,7 @@ public interface ApiInterface {
 
     @Headers("Content-Type: application/json")
     @POST()
-    Observable<Map<String, Object>> getXNID(@Url String url, @Body Map<String, Object> body);
+    Observable<FormCodes> getXNID(@Url String url, @Body Map<String, Object> body);
 
     @Headers("Content-Type: application/json")
     @POST()

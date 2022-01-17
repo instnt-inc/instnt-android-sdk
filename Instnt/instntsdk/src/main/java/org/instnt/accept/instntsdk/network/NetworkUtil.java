@@ -90,15 +90,6 @@ public class NetworkUtil {
     }
 
     @SuppressLint("CheckResult")
-    public Observable<FormCodes> getFormFields(String formId) {
-        ApiInterface apiInterface = getApiService(this.serverUrl);
-
-        return apiInterface.getFormCodes(formId, "json")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    @SuppressLint("CheckResult")
     public Observable<FormSubmitResponse> submit(String url, Map<String, Object> body) {
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
@@ -147,7 +138,7 @@ public class NetworkUtil {
     }
 
     @SuppressLint("CheckResult")
-    public Observable<Map<String, Object>> getTransactionID(String formKey) {
+    public Observable<FormCodes> getTransactionID(String formKey) {
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, Object> body = new HashMap<>();

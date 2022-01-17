@@ -70,6 +70,13 @@ public class FormCodes implements Serializable {
     @SerializedName("otp_verification")
     private boolean otp_verification;
 
+    @SerializedName("instnttxnid")
+    private String instnttxnid;
+
+    public String getInstnttxnid() { return instnttxnid; }
+
+    public void setInstnttxnid(String instnttxnid) { this.instnttxnid = instnttxnid; }
+
     public String getId() {
         return id;
     }

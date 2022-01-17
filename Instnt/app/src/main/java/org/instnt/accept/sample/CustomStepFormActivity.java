@@ -566,7 +566,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
                 nextStep(true);
                 break;
             }
-            case SUCCESS_GET_WORKFLOW_DETAIL: {
+            case SUCCESS_INIT_TRANSACTION: {
                 showProgressDialog(false);
                 //init form fields
                 initFormFields();
@@ -588,7 +588,6 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
         switch (callbackType) {
             case ERROR_FORM_SUBMIT:
-            case ERROR_INIT_TRANSACTION:
             case ERROR_SEND_OTP:
             case ERROR_VERIFY_OTP:
             case ERROR_DOC_SCAN_CANCELLED:
@@ -597,7 +596,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
                 CommonUtils.showToast(this, message);
                 break;
             }
-            case ERROR_GET_WORKFLOW_DETAIL: {
+            case ERROR_INIT_TRANSACTION: {
                 CommonUtils.showToast(this, message);
                 Intent intent = new Intent(this, FormInitializationActivity.class);
                 startActivity(intent);
