@@ -1,12 +1,13 @@
 package org.instnt.accept.instntsdk;
 
 import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
+import org.instnt.accept.instntsdk.interfaces.DeviceHandler;
 import org.instnt.accept.instntsdk.interfaces.DocumentHandler;
 import org.instnt.accept.instntsdk.interfaces.FormHandler;
 import org.instnt.accept.instntsdk.implementations.InstntSDKImpl;
 import org.instnt.accept.instntsdk.interfaces.OTPHandler;
 
-public interface InstntSDK extends DocumentHandler, OTPHandler, FormHandler {
+public interface InstntSDK extends DocumentHandler, OTPHandler, FormHandler , DeviceHandler {
 
     InstntSDK instance = new InstntSDKImpl();
 

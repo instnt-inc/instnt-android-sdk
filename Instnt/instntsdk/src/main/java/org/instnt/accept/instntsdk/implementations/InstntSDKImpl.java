@@ -1,10 +1,12 @@
 package org.instnt.accept.instntsdk.implementations;
 
 import android.content.Context;
+import android.view.WindowManager;
 
 import org.instnt.accept.instntsdk.InstntSDK;
 import org.instnt.accept.instntsdk.enums.CallbackType;
 import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
+import org.instnt.accept.instntsdk.interfaces.DeviceHandler;
 import org.instnt.accept.instntsdk.interfaces.DocumentHandler;
 import org.instnt.accept.instntsdk.interfaces.FormHandler;
 import org.instnt.accept.instntsdk.interfaces.OTPHandler;
@@ -19,6 +21,7 @@ public class InstntSDKImpl implements InstntSDK {
     private DocumentHandler documentHandler;
     private OTPHandler otpHandler;
     private FormHandler formHandler;
+    private DeviceHandler deviceHandler;
     private NetworkUtil networkModule;
     private String instnttxnid;
     private String formKey;
@@ -30,6 +33,7 @@ public class InstntSDKImpl implements InstntSDK {
         documentHandler = new DocumentHandlerImpl(networkModule);
         otpHandler = new OTPHandlerImpl(networkModule);
         formHandler = new FormHandlerImpl(networkModule);
+        deviceHandler = new DeviceHandlerImpl();
     }
 
     @Override
@@ -121,5 +125,10 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public boolean isDocumentVerificationEnable() {
         return this.formCodes.isDocumentVerification();
+    }
+
+    @Override
+    public Map<String, String> getDeviceInfo(Context context, WindowManager windowManager) {
+        return deviceHandler.getDeviceInfo(context, windowManager);
     }
 }
