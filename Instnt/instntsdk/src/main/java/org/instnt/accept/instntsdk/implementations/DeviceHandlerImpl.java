@@ -29,7 +29,6 @@ public class DeviceHandlerImpl implements DeviceHandler {
         String ScreenResolution_value = String.valueOf(dm.heightPixels) + " * " + String.valueOf(dm.widthPixels) + " Pixels";
         String screen_size = rounded + " Inches";
         String screen_density = String.valueOf(densityDpi) + " dpi";
-        String BootLoader_value = Build.BOOTLOADER;
         String User_value = Build.USER;
         String Host_value = Build.HOST;
         String Version = Build.VERSION.RELEASE;
@@ -45,7 +44,6 @@ public class DeviceHandlerImpl implements DeviceHandler {
         String _BRAND = android.os.Build.BRAND;
         String _DISPLAY = android.os.Build.DISPLAY;
         String _CPU_ABI = android.os.Build.CPU_ABI;
-        String _CPU_ABI2 = android.os.Build.CPU_ABI2;
         String _HARDWARE = android.os.Build.HARDWARE;
         String _MANUFACTURER = android.os.Build.MANUFACTURER;
         String _USER = android.os.Build.USER;
@@ -56,7 +54,6 @@ public class DeviceHandlerImpl implements DeviceHandler {
         map.put("screen_resolution_value", ScreenResolution_value);
         map.put("screen_size", screen_size);
         map.put("screen_density", screen_density);
-        map.put("boot_loader_value", BootLoader_value);
         map.put("user_value", User_value);
         map.put("host_value", Host_value);
         map.put("version", Version);
@@ -72,7 +69,6 @@ public class DeviceHandlerImpl implements DeviceHandler {
         map.put("brand", _BRAND);
         map.put("display", _DISPLAY);
         map.put("cpu_abi", _CPU_ABI);
-        map.put("cpu_abi2", _CPU_ABI2);
         map.put("hardware", _HARDWARE);
         map.put("manufacturer", _MANUFACTURER);
         map.put("user", _USER);
