@@ -46,16 +46,14 @@ public class DeviceHandlerImpl implements DeviceHandler {
         String _DISPLAY = android.os.Build.DISPLAY;
         String _CPU_ABI = android.os.Build.CPU_ABI;
         String _CPU_ABI2 = android.os.Build.CPU_ABI2;
-        String _UNKNOWN = android.os.Build.UNKNOWN;
         String _HARDWARE = android.os.Build.HARDWARE;
-        String _ID = android.os.Build.ID;
         String _MANUFACTURER = android.os.Build.MANUFACTURER;
         String _SERIAL = android.os.Build.SERIAL;
         String _USER = android.os.Build.USER;
         String _HOST = android.os.Build.HOST;
 
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put("android_id", android_id);
+        map.put("device_id", android_id);
         map.put("screen_resolution_value", ScreenResolution_value);
         map.put("screen_size", screen_size);
         map.put("screen_density", screen_density);
@@ -76,9 +74,7 @@ public class DeviceHandlerImpl implements DeviceHandler {
         map.put("display", _DISPLAY);
         map.put("cpu_abi", _CPU_ABI);
         map.put("cpu_abi2", _CPU_ABI2);
-        map.put("unknown", _UNKNOWN);
         map.put("hardware", _HARDWARE);
-        map.put("id", _ID);
         map.put("manufacturer", _MANUFACTURER);
         map.put("serial", _SERIAL);
         map.put("user", _USER);
