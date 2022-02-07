@@ -48,7 +48,6 @@ public class DeviceHandlerImpl implements DeviceHandler {
         String _CPU_ABI2 = android.os.Build.CPU_ABI2;
         String _HARDWARE = android.os.Build.HARDWARE;
         String _MANUFACTURER = android.os.Build.MANUFACTURER;
-        String _SERIAL = android.os.Build.SERIAL;
         String _USER = android.os.Build.USER;
         String _HOST = android.os.Build.HOST;
 
@@ -76,7 +75,6 @@ public class DeviceHandlerImpl implements DeviceHandler {
         map.put("cpu_abi2", _CPU_ABI2);
         map.put("hardware", _HARDWARE);
         map.put("manufacturer", _MANUFACTURER);
-        map.put("serial", _SERIAL);
         map.put("user", _USER);
         map.put("host", _HOST);
         return map;
