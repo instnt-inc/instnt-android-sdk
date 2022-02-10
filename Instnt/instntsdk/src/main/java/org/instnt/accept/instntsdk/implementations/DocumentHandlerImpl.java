@@ -119,6 +119,14 @@ public class DocumentHandlerImpl implements DocumentHandler {
         return new DSOptions();
     }
 
+    /**
+     * Scan document
+     * @param ifFront
+     * @param isAutoUpload
+     * @param documentType
+     * @param context
+     * @param documentVerifyLicenseKey
+     */
     @Override
     public void scanDocument(boolean ifFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) {
 
@@ -161,12 +169,20 @@ public class DocumentHandlerImpl implements DocumentHandler {
         dsHandler.start();
     }
 
+    /**
+     * Upload attachment
+     * @param ifFront
+     */
     @Override
     public void uploadAttachment(boolean ifFront) {
 
         uploadAttachment(this.dsResult, this.instnttxnid, ifFront);
     }
 
+    /**
+     * Verify documents
+     * @param documentType
+     */
     @Override
     public void verifyDocuments(String documentType) {
 
@@ -179,18 +195,30 @@ public class DocumentHandlerImpl implements DocumentHandler {
         });
     }
 
+    /**
+     * Set form key
+     * @param formKey
+     */
     @Override
     public void setFormKey(String formKey) {
         Log.i(TAG, "Set form key");
         this.formKey = formKey;
     }
 
+    /**
+     * Set instnt transaction id
+     * @param instnttxnid
+     */
     @Override
     public void setInstnttxnid(String instnttxnid) {
         Log.i(TAG, "Set instnttxnid");
         this.instnttxnid = instnttxnid;
     }
 
+    /**
+     * Set callback handler
+     * @param callbackHandler
+     */
     @Override
     public void setCallbackHandler(CallbackHandler callbackHandler) {
         Log.i(TAG, "Set callbackHandler");

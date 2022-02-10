@@ -17,6 +17,12 @@ public class DeviceHandlerImpl implements DeviceHandler {
 
     private static final String TAG = "DeviceHandlerImpl";
 
+    /**
+     * Get device info
+     * @param context
+     * @param windowManager
+     * @return
+     */
     @Override
     public Map<String, String> getDeviceInfo(Context context, WindowManager windowManager) {
 

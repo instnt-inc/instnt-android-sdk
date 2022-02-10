@@ -19,6 +19,10 @@ public class OTPHandlerImpl implements OTPHandler {
         this.networkModule = networkModule;
     }
 
+    /**
+     * Send OTP
+     * @param mobileNumber
+     */
     @Override
     public void sendOTP(String mobileNumber) {
 
@@ -37,6 +41,11 @@ public class OTPHandlerImpl implements OTPHandler {
         });
     }
 
+    /**
+     * Verify OTP
+     * @param mobileNumber
+     * @param otpCode
+     */
     @Override
     public void verifyOTP(String mobileNumber, String otpCode) {
 
@@ -55,12 +64,20 @@ public class OTPHandlerImpl implements OTPHandler {
         });
     }
 
+    /**
+     * Set instnt transaction id
+     * @param instnttxnid
+     */
     @Override
     public void setInstnttxnid(String instnttxnid) {
         Log.i(TAG, "Set instnttxnid");
         this.instnttxnid = instnttxnid;
     }
 
+    /**
+     * Set call back handler
+     * @param callbackHandler
+     */
     @Override
     public void setCallbackHandler(CallbackHandler callbackHandler) {
         Log.i(TAG, "Set callbackHandler");

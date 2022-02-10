@@ -95,6 +95,12 @@ public class NetworkUtil {
         return httpLoggingInterceptor;
     }
 
+    /**
+     * Submit form
+     * @param url
+     * @param body
+     * @return
+     */
     @SuppressLint("CheckResult")
     public Observable<FormSubmitResponse> submit(String url, Map<String, Object> body) {
         Log.i(TAG, "Calling submit form API");
@@ -105,6 +111,12 @@ public class NetworkUtil {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     * Send OTP
+     * @param mobileNumber
+     * @param instnttxnid
+     * @return
+     */
     @SuppressLint("CheckResult")
     public Observable<OTPResponse> sendOTP(String mobileNumber, String instnttxnid) {
 
@@ -125,6 +137,13 @@ public class NetworkUtil {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     * Verify OTP
+     * @param mobileNumber
+     * @param enteredOTP
+     * @param instnttxnid
+     * @return
+     */
     @SuppressLint("CheckResult")
     public Observable<OTPResponse> verifyOTP(String mobileNumber, String enteredOTP, String instnttxnid) {
 
@@ -148,6 +167,11 @@ public class NetworkUtil {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     * Get transaction
+     * @param formKey
+     * @return
+     */
     @SuppressLint("CheckResult")
     public Observable<FormCodes> getTransactionID(String formKey) {
 
@@ -167,6 +191,12 @@ public class NetworkUtil {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     * Get upload URL
+     * @param instnttxnid
+     * @param docSuffix
+     * @return
+     */
     @SuppressLint("CheckResult")
     public Observable<Map<String, Object>> getUploadUrl(String instnttxnid, String docSuffix) {
 
@@ -185,6 +215,12 @@ public class NetworkUtil {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     * Upload document
+     * @param fileName
+     * @param presignedS3Url
+     * @param imageData
+     */
     @SuppressLint("CheckResult")
     public void uploadDocument(String fileName, String presignedS3Url, byte[] imageData) {
 
@@ -206,6 +242,13 @@ public class NetworkUtil {
         });
     }
 
+    /**
+     * Verify documents
+     * @param documentType
+     * @param formKey
+     * @param instnttxnid
+     * @return
+     */
     @SuppressLint("CheckResult")
     public Observable<Map<String, Object>> verifyDocuments(String documentType, String formKey, String instnttxnid) {
     	
@@ -222,5 +265,4 @@ public class NetworkUtil {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
-
 }

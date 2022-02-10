@@ -66,6 +66,12 @@ public class InstntSDKImpl implements InstntSDK {
         this.otpHandler.setCallbackHandler(callbackHandler);
     }
 
+    /**
+     * Initialize transaction
+     * @param formKey
+     * @param serverUrl
+     * @param callbackHandler
+     */
     @Override
     public void initTransaction(String formKey, String serverUrl, CallbackHandler callbackHandler) {
 
@@ -86,47 +92,90 @@ public class InstntSDKImpl implements InstntSDK {
         });
     }
 
+    /**
+     * Scan document
+     * @param isFront
+     * @param isAutoUpload
+     * @param documentType
+     * @param context
+     * @param documentVerifyLicenseKey
+     */
     @Override
     public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) {
         documentHandler.scanDocument(isFront, isAutoUpload, documentType, context, documentVerifyLicenseKey);
     }
 
+    /**
+     * Upload attachment
+     * @param ifFront
+     */
     @Override
     public void uploadAttachment(boolean ifFront) {
         this.documentHandler.uploadAttachment(ifFront);
     }
 
+    /**
+     * Verify documents
+     * @param documentType
+     */
     @Override
     public void verifyDocuments(String documentType) {
         this.documentHandler.verifyDocuments(documentType);
     }
 
+    /**
+     * Submit form
+     * @param context
+     * @param windowManager
+     * @param body
+     */
     @Override
     public void submitForm(Context context, WindowManager windowManager, Map<String, Object> body) {
         body.put("mobileDeviceInfo", deviceHandler.getDeviceInfo(context, windowManager));
         this.formHandler.submitForm(body);
     }
 
+    /**
+     * Send OTP
+     * @param mobileNumber
+     */
     @Override
     public void sendOTP(String mobileNumber) {
         otpHandler.sendOTP(mobileNumber);
     }
 
+    /**
+     * Verify OTP
+     * @param mobileNumber
+     * @param otpCode
+     */
     @Override
     public void verifyOTP(String mobileNumber, String otpCode) {
         otpHandler.verifyOTP(mobileNumber, otpCode);
     }
 
+    /**
+     * Get instnt transaction id
+     * @return
+     */
     @Override
     public String getInstnttxnid() {
         return this.instnttxnid;
     }
 
+    /**
+     * Check is otp verification enabled
+     * @return
+     */
     @Override
     public boolean isOTPverificationEnable() {
         return this.formCodes.isOtp_verification();
     }
 
+    /**
+     * Check is document verification enabled
+     * @return
+     */
     @Override
     public boolean isDocumentVerificationEnable() {
         return this.formCodes.isDocumentVerification();

@@ -28,6 +28,10 @@ public class FormHandlerImpl implements FormHandler {
         this.networkModule = networkModule;
     }
 
+    /**
+     * Submit form
+     * @param body
+     */
     @Override
     public void submitForm(Map<String, Object> body) {
 
@@ -67,18 +71,30 @@ public class FormHandlerImpl implements FormHandler {
         });
     }
 
+    /**
+     * Set callback handler
+     * @param callbackHandler
+     */
     @Override
     public void setCallbackHandler(CallbackHandler callbackHandler) {
         Log.i(TAG, "Set callbackHandler");
         this.callbackHandler = callbackHandler;
     }
 
+    /**
+     * Set instnt transaction id
+     * @param instnttxnid
+     */
     @Override
     public void setInstnttxnid(String instnttxnid) {
         Log.i(TAG, "Set instnttxnid");
         this.instnttxnid = instnttxnid;
     }
 
+    /**
+     * Set workflow detail
+     * @param formCodes
+     */
     @Override
     public void setWorkFlowDetail(FormCodes formCodes) {
         Log.i(TAG, "Set formCodes");
