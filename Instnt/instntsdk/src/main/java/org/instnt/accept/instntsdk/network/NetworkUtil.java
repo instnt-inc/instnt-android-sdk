@@ -1,6 +1,7 @@
 package org.instnt.accept.instntsdk.network;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,18 +36,20 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class NetworkUtil {
 
+    private static final String TAG = "NetworkUtil";
+
     private String serverUrl;
 
     public void setServerUrl(String serverUrl) {
 
+        Log.i(TAG, "Set serverUrl");
         this.serverUrl = serverUrl;
     }
 
-    public NetworkUtil() {
-
-    }
+    public NetworkUtil() {}
 
     private OkHttpClient getOkHttpClient(){
+        Log.i(TAG, "Calling getOkHttpClient");
         return new OkHttpClient.Builder()
                 .readTimeout(1, TimeUnit.MINUTES)
                 .connectTimeout(1, TimeUnit.MINUTES)
@@ -64,6 +67,7 @@ public class NetworkUtil {
     }
 
     private Retrofit getRetrofit(OkHttpClient httpclient, String serverUrl){
+        Log.i(TAG, "Calling getRetrofit");
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -78,12 +82,14 @@ public class NetworkUtil {
     }
 
     private ApiInterface getApiService(String serverUrl) {
+        Log.i(TAG, "Calling getApiService");
         Retrofit retrofit = getRetrofit(getOkHttpClient(), serverUrl);
 
         return retrofit.create(ApiInterface.class);
     }
 
     private HttpLoggingInterceptor createHttpLoggingInterceptor() {
+        Log.i(TAG, "Calling createHttpLoggingInterceptor");
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         return httpLoggingInterceptor;
@@ -91,6 +97,7 @@ public class NetworkUtil {
 
     @SuppressLint("CheckResult")
     public Observable<FormSubmitResponse> submit(String url, Map<String, Object> body) {
+        Log.i(TAG, "Calling submit form API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         return apiInterface.submitForm(url, body)
@@ -100,6 +107,8 @@ public class NetworkUtil {
 
     @SuppressLint("CheckResult")
     public Observable<OTPResponse> sendOTP(String mobileNumber, String instnttxnid) {
+
+        Log.i(TAG, "Calling send OTP API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, String> innerBody = new HashMap<>();
@@ -118,6 +127,8 @@ public class NetworkUtil {
 
     @SuppressLint("CheckResult")
     public Observable<OTPResponse> verifyOTP(String mobileNumber, String enteredOTP, String instnttxnid) {
+
+        Log.i(TAG, "Calling verify OTP API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, String> innerBody = new HashMap<>();
@@ -139,6 +150,8 @@ public class NetworkUtil {
 
     @SuppressLint("CheckResult")
     public Observable<FormCodes> getTransactionID(String formKey) {
+
+        Log.i(TAG, "Calling get transaction API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, Object> body = new HashMap<>();
@@ -156,6 +169,8 @@ public class NetworkUtil {
 
     @SuppressLint("CheckResult")
     public Observable<Map<String, Object>> getUploadUrl(String instnttxnid, String docSuffix) {
+
+        Log.i(TAG, "Calling get upload URL API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, Object> body = new HashMap<>();
@@ -172,6 +187,8 @@ public class NetworkUtil {
 
     @SuppressLint("CheckResult")
     public void uploadDocument(String fileName, String presignedS3Url, byte[] imageData) {
+
+        Log.i(TAG, "Calling get transaction API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageData);
         Call<Void> call = apiInterface.uploadDocument(presignedS3Url, requestFile);
@@ -191,6 +208,8 @@ public class NetworkUtil {
 
     @SuppressLint("CheckResult")
     public Observable<Map<String, Object>> verifyDocuments(String documentType, String formKey, String instnttxnid) {
+    	
+    	Log.i(TAG, "Calling verify documents API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, Object> body = new HashMap<>();

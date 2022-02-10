@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.WindowManager;
 
 import java.text.DecimalFormat;
@@ -14,8 +15,13 @@ import java.util.Map;
 
 public class DeviceHandlerImpl implements DeviceHandler {
 
+    private static final String TAG = "DeviceHandlerImpl";
+
     @Override
     public Map<String, String> getDeviceInfo(Context context, WindowManager windowManager) {
+
+        Log.i(TAG, "Calling get device info");
+
         String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         DisplayMetrics dm = new DisplayMetrics();
         windowManager.getDefaultDisplay().getMetrics(dm);

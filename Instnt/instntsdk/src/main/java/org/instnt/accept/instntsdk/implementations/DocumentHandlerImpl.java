@@ -1,6 +1,7 @@
 package org.instnt.accept.instntsdk.implementations;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.idmetrics.dc.DSHandler;
 import com.idmetrics.dc.utils.DSCaptureMode;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 public class DocumentHandlerImpl implements DocumentHandler {
 
+    private static final String TAG = "DocumentHandlerImpl";
     private NetworkUtil networkModule;
     private CallbackHandler callbackHandler;
     private String formKey;
@@ -36,6 +38,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
 
     private void uploadAttachment(DSResult dsResult, String instnttxnid, boolean ifFront) {
 
+        Log.i(TAG, "Calling UploadAttachment");
         boolean isSelfie = false;
         String docSuffix = "F";
 
@@ -50,29 +53,35 @@ public class DocumentHandlerImpl implements DocumentHandler {
 
     private void getUploadUrlAndUploadDoc(DSResult dsResult, String docSuffix, String instnttxnid) {
 
+        Log.i(TAG, "Calling Get document upload url");
         //Get presigned s3 url method on which file should upload
         networkModule.getUploadUrl(instnttxnid, docSuffix).subscribe(response->{
 
+            Log.i(TAG, "Get document upload URL successfully");
             uploadDocumentAfterGetUrl(dsResult, response, docSuffix, instnttxnid);
         }, throwable -> {
-            //CommonUtils.showToast(getContext(), CommonUtils.getErrorMessage(throwable));
+            Log.e(TAG, "Have error when call get document upload URL", throwable);
             System.out.println(CommonUtils.getErrorMessage(throwable));
         });
     }
 
     private void uploadDocumentAfterGetUrl(DSResult dsResult, Map<String, Object> response, String docSuffix, String instnttxnid) {
 
+        Log.i(TAG, "Upload document to the fetched presigned URL");
         networkModule.uploadDocument(instnttxnid + docSuffix + ".jpg", (String) response.get("s3_key"), dsResult.image);
+        Log.i(TAG, "Document uploaded successfully");
         this.callbackHandler.successCallBack(dsResult.image, "", CallbackType.SUCCESS_IMAGE_UPLOAD);
     }
 
     private DSOptions getOptionsByDocumentType(boolean isFront, String documentType) {
 
+        Log.i(TAG, "Going to get options by document type, DocumentType : " + documentType + ", IsFrontDocument : " + isFront);
         DSID1Type dsid1Type = null;
 
         try {
             dsid1Type = DSID1Type.valueOf(documentType);
         } catch (Exception e) {
+            Log.e(TAG, "Document type mismatch with allowed types, passed document type : " + documentType + ", Auto taken document type : " + DSID1Type.License.toString(), e);
             dsid1Type = DSID1Type.License;
         }
 
@@ -111,13 +120,9 @@ public class DocumentHandlerImpl implements DocumentHandler {
     }
 
     @Override
-    public void setCallbackHandler(CallbackHandler callbackHandler) {
-        this.callbackHandler = callbackHandler;
-    }
-
-    @Override
     public void scanDocument(boolean ifFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) {
 
+        Log.i(TAG, "Calling Scan Document");
         DocumentHandlerImpl documentHandler = this;
         DSOptions dsOptions = getOptionsByDocumentType(ifFront, documentType);
 
@@ -129,6 +134,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
             @Override
             public void handleScan(DSResult dsResult) {
 
+                Log.i(TAG, "Document scanned successfully");
                 documentHandler.dsResult = dsResult;
 
                 if(isAutoUpload)
@@ -140,11 +146,14 @@ public class DocumentHandlerImpl implements DocumentHandler {
             @Override
             public void scanWasCancelled() {
 
+                Log.w(TAG, "Scan document was cancelled");
                 documentHandler.callbackHandler.errorCallBack("Please approve scan", CallbackType.ERROR_DOC_SCAN_CANCELLED);
             }
 
             @Override
             public void captureError(DSError dsError) {
+
+                Log.e(TAG, "Scan document has return with error : " + dsError.message);
                 documentHandler.callbackHandler.errorCallBack(dsError.message, CallbackType.ERROR_DOC_SCAN_NOT_CAPTURED);
             }
         });
@@ -161,22 +170,30 @@ public class DocumentHandlerImpl implements DocumentHandler {
     @Override
     public void verifyDocuments(String documentType) {
 
+        Log.i(TAG, "Calling verify documents");
         networkModule.verifyDocuments(documentType, this.formKey, this.instnttxnid).subscribe(response->{
 
-            System.out.println("Response");
+            Log.i(TAG, "Verify documents called successfully");
         }, throwable -> {
-            //CommonUtils.showToast(getContext(), CommonUtils.getErrorMessage(throwable));
-            System.out.println(CommonUtils.getErrorMessage(throwable));
+            Log.e(TAG, "Verify documents returns with error", throwable);
         });
     }
 
     @Override
     public void setFormKey(String formKey) {
+        Log.i(TAG, "Set form key");
         this.formKey = formKey;
     }
 
     @Override
     public void setInstnttxnid(String instnttxnid) {
+        Log.i(TAG, "Set instnttxnid");
         this.instnttxnid = instnttxnid;
+    }
+
+    @Override
+    public void setCallbackHandler(CallbackHandler callbackHandler) {
+        Log.i(TAG, "Set callbackHandler");
+        this.callbackHandler = callbackHandler;
     }
 }

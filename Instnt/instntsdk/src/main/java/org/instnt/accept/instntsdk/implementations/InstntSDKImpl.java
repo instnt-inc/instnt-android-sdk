@@ -1,6 +1,7 @@
 package org.instnt.accept.instntsdk.implementations;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.WindowManager;
 
 import org.instnt.accept.instntsdk.InstntSDK;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 public class InstntSDKImpl implements InstntSDK {
 
+    private static final String TAG = "InstntSDKImpl";
     private DocumentHandler documentHandler;
     private OTPHandler otpHandler;
     private FormHandler formHandler;
@@ -71,12 +73,15 @@ public class InstntSDKImpl implements InstntSDK {
         this.setFormKey(formKey);
         this.setCallbackHandler(callbackHandler);
 
+        Log.i(TAG, "Calling getTransactionID");
         networkModule.getTransactionID(this.formKey).subscribe(response->{
+            Log.i(TAG, "Calling getTransactionID returns with success response");
             this.setInstnttxnid(response.getInstnttxnid());
             this.setWorkFlowDetail(response);
             this.formCodes = response;
             this.callbackHandler.successCallBack(null, "Transaction initialization successfully", CallbackType.SUCCESS_INIT_TRANSACTION);
         }, throwable -> {
+            Log.e(TAG, "Calling getTransactionID returns with error response", throwable);
             this.callbackHandler.errorCallBack("Transaction initialization failed", CallbackType.ERROR_INIT_TRANSACTION);
         });
     }
