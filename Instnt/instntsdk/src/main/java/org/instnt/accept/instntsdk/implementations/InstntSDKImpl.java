@@ -36,33 +36,40 @@ public class InstntSDKImpl implements InstntSDK {
         deviceHandler = new DeviceHandlerImpl();
     }
 
-    @Override
-    public void setServerURL(String serverURL) {
+    private void setServerURL(String serverURL) {
         networkModule.setServerUrl(serverURL);
     }
 
-    @Override
-    public void setFormKey(String formKey) {
+    private void setFormKey(String formKey) {
         this.formKey = formKey;
         this.documentHandler.setFormKey(formKey);
     }
 
-    @Override
-    public void setInstnttxnid(String instnttxnid) {
+    private void setInstnttxnid(String instnttxnid) {
         this.instnttxnid = instnttxnid;
         this.documentHandler.setInstnttxnid(instnttxnid);
         this.otpHandler.setInstnttxnid(instnttxnid);
         this.formHandler.setInstnttxnid(instnttxnid);
     }
 
-    @Override
-    public void setWorkFlowDetail(FormCodes formCodes) {
+    private void setWorkFlowDetail(FormCodes formCodes) {
         this.formCodes = formCodes;
         this.formHandler.setWorkFlowDetail(formCodes);
     }
 
+    private void setCallbackHandler(CallbackHandler callbackHandler) {
+        this.callbackHandler = callbackHandler;
+        this.documentHandler.setCallbackHandler(callbackHandler);
+        this.formHandler.setCallbackHandler(callbackHandler);
+        this.otpHandler.setCallbackHandler(callbackHandler);
+    }
+
     @Override
-    public void initTransaction() {
+    public void initTransaction(String formKey, String serverUrl, CallbackHandler callbackHandler) {
+
+        this.setServerURL(serverUrl);
+        this.setFormKey(formKey);
+        this.setCallbackHandler(callbackHandler);
 
         networkModule.getTransactionID(this.formKey).subscribe(response->{
             this.setInstnttxnid(response.getInstnttxnid());
@@ -90,15 +97,8 @@ public class InstntSDKImpl implements InstntSDK {
     }
 
     @Override
-    public void setCallbackHandler(CallbackHandler callbackHandler) {
-        this.callbackHandler = callbackHandler;
-        this.documentHandler.setCallbackHandler(callbackHandler);
-        this.formHandler.setCallbackHandler(callbackHandler);
-        this.otpHandler.setCallbackHandler(callbackHandler);
-    }
-
-    @Override
-    public void submitForm(Map<String, Object> body) {
+    public void submitForm(Context context, WindowManager windowManager, Map<String, Object> body) {
+        body.put("mobileDeviceInfo", deviceHandler.getDeviceInfo(context, windowManager));
         this.formHandler.submitForm(body);
     }
 
@@ -113,7 +113,7 @@ public class InstntSDKImpl implements InstntSDK {
     }
 
     @Override
-    public String getTransactionID() {
+    public String getInstnttxnid() {
         return this.instnttxnid;
     }
 
@@ -125,10 +125,5 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public boolean isDocumentVerificationEnable() {
         return this.formCodes.isDocumentVerification();
-    }
-
-    @Override
-    public Map<String, String> getDeviceInfo(Context context, WindowManager windowManager) {
-        return deviceHandler.getDeviceInfo(context, windowManager);
     }
 }

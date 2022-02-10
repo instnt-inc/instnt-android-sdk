@@ -1,5 +1,8 @@
 package org.instnt.accept.instntsdk;
 
+import android.content.Context;
+import android.view.WindowManager;
+
 import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
 import org.instnt.accept.instntsdk.interfaces.DeviceHandler;
 import org.instnt.accept.instntsdk.interfaces.DocumentHandler;
@@ -7,29 +10,28 @@ import org.instnt.accept.instntsdk.interfaces.FormHandler;
 import org.instnt.accept.instntsdk.implementations.InstntSDKImpl;
 import org.instnt.accept.instntsdk.interfaces.OTPHandler;
 
-public interface InstntSDK extends DocumentHandler, OTPHandler, FormHandler , DeviceHandler {
+import java.util.Map;
+
+public interface InstntSDK {
 
     InstntSDK instance = new InstntSDKImpl();
 
     static InstntSDK init(String formKey, String serverUrl, CallbackHandler callbackHandler) {
-        instance.setServerURL(serverUrl);
-        instance.setFormKey(formKey);
-        instance.setCallbackHandler(callbackHandler);
-        instance.initTransaction();
+        instance.initTransaction(formKey, serverUrl, callbackHandler);
         return instance;
     }
 
-    void initTransaction();
-
-    String getTransactionID();
-
+    void initTransaction(String formKey, String serverUrl, CallbackHandler callbackHandler);
+    String getInstnttxnid();
     boolean isOTPverificationEnable();
-
     boolean isDocumentVerificationEnable();
 
-    void setServerURL(String serverURL);
+    void scanDocument(boolean ifFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey);
+    void uploadAttachment(boolean ifFront);
+    void verifyDocuments(String documentType);
 
-    void setFormKey(String formKey);
+    void submitForm(Context context, WindowManager windowManager, Map<String, Object> body);
 
-    void setInstnttxnid(String instnttxnid);
+    void sendOTP(String mobileNumber);
+    void verifyOTP(String mobileNumber, String otpCode);
 }

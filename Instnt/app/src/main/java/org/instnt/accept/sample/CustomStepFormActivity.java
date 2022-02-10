@@ -518,9 +518,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
             inputView.input(paramMap);
         }
 
-        Map<String, String> deviceInfoMap = this.instantSDK.getDeviceInfo(getBaseContext(), this.getWindowManager());
-        paramMap.put("mobileDeviceInfo", deviceInfoMap);
-        this.instantSDK.submitForm(paramMap);
+        this.instantSDK.submitForm(getBaseContext(), this.getWindowManager(), paramMap);
     }
 
     private String convertObjectToString(Object obj) {
