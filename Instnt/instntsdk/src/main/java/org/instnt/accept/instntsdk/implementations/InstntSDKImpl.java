@@ -19,7 +19,6 @@ import java.util.Map;
 
 public class InstntSDKImpl implements InstntSDK {
 
-    private static final String TAG = "InstntSDKImpl";
     private DocumentHandler documentHandler;
     private OTPHandler otpHandler;
     private FormHandler formHandler;
@@ -79,17 +78,17 @@ public class InstntSDKImpl implements InstntSDK {
         this.setFormKey(formKey);
         this.setCallbackHandler(callbackHandler);
 
-        Log.i(TAG, "Calling getTransactionID");
+        Log.i(CommonUtils.LOG_TAG, "Calling getTransactionID");
         networkModule.getTransactionID(this.formKey).subscribe(response->{
             CallbackDataImpl callbackDataImpl = new CallbackDataImpl();
-            Log.i(TAG, "Calling getTransactionID returns with success response");
+            Log.i(CommonUtils.LOG_TAG, "Calling getTransactionID returns with success response");
             this.setInstnttxnid(response.getInstnttxnid());
             this.setWorkFlowDetail(response);
             this.formCodes = response;
             callbackDataImpl.setInstnttxnid(response.getInstnttxnid());
             this.callbackHandler.successCallBack(callbackDataImpl, "Transaction initialization successfully", CallbackType.SUCCESS_INIT_TRANSACTION);
         }, throwable -> {
-            Log.e(TAG, "Calling getTransactionID returns with error response", throwable);
+            Log.e(CommonUtils.LOG_TAG, "Calling getTransactionID returns with error response", throwable);
             this.callbackHandler.errorCallBack("Transaction initialization failed", CallbackType.ERROR_INIT_TRANSACTION);
         });
     }

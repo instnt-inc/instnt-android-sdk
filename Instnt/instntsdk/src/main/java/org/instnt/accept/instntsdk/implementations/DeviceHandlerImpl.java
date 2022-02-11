@@ -1,6 +1,7 @@
 package org.instnt.accept.instntsdk.implementations;
 
 import org.instnt.accept.instntsdk.interfaces.DeviceHandler;
+import org.instnt.accept.instntsdk.utils.CommonUtils;
 
 import android.content.Context;
 import android.os.Build;
@@ -15,8 +16,6 @@ import java.util.Map;
 
 public class DeviceHandlerImpl implements DeviceHandler {
 
-    private static final String TAG = "DeviceHandlerImpl";
-
     /**
      * Get device info
      * @param context
@@ -26,7 +25,7 @@ public class DeviceHandlerImpl implements DeviceHandler {
     @Override
     public Map<String, String> getDeviceInfo(Context context, WindowManager windowManager) {
 
-        Log.i(TAG, "Calling get device info");
+        Log.i(CommonUtils.LOG_TAG, "Calling get device info");
 
         String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         DisplayMetrics dm = new DisplayMetrics();

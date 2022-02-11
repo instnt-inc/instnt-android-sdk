@@ -10,6 +10,7 @@ import org.instnt.accept.instntsdk.model.FormCodes;
 import org.instnt.accept.instntsdk.model.FormSubmitResponse;
 import org.instnt.accept.instntsdk.model.OTPResponse;
 
+import org.instnt.accept.instntsdk.utils.CommonUtils;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -36,20 +37,18 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class NetworkUtil {
 
-    private static final String TAG = "NetworkUtil";
-
     private String serverUrl;
 
     public void setServerUrl(String serverUrl) {
 
-        Log.i(TAG, "Set serverUrl");
+        Log.i(CommonUtils.LOG_TAG, "Set serverUrl");
         this.serverUrl = serverUrl;
     }
 
     public NetworkUtil() {}
 
     private OkHttpClient getOkHttpClient(){
-        Log.i(TAG, "Calling getOkHttpClient");
+        Log.i(CommonUtils.LOG_TAG, "Calling getOkHttpClient");
         return new OkHttpClient.Builder()
                 .readTimeout(1, TimeUnit.MINUTES)
                 .connectTimeout(1, TimeUnit.MINUTES)
@@ -67,7 +66,7 @@ public class NetworkUtil {
     }
 
     private Retrofit getRetrofit(OkHttpClient httpclient, String serverUrl){
-        Log.i(TAG, "Calling getRetrofit");
+        Log.i(CommonUtils.LOG_TAG, "Calling getRetrofit");
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -82,14 +81,14 @@ public class NetworkUtil {
     }
 
     private ApiInterface getApiService(String serverUrl) {
-        Log.i(TAG, "Calling getApiService");
+        Log.i(CommonUtils.LOG_TAG, "Calling getApiService");
         Retrofit retrofit = getRetrofit(getOkHttpClient(), serverUrl);
 
         return retrofit.create(ApiInterface.class);
     }
 
     private HttpLoggingInterceptor createHttpLoggingInterceptor() {
-        Log.i(TAG, "Calling createHttpLoggingInterceptor");
+        Log.i(CommonUtils.LOG_TAG, "Calling createHttpLoggingInterceptor");
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         return httpLoggingInterceptor;
@@ -103,7 +102,7 @@ public class NetworkUtil {
      */
     @SuppressLint("CheckResult")
     public Observable<FormSubmitResponse> submit(String url, Map<String, Object> body) {
-        Log.i(TAG, "Calling submit form API");
+        Log.i(CommonUtils.LOG_TAG, "Calling submit form API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         return apiInterface.submitForm(url, body)
@@ -120,7 +119,7 @@ public class NetworkUtil {
     @SuppressLint("CheckResult")
     public Observable<OTPResponse> sendOTP(String mobileNumber, String instnttxnid) {
 
-        Log.i(TAG, "Calling send OTP API");
+        Log.i(CommonUtils.LOG_TAG, "Calling send OTP API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, String> innerBody = new HashMap<>();
@@ -147,7 +146,7 @@ public class NetworkUtil {
     @SuppressLint("CheckResult")
     public Observable<OTPResponse> verifyOTP(String mobileNumber, String enteredOTP, String instnttxnid) {
 
-        Log.i(TAG, "Calling verify OTP API");
+        Log.i(CommonUtils.LOG_TAG, "Calling verify OTP API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, String> innerBody = new HashMap<>();
@@ -175,7 +174,7 @@ public class NetworkUtil {
     @SuppressLint("CheckResult")
     public Observable<FormCodes> getTransactionID(String formKey) {
 
-        Log.i(TAG, "Calling get transaction API");
+        Log.i(CommonUtils.LOG_TAG, "Calling get transaction API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, Object> body = new HashMap<>();
@@ -200,7 +199,7 @@ public class NetworkUtil {
     @SuppressLint("CheckResult")
     public Observable<Map<String, Object>> getUploadUrl(String instnttxnid, String docSuffix) {
 
-        Log.i(TAG, "Calling get upload URL API");
+        Log.i(CommonUtils.LOG_TAG, "Calling get upload URL API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, Object> body = new HashMap<>();
@@ -224,7 +223,7 @@ public class NetworkUtil {
     @SuppressLint("CheckResult")
     public void uploadDocument(String fileName, String presignedS3Url, byte[] imageData) {
 
-        Log.i(TAG, "Calling get transaction API");
+        Log.i(CommonUtils.LOG_TAG, "Calling get transaction API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageData);
         Call<Void> call = apiInterface.uploadDocument(presignedS3Url, requestFile);
@@ -252,7 +251,7 @@ public class NetworkUtil {
     @SuppressLint("CheckResult")
     public Observable<Map<String, Object>> verifyDocuments(String documentType, String formKey, String instnttxnid) {
     	
-    	Log.i(TAG, "Calling verify documents API");
+    	Log.i(CommonUtils.LOG_TAG, "Calling verify documents API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, Object> body = new HashMap<>();

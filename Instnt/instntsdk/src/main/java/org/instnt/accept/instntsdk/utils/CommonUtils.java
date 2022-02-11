@@ -12,6 +12,8 @@ import retrofit2.HttpException;
 
 public class CommonUtils {
 
+    public static final String LOG_TAG = "InstntSDK";
+
     public static void showToast(Context context, String message){
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
