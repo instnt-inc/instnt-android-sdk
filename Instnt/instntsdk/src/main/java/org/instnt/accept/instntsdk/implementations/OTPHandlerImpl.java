@@ -34,8 +34,8 @@ public class OTPHandlerImpl implements OTPHandler {
             Gson gson = new Gson();
             OTPResponse otpResponse1 = gson.fromJson((String) otpResponse.get("body"), OTPResponse.class);
             if(otpResponse1 != null && !otpResponse1.getResponse().isValid()) {
-                Log.e(CommonUtils.LOG_TAG, "Send OTP called successfully but returns with error : " + otpResponse.getResponse().getErrors()[0]);
-                this.callbackHandler.sendOTPErrorCallBack(otpResponse.getResponse().getErrors()[0]);
+                Log.e(CommonUtils.LOG_TAG, "Send OTP called successfully but returns with error : " + otpResponse1.getResponse().getErrors()[0]);
+                this.callbackHandler.sendOTPErrorCallBack(otpResponse1.getResponse().getErrors()[0]);
                 return;
             }
             this.callbackHandler.sendOTPSuccessCallBack("OTP sent successfully");
@@ -59,8 +59,8 @@ public class OTPHandlerImpl implements OTPHandler {
             Gson gson = new Gson();
             OTPResponse otpResponse1 = gson.fromJson((String) otpResponse.get("body"), OTPResponse.class);
             if(otpResponse1 != null && !otpResponse1.getResponse().isValid()) {
-                Log.e(CommonUtils.LOG_TAG, "Verify OTP called successfully but returns with error : " + otpResponse.getResponse().getErrors()[0]);
-                this.callbackHandler.verifyOTPErrorCallBack(otpResponse.getResponse().getErrors()[0]);
+                Log.e(CommonUtils.LOG_TAG, "Verify OTP called successfully but returns with error : " + otpResponse1.getResponse().getErrors()[0]);
+                this.callbackHandler.verifyOTPErrorCallBack(otpResponse1.getResponse().getErrors()[0]);
                 return;
             }
             this.callbackHandler.verifyOTPSuccessCallBack("OTP verified successfully");
