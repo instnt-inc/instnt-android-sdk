@@ -99,7 +99,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
             case 3: {
 
                 //Check if otp verification enable
-                if(this.instantSDK.isOTPverificationEnable()) {
+                if(this.instantSDK.isOTPverificationEnabled()) {
                     showProgressDialog(true);
                     sendOTP();
                 } else {
@@ -124,7 +124,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 6: {
 
-                if(this.instantSDK.isDocumentVerificationEnable()) {
+                if(this.instantSDK.isDocumentVerificationEnabled()) {
                     this.isFront = true;
                     scanDocument("License");
                 } else {
@@ -136,7 +136,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 7: {
 
-                if(this.instantSDK.isDocumentVerificationEnable()) {
+                if(this.instantSDK.isDocumentVerificationEnabled()) {
                     this.isFront = false;
                     scanDocument("License");
                 } else {
@@ -234,7 +234,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 4: {
 
-                if(this.instantSDK.isOTPverificationEnable()) {
+                if(this.instantSDK.isOTPverificationEnabled()) {
                     binding.headText1.setText("Enter OTP");
                     binding.headText2.setVisibility(View.GONE);
 
@@ -272,7 +272,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 6: {
 
-                if(this.instantSDK.isDocumentVerificationEnable()) {
+                if(this.instantSDK.isDocumentVerificationEnabled()) {
                     binding.headText1.setText("Choose the document type");
                     binding.headText2.setText("As an added layer of security, we need to verify your identity before approving your application");
                     binding.headText2.setVisibility(View.VISIBLE);
@@ -294,7 +294,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 7: {
 
-                if(this.instantSDK.isDocumentVerificationEnable()) {
+                if(this.instantSDK.isDocumentVerificationEnabled()) {
                     binding.headText1.setText("Review Capture Image");
                     binding.headText2.setVisibility(View.GONE);
                     binding.containerStep1Declaration.setVisibility(View.GONE);
@@ -519,7 +519,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
             inputView.input(paramMap);
         }
 
-        this.instantSDK.submitForm(getBaseContext(), this.getWindowManager(), paramMap);
+        this.instantSDK.submitData(getBaseContext(), this.getWindowManager(), paramMap);
     }
 
     private String convertObjectToString(Object obj) {

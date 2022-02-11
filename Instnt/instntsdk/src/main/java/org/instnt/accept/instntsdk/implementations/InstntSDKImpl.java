@@ -131,9 +131,9 @@ public class InstntSDKImpl implements InstntSDK {
      * @param body
      */
     @Override
-    public void submitForm(Context context, WindowManager windowManager, Map<String, Object> body) {
+    public void submitData(Context context, WindowManager windowManager, Map<String, Object> body) {
         body.put("mobileDeviceInfo", deviceHandler.getDeviceInfo(context, windowManager));
-        this.formHandler.submitForm(body);
+        this.formHandler.submitData(body);
     }
 
     /**
@@ -169,7 +169,7 @@ public class InstntSDKImpl implements InstntSDK {
      * @return
      */
     @Override
-    public boolean isOTPverificationEnable() {
+    public boolean isOTPverificationEnabled() {
         return this.formCodes.isOtp_verification();
     }
 
@@ -178,7 +178,7 @@ public class InstntSDKImpl implements InstntSDK {
      * @return
      */
     @Override
-    public boolean isDocumentVerificationEnable() {
+    public boolean isDocumentVerificationEnabled() {
         return this.formCodes.isDocumentVerification();
     }
 }

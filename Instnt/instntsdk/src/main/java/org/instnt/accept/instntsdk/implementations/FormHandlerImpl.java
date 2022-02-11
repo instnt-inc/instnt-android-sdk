@@ -33,7 +33,7 @@ public class FormHandlerImpl implements FormHandler {
      * @param body
      */
     @Override
-    public void submitForm(Map<String, Object> body) {
+    public void submitData(Map<String, Object> body) {
 
         Log.i(CommonUtils.LOG_TAG, "Calling Submit form");
         try {

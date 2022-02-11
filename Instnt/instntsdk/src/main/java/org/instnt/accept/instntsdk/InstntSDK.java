@@ -23,14 +23,14 @@ public interface InstntSDK {
 
     void initTransaction(String formKey, String serverUrl, CallbackHandler callbackHandler);
     String getInstnttxnid();
-    boolean isOTPverificationEnable();
-    boolean isDocumentVerificationEnable();
+    boolean isOTPverificationEnabled();
+    boolean isDocumentVerificationEnabled();
 
     void scanDocument(boolean ifFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey);
     void uploadAttachment(boolean ifFront);
     void verifyDocuments(String documentType);
 
-    void submitForm(Context context, WindowManager windowManager, Map<String, Object> body);
+    void submitData(Context context, WindowManager windowManager, Map<String, Object> body);
 
     void sendOTP(String mobileNumber);
     void verifyOTP(String mobileNumber, String otpCode);
