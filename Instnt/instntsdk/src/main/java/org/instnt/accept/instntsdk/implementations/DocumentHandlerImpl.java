@@ -16,6 +16,7 @@ import com.idmetrics.dc.utils.DSSide;
 import com.idmetrics.dc.utils.FlashCapture;
 
 import org.instnt.accept.instntsdk.enums.CallbackType;
+import org.instnt.accept.instntsdk.interfaces.CallbackData;
 import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
 import org.instnt.accept.instntsdk.interfaces.DocumentHandler;
 import org.instnt.accept.instntsdk.network.NetworkUtil;
@@ -61,7 +62,6 @@ public class DocumentHandlerImpl implements DocumentHandler {
             uploadDocumentAfterGetUrl(dsResult, response, docSuffix, instnttxnid);
         }, throwable -> {
             Log.e(TAG, "Have error when call get document upload URL", throwable);
-            System.out.println(CommonUtils.getErrorMessage(throwable));
         });
     }
 
@@ -70,7 +70,9 @@ public class DocumentHandlerImpl implements DocumentHandler {
         Log.i(TAG, "Upload document to the fetched presigned URL");
         networkModule.uploadDocument(instnttxnid + docSuffix + ".jpg", (String) response.get("s3_key"), dsResult.image);
         Log.i(TAG, "Document uploaded successfully");
-        this.callbackHandler.successCallBack(dsResult.image, "", CallbackType.SUCCESS_IMAGE_UPLOAD);
+        CallbackDataImpl callbackDataImpl = new CallbackDataImpl();
+        callbackDataImpl.setImageBytes(dsResult.image);
+        this.callbackHandler.successCallBack(callbackDataImpl, "", CallbackType.SUCCESS_IMAGE_UPLOAD);
     }
 
     private DSOptions getOptionsByDocumentType(boolean isFront, String documentType) {

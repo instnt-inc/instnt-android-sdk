@@ -3,6 +3,7 @@ package org.instnt.accept.instntsdk.implementations;
 import android.util.Log;
 
 import org.instnt.accept.instntsdk.enums.CallbackType;
+import org.instnt.accept.instntsdk.interfaces.CallbackData;
 import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
 import org.instnt.accept.instntsdk.model.FormCodes;
 import org.instnt.accept.instntsdk.interfaces.FormHandler;
@@ -64,7 +65,9 @@ public class FormHandlerImpl implements FormHandler {
         Log.i(TAG, "Calling submit form API");
         networkModule.submit(formCodes.getSubmitURL(), body).subscribe( success-> {
             Log.i(TAG, "Submit form called successfully");
-            this.callbackHandler.successCallBack(success.getData(), "", CallbackType.SUCCESS_FORM_SUBMIT);
+            CallbackDataImpl callbackDataImpl = new CallbackDataImpl();
+            callbackDataImpl.setFormSubmitData(success.getData());
+            this.callbackHandler.successCallBack(callbackDataImpl, "", CallbackType.SUCCESS_FORM_SUBMIT);
         }, throwable -> {
             Log.e(TAG, "Submit form returns with error", throwable);
             this.callbackHandler.errorCallBack(CommonUtils.getErrorMessage(throwable), CallbackType.ERROR_FORM_SUBMIT);

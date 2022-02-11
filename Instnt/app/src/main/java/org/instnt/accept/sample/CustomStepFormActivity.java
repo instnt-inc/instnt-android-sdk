@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import com.google.gson.Gson;
 
 import org.instnt.accept.instntsdk.enums.CallbackType;
+import org.instnt.accept.instntsdk.interfaces.CallbackData;
 import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
 import org.instnt.accept.instntsdk.model.FormField;
 import org.instnt.accept.instntsdk.InstntSDK;
@@ -541,13 +542,13 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
     }
 
     @Override
-    public void successCallBack(Object data, String message, CallbackType callbackType) {
+    public void successCallBack(CallbackData data, String message, CallbackType callbackType) {
 
         switch (callbackType) {
 
             case SUCCESS_IMAGE_UPLOAD: {
 
-                byte[] imageData = (byte[]) data;
+                byte[] imageData = data.SUCCESS_IMAGE_UPLOAD_data();
                 Bitmap bm = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
                 DisplayMetrics dm = new DisplayMetrics();
                 getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -570,11 +571,12 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
                 showProgressDialog(false);
                 //init form fields
                 initFormFields();
+                String instnttxnid = data.SUCCESS_INIT_TRANSACTION_data();
                 break;
             }
             case SUCCESS_FORM_SUBMIT: {
                 showProgressDialog(false);
-                FormSubmitData formSubmitData = (FormSubmitData) data;
+                FormSubmitData formSubmitData = data.SUCCESS_FORM_SUBMIT_data();
                 binding.decision.setText("Decision : " + formSubmitData.getDecision());
                 binding.jwtToken.setText(formSubmitData.getJwt());
                 nextStep(true);

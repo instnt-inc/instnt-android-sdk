@@ -81,11 +81,13 @@ public class InstntSDKImpl implements InstntSDK {
 
         Log.i(TAG, "Calling getTransactionID");
         networkModule.getTransactionID(this.formKey).subscribe(response->{
+            CallbackDataImpl callbackDataImpl = new CallbackDataImpl();
             Log.i(TAG, "Calling getTransactionID returns with success response");
             this.setInstnttxnid(response.getInstnttxnid());
             this.setWorkFlowDetail(response);
             this.formCodes = response;
-            this.callbackHandler.successCallBack(null, "Transaction initialization successfully", CallbackType.SUCCESS_INIT_TRANSACTION);
+            callbackDataImpl.setInstnttxnid(response.getInstnttxnid());
+            this.callbackHandler.successCallBack(callbackDataImpl, "Transaction initialization successfully", CallbackType.SUCCESS_INIT_TRANSACTION);
         }, throwable -> {
             Log.e(TAG, "Calling getTransactionID returns with error response", throwable);
             this.callbackHandler.errorCallBack("Transaction initialization failed", CallbackType.ERROR_INIT_TRANSACTION);
