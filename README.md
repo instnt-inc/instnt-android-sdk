@@ -1,28 +1,40 @@
-# InstntSDK
-This documentation covers the basics of Instnt SDK. For a detailed overview of Instnt's functionality, visit the [Instnt documentation library](https://support.instnt.org/hc/en-us/articles/360055345112-Integration-Overview)
+# Instnt Android SDK
+This documentation covers the basics of Instnt Android SDK. For a detailed overview of Instnt's functionality, visit the [Instnt documentation library](https://support.instnt.org/hc/en-us/articles/360055345112-Integration-Overview)
 
-## Rendering a Standard Signup Workflow with Instnt SDK
+# Table of Contents
 
-Instnt SDK can render a standard workflow that includes the following fields:
-* Email Address
-* First Name
-* Surname
-* Mobile Number
-* State
-* Street Address
-* Zip code
-* City
-* Country
-* Submit My Workflow Button
+- [Prerequisites](#prerequisites)
+- [Getting started](#getting-started)
+     * [Initialization of a transaction](#initialization-of-a-transaction)
+- [Document verification](#document-verification)
+    * [Document verification pre-requisites](#document-verification-pre-requisites)
+    * [Document verifications steps](#document-verification-steps)
+- [OTP verification](#otp-one-time-passcode)
+    * [OTP workflow ](#otp-flow )
+- [Submit form data](#submit-form-data)
+- [Callback handler](#callback-handler)
+- [Instnt object](#instnt-object)
+- [Instnt functions](#instnt-functions)
+    * [Callback type](#callback-type)
+        * [Success callback enum](#success-callback-enum)
+        * [Error callback enum](#error-callback-enum)
+- [Assertion Response Payload](#assertion-response-payload)
+- [Resource links](#resource-links)
 
-## Getting Started
+# Prerequisites
 
-Note that a Workflow ID is required in order to properly execute this function. For more information concerning Workflow IDs, please visit
+* Sign in to your account on the Instnt Accept's dashboard and create a customer signup workflow that works for your company. Get the workflow ID, this ID is important during the integration with Instnt SDK.
+Refer [Quick start guide](https://support.instnt.org/hc/en-us/articles/4408781136909) and [Developer guide, ](https://support.instnt.org/hc/en-us/articles/360055345112-Integration-Overview) for more information.
+
+* The integration of SDK depends on your workflow; read the [Instnt Accept integration process,](https://support.instnt.org/hc/en-us/articles/4418538578701-Instnt-Accept-Integration-Process) to understand the functionalities provided by Instnt and how to integrate SDK with your application.
+
+# Getting Started
+
+Note that a Workflow ID is required in order to properly execute the android functions. For more information concerning Workflow IDs, please visit
 [Instnt's documentation library.](https://support.instnt.org/hc/en-us/articles/360055345112-Integration-Overview)
 
-1. Create a form in the Instnt dashboard and get the Workflow ID.
+**Install InstntSDK**
 
-2. Install InstntSDK.
 ### Gradle
 ```
 dependencies {
@@ -30,100 +42,388 @@ dependencies {
 }
 ```
 
-3. Implement the following code to present the form associated with the Workflow ID
+## Initialization of a transaction
+To initialize the session and to begin the transacction use the `instantSDK = InstntSDK.init(this.formKey, serverUrl, this);` 
 
-### Initialize SDK and callback
+**formKey** : workflowID
+**ServerURl**: production URL or sandbox URL
+**this** : CallbackHandler
+
+The function returns an [Instnt object](#instnt-object), that can be used for further processing of the various functionalities.
+
+See the following sample code implemmenttaion of initializing the transaction.
+
+```java
+import org.instnt.accept.instntsdk.enums.CallbackType;
+import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
+import org.instnt.accept.instntsdk.model.FormField;
+import org.instnt.accept.instntsdk.InstntSDK;
+import org.instnt.accept.instntsdk.model.FormSubmitData;
+import org.instnt.accept.instntsdk.utils.CommonUtils;
+import org.instnt.accept.sample.databinding.ActivityCustomStepFormBinding;
+import org.instnt.accept.sample.view.BaseActivity;
+import org.instnt.accept.sample.view.render.BaseInputView;
+import org.instnt.accept.sample.view.render.TextInputView;
+
+
+private InstntSDK instantSDK;
+private void init() {
+
+        Bundle extras = getIntent().getExtras();
+        String serverUrl;
+        if (extras != null) {
+            this.formKey = extras.getString("formKey");
+            serverUrl = extras.getString("serverUrl");
+        } else {
+            CommonUtils.showToast(this, "Form key is not found. Please go back and proceed.");
+            return;
+        }
+
+        showProgressDialog(true);
+        instantSDK = InstntSDK.init(this.formKey, serverUrl, this);
+        binding.previous.setOnClickListener(v -> nextStep(false));
+        binding.next.setOnClickListener(v -> validateCurrentStep(true));
+        binding.submitAnotherForm.setOnClickListener(v -> reInitForm());
+    }
+```
+
+
+# Document verification
+
+Document verification feature comes into the picture if you have enabled it during the workflow creation.
+
+When this feature is enabled, the physical capture and verification of selfies and Government-issued identification documents such as Driver's Licenses and Passportsare available.
+
+Read the [Document Verification](https://support.instnt.org/hc/en-us/articles/4408781136909#heading-6) section of the Quickstart guide to understand better how to enable the feature.
+
+## Document verification pre-requisites
+
+* iOS and Android mobile devices with Chrome or Safari browsers are supported for document verification.
+
+* Desktop devices (laptops, PCs) are unsupported due to the poor quality of embedded cameras and lack of gyroscopes for orientation detection. While the feature will work on devices running Chrome or Safari browsers, the experience can vary.
+
+* Do not include HTML tags with IDs containing the prefix 'aid.' e.g. `<div id=’aidFooter’>` in your web app as this prefix is reserved to be used by the toolkit.
+
+* Document verification requires end-to-end communication over SSL to get permission to use the device camera.
+
+## Document verification steps
+
+
+1. Firstly you need to initialize the device camera for capturing the images like font/backside of a Drivers's License, then obtain a pre-signed URL to scan and upload the document and is taken care of by functioning the SDK; see the following sample code:
+
 ```java
 
-public class MainActivity extends BaseActivity implements SubmitCallback {
-   private InstntSDK instantSDK;
-  
-   private void init() {
-        instantSDK = InstntSDK.getInstance();      
-        instantSDK.setCallback(this);
-    }
-    
-   @Override
-   public void didCancel() {
-        binding.result.setText("No JWT");
-        CommonUtils.showToast(this, "User Cancelled");
-   }
-
-   @Override
-   public void didSubmit(FormSubmitData data, String errMessage) {
-        if (data == null) {        
-            binding.result.setText("No JWT");
-            CommonUtils.showToast(this, errMessage);
-        }else {
-            binding.result.setText(data.getJwt());            
+private void scanDocument(String documentType) {
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, MY_CAMERA_REQUEST_CODE);
+        } else {
+            instantSDK.scanDocument(this.isFront, this.isAutoUpload, documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
         }
-   }
-```
- ### Call api with workflow ID
- ``` java
-      String formId = binding.formid.getText().toString().trim();
-
-      instantSDK.setup(formId, binding.sandboxSwitch.isChecked());
-
- ```
- ### Call render function to show form field screen and submit
- ``` java
-   private void showForm(FormCodes formCodes) {
-        instantSDK.showForm(this, formCodes, this);
     }
- ```
-  ### Submitcallback
-  ``` java
-   public interface SubmitCallback {
-      void didCancel();
-      void didSubmit(FormSubmitData submitData, String errMessage);
-   }
-  ```
-  `didCancel()` is called when the user taps the Cancel button.
-  `didSubmit()` is called when the data is submitted successfully.
-        - `submitData`: Form submission result. `Jwt` and `decision` will be included.
-        - `errMessage`: Error when api call fails.
 
 
-## Custom Usage
-
-InstntSDK provides the following two functions for submitting custom forms to the Instnt API.
-``` java
-public void getFormData(GetFormCallback callback)
-public void submitForm(String url, Map<String, Object> body, SubmitCallback callback)
-```
-1. Call `setUp` function first to prepare the form submission.
-``` java
-    instantSDK.setup(formId, binding.sandboxSwitch.isChecked());
 ```
 
-2. Call `submitForm` function with user data.
-```swift
-   private void submit() {
+2. Next, upload the attachment.
+
+Following sample code demonstrates the upload attachment process:
+
+```java
+binding.uploadDocBtn.setVisibility(View.VISIBLE);
+            binding.uploadDocBtn.setOnClickListener(v -> {
+                this.instantSDK.uploadAttachment(this.isFront);
+```
+
+3. Next, verify the documents that were uploaded.
+
+Following sample code demonstrates the verify document process: 
+
+``` java
+this.instantSDK.verifyDocuments("License");
+```
+
+# OTP (One-Time Passcode)
+
+OTP functionality can be enabled by logging in Instnt dashboard and enabling OTP in your workflow. Refer to the [OTP](https://support.instnt.org/hc/en-us/articles/4408781136909#heading-5) section of the Quickstart guide for more information.
+
+## OTP flow
+
+* User enters mobile number as part of the signup screen.
+* Your app calls send OTP() SDK function and pass the mobile number.
+* Instnt SDK calls Instnt API and returns the response upon successful OTP delivery.
+* Your app shows the user a screen to enter the OTP code.
+* User enters the OTP code which they received.
+* Your app calls verify the OTP() SDK function to verify the OTP and pass mobile number and OTP code.
+* Instnt SDK calls Instnt API and returns the response upon successful OTP verification
+
+Instnt SDK provides two [library functions](#library-functions) to enable OTP. we have also provided the sample code for the implementation.
+
+1. sendOTP (mobileNumber)
+
+```java
+private void sendOTP() {
+
+        //Call send otp api
+        View view = binding.containerStep3Contact.getChildAt(0);
+        TextView mobile = view.findViewById(org.instnt.accept.instntsdk.R.id.value);
+        String mobileNumber = mobile.getText() == null ? null : mobile.getText().toString();
+
+        //Validate number
+        if (!isValidE123(mobileNumber)) {
+            showProgressDialog(false);
+            CommonUtils.showToast(getBaseContext(), "Please enter a valid number with country code");
+            return;
+        }
+
+        this.instantSDK.sendOTP(mobileNumber);
+    }
+```
+2. verifyOTP(mobileNumber, otpCode)
+
+```java
+private void verifyOTP() {
+
+        View view = binding.containerStep3Contact.getChildAt(0);
+        TextView mobile = view.findViewById(org.instnt.accept.instntsdk.R.id.value);
+        String mobileNumber = mobile.getText() == null ? null : mobile.getText().toString();
+
+        View view1 = binding.containerStep4Otp.getChildAt(1);
+        TextView otpText = view1.findViewById(org.instnt.accept.instntsdk.R.id.value);
+        String otpCode = otpText.getText() == null ? null : otpText.getText().toString();
+
+        this.instantSDK.verifyOTP(mobileNumber, otpCode);
+    }
+```
+
+Please refer to the [library functions](#library-functions) listed below for more details. 
+
+# Submit form data
+
+After gathering all the relevant end-user information and processing the documents, you can submit all the data to Instnt via a function.
+
+See the sample code of the implementation:
+
+```java
+private void submit() {
         Map<String, Object> paramMap = new HashMap<>();
-        for (int i = 0; i<binding.container.getChildCount(); i++) {
-            BaseInputView inputView = (BaseInputView)binding.container.getChildAt(i);
-
-            if (!inputView.checkValid())
-                return;
-
+        for (int i = 0; i<binding.containerStep2Name.getChildCount(); i++) {
+            BaseInputView inputView = (BaseInputView) binding.containerStep2Name.getChildAt(i);
             inputView.input(paramMap);
         }
 
-        instantSDK.submitForm(paramMap, this);
-   }
+        for (int i = 0; i<binding.containerStep3Contact.getChildCount(); i++) {
+            BaseInputView inputView = (BaseInputView) binding.containerStep3Contact.getChildAt(i);
+            inputView.input(paramMap);
+        }
+
+        for (int i = 0; i<binding.containerStep5Address.getChildCount(); i++) {
+            BaseInputView inputView = (BaseInputView) binding.containerStep5Address.getChildAt(i);
+            inputView.input(paramMap);
+        }
+
+        Map<String, String> deviceInfoMap = this.instantSDK.getDeviceInfo(getBaseContext(), this.getWindowManager());
+        paramMap.put("mobileDeviceInfo", deviceInfoMap);
+        this.instantSDK.submitForm(paramMap);
+    }
+
 ```
 
- `this` from above `submitForm` function is SubmitCallback. See below:
+# Callback handler
+
+Instnt provides an `Interface` called `CallbackHandler` that should be used by your application to handle the callback functions.
+
+<table data-layout="default" data-local-id="1461e79a-6df4-4f4b-b7df-a9a072096fd3" class="confluenceTable"><colgroup><col style="width: 173.0px;"><col style="width: 71.0px;"><col style="width: 65.0px;"></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Method</strong></p></th><th class="confluenceTh"><p><strong>Description</strong></p></th><th class="confluenceTh"><p><strong>Input Parameters</strong></p></th></tr>
+
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">successCallBack</font>
+</p></td><td class="confluenceTd"><p>Function that handles the success callback during a transaction.</p></td><td class="confluenceTd"><p>(Object data, String message, CallbackType callbackType)</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">errorCallBack</font>
+</p></td><td class="confluenceTd"><p>Function that handles the error callback during a transaction.</td><td class="confluenceTd"><p>(String message, CallbackType callbackType)</p></td></tr>
+
+</tbody></table>
+
+# Instnt object
+
+<table data-layout="default" data-local-id="1461e79a-6df4-4f4b-b7df-a9a072096fd3" class="confluenceTable"><colgroup><col style="width: 173.0px;"><col style="width: 121.0px;"><col style="width: 465.0px;"></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Property</strong></p></th><th class="confluenceTh"><p><strong>Type</strong></p></th><th class="confluenceTh"><p><strong>Description</strong></p></th></tr>
+
+<tr><td class="confluenceTd"><p>instnttxnid</p></td><td class="confluenceTd"><p>UUID</p></td><td class="confluenceTd"><p>Instnt Transaction ID</p></td></tr>
+
+<tr><td class="confluenceTd"><p>formId</p></td><td class="confluenceTd"><p>string</p></td><td class="confluenceTd"><p>Instnt Form/Workflow ID</p></td></tr>
+
+<tr><td class="confluenceTd"><p>otpVerification</p></td><td class="confluenceTd"><p>boolean</p></td><td class="confluenceTd"><p>Whether Instnt Form/Workflow has OTP verification enabled</p></td></tr>
+
+<tr><td class="confluenceTd"><p>documentVerification</p></td><td class="confluenceTd"><p>boolean</p></td><td class="confluenceTd"><p>Whether Instnt Form/Workflow has document verification enabled</p></td></tr>
+</tbody></table>
+
+# Instnt functions
+
+<table data-layout="default" data-local-id="1461e79a-6df4-4f4b-b7df-a9a072096fd3" class="confluenceTable"><colgroup><col style="width: 173.0px;"><col style="width: 71.0px;"><col style="width: 65.0px;"></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Method</strong></p></th><th class="confluenceTh"><p><strong>Input Parameters</strong></p></th><th class="confluenceTh"><p><strong>Return Parameters</strong></p></th><th class="confluenceTh"><p><strong>Description</strong></p></th></tr>
+
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="3">init</font>
+</p></td><td class="confluenceTd"><p></p></td><td class="confluenceTd"><p>(String formKey, String serverUrl, CallbackHandler callbackHandler) </p></td><td class="confluenceTd"><p>Initializes an Instnt signup session. You need to implement the CallbackHandler class to handle the callbacks.</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="3">uploadAttachment</font>
+</p></td><td class="confluenceTd"><p>boolean ifFront </td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Upload a document file to Instnt server. The input parameter is of the type boolean that represents if the front side of the document is being uploaded.</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="3">verifyDocuments</font>
+</p></td><td class="confluenceTd"><p>documentType</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Initiate document verification on Instnt server.</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="3">submitForm</font>
+</p></td><td class="confluenceTd"><p>Map < string, Object > body</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Submit the user entered data to Instnt server and initiate customer approval process.</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="3">getTransactionID</font>
+
+</p></td><td class="confluenceTd"><p>instnttxnid</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Gets the ID for the current transaction.</p></td></tr>
+<tr><td class="confluenceTd"><p>
+
+## <font size="3">sendOTP</font>
+
+</p></td><td class="confluenceTd"><p>function,mobileNumber</p></td><td class="confluenceTd"><p></p></td><td class="confluenceTd"><p>Sends one-time password to the mobile number provided.</p></td></tr>
+<tr><td class="confluenceTd"><p>
+
+## <font size="3">verifyOTP</font>
+
+</p></td><td class="confluenceTd"><p>mobileNumber, otpCode</p></td><td class="confluenceTd"><p>here </p></td><td class="confluenceTd"><p>Verifies one-time password that was sent to the provided mobile number.</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="3">getDeviceInfo</p>
+</p></td><td class="confluenceTd"><p>(Context context, WindowManager windowManager)</p></td><td class="confluenceTd"><p>Map < string, String ></p></td><td class="confluenceTd"><p>Gets the device info.</p></td></tr>
+
+</tbody></table>
+
+
+
+## Callback type
+
+The callback can be checked via the enums interface provided by Instnt SDK.
+
+The following code represents the Callback type enum in the SDK:
 
 ``` java
- @Override
-    public void didSubmit(FormSubmitData data, String errMessage) {
-        if (data == null) {
-            //api call is failed
-            binding.result.setText(errMessage);
-        }else {
-            binding.result.setText(data.getJwt());
-        }
-    }
+
+public enum CallbackType {
+    SUCCESS_INIT_TRANSACTION,
+    SUCCESS_IMAGE_UPLOAD,
+    SUCCESS_FORM_SUBMIT,
+    SUCCESS_SEND_OTP,
+    SUCCESS_VERIFY_OTP,
+    SUCCESS_DOC_SCAN,
+
+    ERROR_INIT_TRANSACTION,
+    ERROR_FORM_SUBMIT,
+    ERROR_SEND_OTP,
+    ERROR_VERIFY_OTP,
+    ERROR_DOC_SCAN_CANCELLED,
+    ERROR_DOC_SCAN_NOT_CAPTURED,
+}
+
 ```
+
+### Success callback enum
+
+<table data-layout="default" data-local-id="1461e79a-6df4-4f4b-b7df-a9a072096fd3" class="confluenceTable"><colgroup><col style="width: 173.0px;"><col style="width: 71.0px;"><col style="width: 65.0px;"></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Enum Callback</strong></p></th><th class="confluenceTh"><p><strong>Description</strong></p></th></tr>
+
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2"> SUCCESS_INIT_TRANSACTION</font>
+</p></td><td class="confluenceTd"><p>Callback when Init fuction/initialization is successful</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">SUCCESS_IMAGE_UPLOAD</font>
+</p></td><td class="confluenceTd"><p>boolean ifFront </td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">SUCCESS_FORM_SUBMIT</font>
+</p></td><td class="confluenceTd"><p>documentType</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">SUCCESS_SEND_OTP</font>
+</p></td><td class="confluenceTd"><p>Map < string, Object > body</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">SUCCESS_VERIFY_OTP</font>
+
+</p></td><td class="confluenceTd"><p>instnttxnid</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">SUCCESS_DOC_SCAN</font>
+
+</p></td><td class="confluenceTd"><p>function,mobileNumber</p></td></tr>
+</tbody></table>
+
+### Error callback enum
+
+<table data-layout="default" data-local-id="1461e79a-6df4-4f4b-b7df-a9a072096fd3" class="confluenceTable"><colgroup><col style="width: 173.0px;"><col style="width: 71.0px;"><col style="width: 65.0px;"></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Enum Callback</strong></p></th><th class="confluenceTh"><p><strong>Description</strong></p></th></tr>
+
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">ERROR_INIT_TRANSACTION</font>
+</p></td><td class="confluenceTd"><p>Callback when Init fuction/initialization is not successful</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">ERROR_FORM_SUBMIT</font>
+</p></td><td class="confluenceTd"><p>Callback when form submissionis not sucessful. </td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">ERROR_SEND_OTP</font>
+</p></td><td class="confluenceTd"><p>Callback when there is an error while sending OTP.</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">ERROR_VERIFY_OTP</font>
+</p></td><td class="confluenceTd"><p>Callback when there is an error while verifying OTP</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">ERROR_DOC_SCAN_CANCELLED</font>
+
+</p></td><td class="confluenceTd"><p>Callback when there is an error while document scan is canceled</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">ERROR_DOC_SCAN_NOT_CAPTURED</font>
+
+</p></td><td class="confluenceTd"><p>Callback when there is an error while scanning the document. </p></td></tr>
+</tbody></table>
+
+# Assertion response payload
+
+Now that you're connected to the sandbox environment, you can begin processing synthetic applicants provided to you by Instnt. The decisions applied to these synthetic applicants will be returned in the form of an assertion response payload that must be decrypted.
+
+For more information concerning the decryption and analysis of the assertion response payload refer to the [Data Encryption and Decryption](https://support.instnt.org/hc/en-us/articles/360045168511) and [Getting and Analyzing the Assertion Response](https://support.instnt.org/hc/en-us/articles/360044671691) articles in the Developer Guide.
+
+# Resource links
+- [Quick start guide](https://support.instnt.org/hc/en-us/articles/4408781136909)
+- [Developer guide](https://support.instnt.org/hc/en-us/articles/360055345112-Integration-Overview)
+- [Instnt API endpoints](https://swagger.instnt.org/)
+- [Instnt support](https://support.instnt.org/hc/en-us)
+
+# License
+
+The instnt-reactjs SDK is under MIT license.
