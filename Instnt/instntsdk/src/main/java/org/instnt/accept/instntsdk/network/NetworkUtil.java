@@ -38,6 +38,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class NetworkUtil {
 
     private String serverUrl;
+    private String userAgent = System.getProperty("http.agent");
 
     public void setServerUrl(String serverUrl) {
 
@@ -105,7 +106,7 @@ public class NetworkUtil {
         Log.i(CommonUtils.LOG_TAG, "Calling submit form API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
-        return apiInterface.submitForm(url, body)
+        return apiInterface.submitForm(this.userAgent, url, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -117,8 +118,7 @@ public class NetworkUtil {
      * @return
      */
     @SuppressLint("CheckResult")
-    public Observable<OTPResponse> sendOTP(String mobileNumber, String instnttxnid) {
-
+    public Observable<Map<String, Object>> sendOTP(String mobileNumber, String instnttxnid) {
         Log.i(CommonUtils.LOG_TAG, "Calling send OTP API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
@@ -126,12 +126,10 @@ public class NetworkUtil {
         innerBody.put("phoneNumber", mobileNumber);
         JSONObject jsonObject = new JSONObject(innerBody);
         Map<String, Object> body = new HashMap<>();
-        body.put("requestData", jsonObject.toString());
-        body.put("isVerify", false);
-        body.put("instnttxnid", instnttxnid);
+        body.put("phone", mobileNumber);
 
-        String url = this.serverUrl + "otp/phone/send/v1.0";
-        return apiInterface.sendOTP(url, body)
+        String url = this.serverUrl + "transactions/" + instnttxnid + "/otp/";
+        return apiInterface.sendOTP(this.userAgent, url, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -144,8 +142,7 @@ public class NetworkUtil {
      * @return
      */
     @SuppressLint("CheckResult")
-    public Observable<OTPResponse> verifyOTP(String mobileNumber, String enteredOTP, String instnttxnid) {
-
+    public Observable<Map<String, Object>> verifyOTP(String mobileNumber, String enteredOTP, String instnttxnid) {
         Log.i(CommonUtils.LOG_TAG, "Calling verify OTP API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
@@ -155,13 +152,12 @@ public class NetworkUtil {
 
         JSONObject jsonObject = new JSONObject(innerBody);
         Map<String, Object> body = new HashMap<>();
-        body.put("requestData", jsonObject.toString());
-        body.put("isVerify", true);
-        body.put("instnttxnid", instnttxnid);
-        body.put("signature", instnttxnid);
+        body.put("phone", mobileNumber);
+        body.put("is_verify", true);
+        body.put("otp", enteredOTP);
 
-        String url = this.serverUrl + "otp/phone/verify/v1.0";
-        return apiInterface.sendOTP(url, body)
+        String url = this.serverUrl + "transactions/" + instnttxnid + "/otp/";
+        return apiInterface.sendOTP(this.userAgent, url, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -185,7 +181,7 @@ public class NetworkUtil {
         body.put("redirect", false);
 
         String url = this.serverUrl + "transactions/";
-        return apiInterface.getXNID(url, body)
+        return apiInterface.getXNID(this.userAgent, url, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -208,8 +204,8 @@ public class NetworkUtil {
         body.put("transaction_status", "NEW");
         body.put("doc_suffix", docSuffix);
 
-        String url = RestUrl.BASE_URL + "transactions/" + instnttxnid + "/attachments/";
-        return apiInterface.getUploadUrl(url, body)
+        String url = this.serverUrl + "transactions/" + instnttxnid + "/attachments/";
+        return apiInterface.getUploadUrl(this.userAgent, url, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -226,7 +222,7 @@ public class NetworkUtil {
         Log.i(CommonUtils.LOG_TAG, "Calling get transaction API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageData);
-        Call<Void> call = apiInterface.uploadDocument(presignedS3Url, requestFile);
+        Call<Void> call = apiInterface.uploadDocument(this.userAgent, presignedS3Url, requestFile);
         call.enqueue(new Callback<Void>() {
 
             @Override
@@ -259,9 +255,10 @@ public class NetworkUtil {
         body.put("documentType", documentType);
         body.put("instnttxnid", instnttxnid);
 
-        String url = this.serverUrl + "docverify/authenticate/v1.0";
-        return apiInterface.verifyDocuments(url, body)
+        String url = this.serverUrl + "transactions/" + instnttxnid + "/attachments/verify/";
+        return apiInterface.verifyDocuments(this.userAgent, url, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
 }

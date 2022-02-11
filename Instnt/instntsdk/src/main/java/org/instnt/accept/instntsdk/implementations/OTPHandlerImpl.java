@@ -1,11 +1,15 @@
 package org.instnt.accept.instntsdk.implementations;
 
 import android.util.Log;
+import com.google.gson.Gson;
 
 import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
 import org.instnt.accept.instntsdk.interfaces.OTPHandler;
+import org.instnt.accept.instntsdk.model.OTPResponse;
 import org.instnt.accept.instntsdk.network.NetworkUtil;
 import org.instnt.accept.instntsdk.utils.CommonUtils;
+
+import java.util.Map;
 
 public class OTPHandlerImpl implements OTPHandler {
 
@@ -26,8 +30,10 @@ public class OTPHandlerImpl implements OTPHandler {
 
         Log.i(CommonUtils.LOG_TAG, "Calling Send OTP");
         networkModule.sendOTP(mobileNumber, this.instnttxnid).subscribe(otpResponse->{
-            Log.i(CommonUtils.LOG_TAG, "Send OTP called successfully");
-            if(otpResponse != null && !otpResponse.getResponse().isValid()) {
+            Log.i(CommonUtils.LOG_TAG, "Send OTP called successfully");        
+            Gson gson = new Gson();
+            OTPResponse otpResponse1 = gson.fromJson((String) otpResponse.get("body"), OTPResponse.class);
+            if(otpResponse1 != null && !otpResponse1.getResponse().isValid()) {
                 Log.e(CommonUtils.LOG_TAG, "Send OTP called successfully but returns with error : " + otpResponse.getResponse().getErrors()[0]);
                 this.callbackHandler.sendOTPErrorCallBack(otpResponse.getResponse().getErrors()[0]);
                 return;
@@ -50,7 +56,9 @@ public class OTPHandlerImpl implements OTPHandler {
         Log.i(CommonUtils.LOG_TAG, "Calling verify OTP");
         networkModule.verifyOTP(mobileNumber, otpCode, this.instnttxnid).subscribe(otpResponse->{
             Log.i(CommonUtils.LOG_TAG, "Verify OTP called successfully");
-            if(otpResponse != null && !otpResponse.getResponse().isValid()) {
+            Gson gson = new Gson();
+            OTPResponse otpResponse1 = gson.fromJson((String) otpResponse.get("body"), OTPResponse.class);
+            if(otpResponse1 != null && !otpResponse1.getResponse().isValid()) {
                 Log.e(CommonUtils.LOG_TAG, "Verify OTP called successfully but returns with error : " + otpResponse.getResponse().getErrors()[0]);
                 this.callbackHandler.verifyOTPErrorCallBack(otpResponse.getResponse().getErrors()[0]);
                 return;
