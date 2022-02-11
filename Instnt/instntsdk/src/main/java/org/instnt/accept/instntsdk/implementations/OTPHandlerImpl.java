@@ -2,8 +2,6 @@ package org.instnt.accept.instntsdk.implementations;
 
 import android.util.Log;
 
-import org.instnt.accept.instntsdk.enums.CallbackType;
-import org.instnt.accept.instntsdk.interfaces.CallbackData;
 import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
 import org.instnt.accept.instntsdk.interfaces.OTPHandler;
 import org.instnt.accept.instntsdk.network.NetworkUtil;
@@ -29,16 +27,15 @@ public class OTPHandlerImpl implements OTPHandler {
         Log.i(CommonUtils.LOG_TAG, "Calling Send OTP");
         networkModule.sendOTP(mobileNumber, this.instnttxnid).subscribe(otpResponse->{
             Log.i(CommonUtils.LOG_TAG, "Send OTP called successfully");
-            CallbackDataImpl callbackDataImpl = new CallbackDataImpl();
             if(otpResponse != null && !otpResponse.getResponse().isValid()) {
                 Log.e(CommonUtils.LOG_TAG, "Send OTP called successfully but returns with error : " + otpResponse.getResponse().getErrors()[0]);
-                this.callbackHandler.errorCallBack(otpResponse.getResponse().getErrors()[0], CallbackType.ERROR_SEND_OTP);
+                this.callbackHandler.sendOTPErrorCallBack(otpResponse.getResponse().getErrors()[0]);
                 return;
             }
-            this.callbackHandler.successCallBack(callbackDataImpl, "OTP sent successfully", CallbackType.SUCCESS_SEND_OTP);
+            this.callbackHandler.sendOTPSuccessCallBack("OTP sent successfully");
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Send OTP returns with error", throwable);
-            this.callbackHandler.errorCallBack("Failed to send OTP", CallbackType.ERROR_SEND_OTP);
+            this.callbackHandler.sendOTPErrorCallBack("Failed to send OTP");
         });
     }
 
@@ -53,16 +50,15 @@ public class OTPHandlerImpl implements OTPHandler {
         Log.i(CommonUtils.LOG_TAG, "Calling verify OTP");
         networkModule.verifyOTP(mobileNumber, otpCode, this.instnttxnid).subscribe(otpResponse->{
             Log.i(CommonUtils.LOG_TAG, "Verify OTP called successfully");
-            CallbackDataImpl callbackDataImpl = new CallbackDataImpl();
             if(otpResponse != null && !otpResponse.getResponse().isValid()) {
                 Log.e(CommonUtils.LOG_TAG, "Verify OTP called successfully but returns with error : " + otpResponse.getResponse().getErrors()[0]);
-                this.callbackHandler.errorCallBack(otpResponse.getResponse().getErrors()[0], CallbackType.ERROR_VERIFY_OTP);
+                this.callbackHandler.verifyOTPErrorCallBack(otpResponse.getResponse().getErrors()[0]);
                 return;
             }
-            this.callbackHandler.successCallBack(callbackDataImpl, "OTP verified successfully", CallbackType.SUCCESS_VERIFY_OTP);
+            this.callbackHandler.verifyOTPSuccessCallBack("OTP verified successfully");
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Verify OTP returns with error", throwable);
-            this.callbackHandler.errorCallBack(CommonUtils.getErrorMessage(throwable), CallbackType.ERROR_VERIFY_OTP);
+            this.callbackHandler.verifyOTPErrorCallBack(CommonUtils.getErrorMessage(throwable));
         });
     }
 

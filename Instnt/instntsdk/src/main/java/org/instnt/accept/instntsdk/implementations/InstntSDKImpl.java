@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import org.instnt.accept.instntsdk.InstntSDK;
-import org.instnt.accept.instntsdk.enums.CallbackType;
 import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
 import org.instnt.accept.instntsdk.interfaces.DeviceHandler;
 import org.instnt.accept.instntsdk.interfaces.DocumentHandler;
@@ -80,16 +79,14 @@ public class InstntSDKImpl implements InstntSDK {
 
         Log.i(CommonUtils.LOG_TAG, "Calling getTransactionID");
         networkModule.getTransactionID(this.formKey).subscribe(response->{
-            CallbackDataImpl callbackDataImpl = new CallbackDataImpl();
             Log.i(CommonUtils.LOG_TAG, "Calling getTransactionID returns with success response");
             this.setInstnttxnid(response.getInstnttxnid());
             this.setWorkFlowDetail(response);
             this.formCodes = response;
-            callbackDataImpl.setInstnttxnid(response.getInstnttxnid());
-            this.callbackHandler.successCallBack(callbackDataImpl, "Transaction initialization successfully", CallbackType.SUCCESS_INIT_TRANSACTION);
+            this.callbackHandler.getTransactionIDSuccessCallBack(response.getInstnttxnid());
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Calling getTransactionID returns with error response", throwable);
-            this.callbackHandler.errorCallBack("Transaction initialization failed", CallbackType.ERROR_INIT_TRANSACTION);
+            this.callbackHandler.getTransactionIDErrorCallBack("Transaction initialization failed");
         });
     }
 

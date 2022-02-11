@@ -15,8 +15,6 @@ import com.idmetrics.dc.utils.DSResult;
 import com.idmetrics.dc.utils.DSSide;
 import com.idmetrics.dc.utils.FlashCapture;
 
-import org.instnt.accept.instntsdk.enums.CallbackType;
-import org.instnt.accept.instntsdk.interfaces.CallbackData;
 import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
 import org.instnt.accept.instntsdk.interfaces.DocumentHandler;
 import org.instnt.accept.instntsdk.network.NetworkUtil;
@@ -69,9 +67,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
         Log.i(CommonUtils.LOG_TAG, "Upload document to the fetched presigned URL");
         networkModule.uploadDocument(instnttxnid + docSuffix + ".jpg", (String) response.get("s3_key"), dsResult.image);
         Log.i(CommonUtils.LOG_TAG, "Document uploaded successfully");
-        CallbackDataImpl callbackDataImpl = new CallbackDataImpl();
-        callbackDataImpl.setImageBytes(dsResult.image);
-        this.callbackHandler.successCallBack(callbackDataImpl, "", CallbackType.SUCCESS_IMAGE_UPLOAD);
+        this.callbackHandler.uploadAttachmentSuccessCallBack(dsResult.image);
     }
 
     private DSOptions getOptionsByDocumentType(boolean isFront, String documentType) {
@@ -149,21 +145,21 @@ public class DocumentHandlerImpl implements DocumentHandler {
                 if(isAutoUpload)
                     uploadAttachment(dsResult, documentHandler.instnttxnid, ifFront);
 
-                documentHandler.callbackHandler.successCallBack(null, "Document scanned successfully", CallbackType.SUCCESS_DOC_SCAN);
+                documentHandler.callbackHandler.scanDocumentSuccessCallBack("Document scanned successfully");
             }
 
             @Override
             public void scanWasCancelled() {
 
                 Log.w(CommonUtils.LOG_TAG, "Scan document was cancelled");
-                documentHandler.callbackHandler.errorCallBack("Please approve scan", CallbackType.ERROR_DOC_SCAN_CANCELLED);
+                documentHandler.callbackHandler.scanDocumentCancelledErrorCallBack("Please approve scan");
             }
 
             @Override
             public void captureError(DSError dsError) {
 
                 Log.e(CommonUtils.LOG_TAG, "Scan document has return with error : " + dsError.message);
-                documentHandler.callbackHandler.errorCallBack(dsError.message, CallbackType.ERROR_DOC_SCAN_NOT_CAPTURED);
+                documentHandler.callbackHandler.scanDocumentCaptureErrorCallBack(dsError.message);
             }
         });
 
