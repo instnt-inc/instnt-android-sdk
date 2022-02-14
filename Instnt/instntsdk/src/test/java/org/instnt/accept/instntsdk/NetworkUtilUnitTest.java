@@ -1,6 +1,7 @@
 package org.instnt.accept.instntsdk;
 
 import org.easymock.EasyMock;
+import org.easymock.IExpectationSetters;
 import org.instnt.accept.instntsdk.model.FormCodes;
 import org.instnt.accept.instntsdk.model.FormSubmitData;
 import org.instnt.accept.instntsdk.model.FormSubmitResponse;
@@ -111,8 +112,7 @@ public class NetworkUtilUnitTest {
         otpVerificationResult.setErrors(errors);
         otpVerificationResult.setValid(true);
 
-        Map<String, Object> mockOtpResponse = new HashMap<>();
-        mockOtpResponse.put("response", otpVerificationResult);
+        OTPResponse mockOtpResponse = new OTPResponse();
 
         expect(networkUtil.sendOTP("+16102458140", INSTNTXNID)).andReturn(Observable.just(mockOtpResponse)).anyTimes();
         replay(networkUtil);
@@ -131,8 +131,7 @@ public class NetworkUtilUnitTest {
         otpVerificationResult.setErrors(errors);
         otpVerificationResult.setValid(true);
 
-        Map<String, Object> mockOtpResponse = new HashMap<>();
-        mockOtpResponse.put("response", otpVerificationResult);
+        OTPResponse mockOtpResponse = new OTPResponse();
 
         expect(networkUtil.verifyOTP("+16102458140", "1234", INSTNTXNID)).andReturn(Observable.just(mockOtpResponse)).anyTimes();
         replay(networkUtil);

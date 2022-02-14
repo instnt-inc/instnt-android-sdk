@@ -35,6 +35,19 @@
             android:background="@color/transparent"/>
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent">
+
+        <Switch
+            android:id="@+id/isAutoUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Allow Document To Auto Upload" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <Button
         android:layout_marginTop="20dp"
         android:id="@+id/show"

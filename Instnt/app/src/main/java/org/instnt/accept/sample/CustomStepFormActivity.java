@@ -34,14 +34,16 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     private static final String DOCUMENT_VERIFY_LICENSE_KEY = "AwG5mCdqXkmCj9oNEpGV8UauciP8s4cqFT848FfjUjwAZQJfa8ZvrEpmYsPME0RTo/Q0kRowDCGz7HPhfSdyeE7rOLtB3JAhuABdQ2R7dGhVy2EUdt5ENQBBIoveIZdf1pwVY2EUgDoGm8REDU+rr2C2";
-    private boolean isAutoUpload = true;
+    private boolean isAutoUpload = false;
     private boolean isFront;
+    private boolean isSelfie = false;
     private String documentType;
     private ActivityCustomStepFormBinding binding;
     private InstntSDK instantSDK;
     private int currentStep = 1;
     private int maxSteps = 9;
     private String formKey;
+    private byte[] imageData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         if (extras != null) {
             this.formKey = extras.getString("formKey");
             serverUrl = extras.getString("serverUrl");
+            this.isAutoUpload = extras.getBoolean("isAutoUpload");
         } else {
             CommonUtils.showToast(this, "Form key is not found. Please go back and proceed.");
             return;
@@ -334,7 +337,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, MY_CAMERA_REQUEST_CODE);
         } else {
-            instantSDK.scanDocument(this.isFront, this.isAutoUpload, documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
+            instantSDK.scanDocument(this.isFront, this.isSelfie, this.isAutoUpload, documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
         }
     }
 
@@ -486,15 +489,17 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         //END-------Step 5--------//
 
         binding.driverLicense.setChecked(true);
-
+        binding.uploadDocBtn.setVisibility(View.GONE);
+        /*
         if(this.isAutoUpload) {
             binding.uploadDocBtn.setVisibility(View.GONE);
         } else {
             binding.uploadDocBtn.setVisibility(View.VISIBLE);
             binding.uploadDocBtn.setOnClickListener(v -> {
-                this.instantSDK.uploadAttachment(this.isFront);
+                this.instantSDK.uploadAttachment(this.imageData, this.isFront, this.isSelfie);
             });
         }
+        */
     }
 
     /**
@@ -532,7 +537,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                instantSDK.scanDocument(this.isFront, this.isAutoUpload, this.documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
+                instantSDK.scanDocument(this.isFront, this.isSelfie, this.isAutoUpload, this.documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
             } else {
                 //Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
             }
@@ -540,7 +545,8 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
     }
 
     @Override
-    public void uploadAttachmentSuccessCallBack(byte[] imageData) {
+    public void uploadAttachmentSuccessCallback(byte[] imageData) {
+        this.imageData = imageData;
         Bitmap bm = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -552,13 +558,14 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
     }
 
     @Override
-    public void scanDocumentSuccessCallBack(String message) {
+    public void scanDocumentSuccessCallback(byte[] imageData) {
+        this.imageData = imageData;
         showProgressDialog(false);
         nextStep(true);
     }
 
     @Override
-    public void submitDataSuccessCallBack(FormSubmitData formSubmitData) {
+    public void submitDataSuccessCallback(FormSubmitData formSubmitData) {
         showProgressDialog(false);
         binding.decision.setText("Decision : " + formSubmitData.getDecision());
         binding.jwtToken.setText(formSubmitData.getJwt());
@@ -566,57 +573,57 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
     }
 
     @Override
-    public void getTransactionIDSuccessCallBack(String instnttxnid) {
+    public void getTransactionIDSuccessCallback(String instnttxnid) {
         showProgressDialog(false);
         //init form fields
         initFormFields();
     }
 
     @Override
-    public void sendOTPSuccessCallBack(String message) {
+    public void sendOTPSuccessCallback(String message) {
         showProgressDialog(false);
         nextStep(true);
     }
 
     @Override
-    public void verifyOTPSuccessCallBack(String message) {
+    public void verifyOTPSuccessCallback(String message) {
         showProgressDialog(false);
         nextStep(true);
     }
 
     @Override
-    public void scanDocumentCancelledErrorCallBack(String message) {
+    public void scanDocumentCancelledErrorCallback(String message) {
         showProgressDialog(false);
         CommonUtils.showToast(this, message);
     }
 
     @Override
-    public void scanDocumentCaptureErrorCallBack(String message) {
+    public void scanDocumentCaptureErrorCallback(String message) {
         showProgressDialog(false);
         CommonUtils.showToast(this, message);
     }
 
     @Override
-    public void submitDataErrorCallBack(String message) {
+    public void submitDataErrorCallback(String message) {
         showProgressDialog(false);
         CommonUtils.showToast(this, message);
     }
 
     @Override
-    public void getTransactionIDErrorCallBack(String message) {
+    public void getTransactionIDErrorCallback(String message) {
         CommonUtils.showToast(this, message);
         Intent intent = new Intent(this, FormInitializationActivity.class);
         startActivity(intent);
     }
 
     @Override
-    public void sendOTPErrorCallBack(String message) {
+    public void sendOTPErrorCallback(String message) {
         showProgressDialog(false);
         CommonUtils.showToast(this, message);
     }
 
     @Override
-    public void verifyOTPErrorCallBack(String message) {
+    public void verifyOTPErrorCallback(String message) {
         showProgressDialog(false);
         CommonUtils.showToast(this, message);
     }

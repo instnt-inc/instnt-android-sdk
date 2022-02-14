@@ -27,7 +27,7 @@ public interface ApiInterface {
 
     @Headers("Content-Type: application/json")
     @POST()
-    Observable<Map<String, Object>> sendOTP(@Header("User-Agent") String userAgent, @Url String url, @Body Map<String, Object> body);
+    Observable<OTPResponse> sendOTP(@Header("User-Agent") String userAgent, @Url String url, @Body Map<String, Object> body);
 
     @Headers("Content-Type: application/json")
     @POST()

@@ -62,10 +62,10 @@ public class FormHandlerImpl implements FormHandler {
         Log.i(CommonUtils.LOG_TAG, "Calling submit form API");
         networkModule.submit(formCodes.getSubmitURL(), body).subscribe( success-> {
             Log.i(CommonUtils.LOG_TAG, "Submit form called successfully");
-            this.callbackHandler.submitDataSuccessCallBack(success.getData());
+            this.callbackHandler.submitDataSuccessCallback(success.getData());
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Submit form returns with error", throwable);
-            this.callbackHandler.submitDataErrorCallBack(CommonUtils.getErrorMessage(throwable));
+            this.callbackHandler.submitDataErrorCallback(CommonUtils.getErrorMessage(throwable));
         });
     }
 

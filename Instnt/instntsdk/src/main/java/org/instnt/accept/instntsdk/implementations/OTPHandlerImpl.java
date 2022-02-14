@@ -9,8 +9,6 @@ import org.instnt.accept.instntsdk.model.OTPResponse;
 import org.instnt.accept.instntsdk.network.NetworkUtil;
 import org.instnt.accept.instntsdk.utils.CommonUtils;
 
-import java.util.Map;
-
 public class OTPHandlerImpl implements OTPHandler {
 
     private NetworkUtil networkModule;
@@ -29,19 +27,17 @@ public class OTPHandlerImpl implements OTPHandler {
     public void sendOTP(String mobileNumber) {
 
         Log.i(CommonUtils.LOG_TAG, "Calling Send OTP");
-        networkModule.sendOTP(mobileNumber, this.instnttxnid).subscribe(otpResponseMap->{
+        networkModule.sendOTP(mobileNumber, this.instnttxnid).subscribe(otpResponse->{
             Log.i(CommonUtils.LOG_TAG, "Send OTP called successfully");        
-            Gson gson = new Gson();
-            OTPResponse otpResponse = gson.fromJson((String) otpResponseMap.get("body"), OTPResponse.class);
-            if(otpResponse != null && !otpResponse.getResponse().isValid()) {
+            if(otpResponse != null && otpResponse.getResponse().getErrors() != null && otpResponse.getResponse().getErrors().length > 0) {
                 Log.e(CommonUtils.LOG_TAG, "Send OTP called successfully but returns with error : " + otpResponse.getResponse().getErrors()[0]);
-                this.callbackHandler.sendOTPErrorCallBack(otpResponse.getResponse().getErrors()[0]);
+                this.callbackHandler.sendOTPErrorCallback(otpResponse.getResponse().getErrors()[0]);
                 return;
             }
-            this.callbackHandler.sendOTPSuccessCallBack("OTP sent successfully");
+            this.callbackHandler.sendOTPSuccessCallback("OTP sent successfully");
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Send OTP returns with error", throwable);
-            this.callbackHandler.sendOTPErrorCallBack("Failed to send OTP");
+            this.callbackHandler.sendOTPErrorCallback("Failed to send OTP");
         });
     }
 
@@ -54,19 +50,17 @@ public class OTPHandlerImpl implements OTPHandler {
     public void verifyOTP(String mobileNumber, String otpCode) {
 
         Log.i(CommonUtils.LOG_TAG, "Calling verify OTP");
-        networkModule.verifyOTP(mobileNumber, otpCode, this.instnttxnid).subscribe(otpResponseMap->{
+        networkModule.verifyOTP(mobileNumber, otpCode, this.instnttxnid).subscribe(otpResponse->{
             Log.i(CommonUtils.LOG_TAG, "Verify OTP called successfully");
-            Gson gson = new Gson();
-            OTPResponse otpResponse = gson.fromJson((String) otpResponseMap.get("body"), OTPResponse.class);
-            if(otpResponse != null && !otpResponse.getResponse().isValid()) {
+            if(otpResponse != null && otpResponse.getResponse().getErrors() != null && otpResponse.getResponse().getErrors().length > 0) {
                 Log.e(CommonUtils.LOG_TAG, "Verify OTP called successfully but returns with error : " + otpResponse.getResponse().getErrors()[0]);
-                this.callbackHandler.verifyOTPErrorCallBack(otpResponse.getResponse().getErrors()[0]);
+                this.callbackHandler.verifyOTPErrorCallback(otpResponse.getResponse().getErrors()[0]);
                 return;
             }
-            this.callbackHandler.verifyOTPSuccessCallBack("OTP verified successfully");
+            this.callbackHandler.verifyOTPSuccessCallback("OTP verified successfully");
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Verify OTP returns with error", throwable);
-            this.callbackHandler.verifyOTPErrorCallBack(CommonUtils.getErrorMessage(throwable));
+            this.callbackHandler.verifyOTPErrorCallback(CommonUtils.getErrorMessage(throwable));
         });
     }
 

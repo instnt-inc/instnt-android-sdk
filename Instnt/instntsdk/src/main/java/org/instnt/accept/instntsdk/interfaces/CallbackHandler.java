@@ -1,21 +1,23 @@
 package org.instnt.accept.instntsdk.interfaces;
 
+import com.idmetrics.dc.utils.DSOptions;
+
 import org.instnt.accept.instntsdk.model.FormSubmitData;
 
 public interface CallbackHandler {
 	//SUCCESS
-    void uploadAttachmentSuccessCallBack(byte[] imageData);
-    void scanDocumentSuccessCallBack(String message);
-    void submitDataSuccessCallBack(FormSubmitData formSubmitData);
-    void getTransactionIDSuccessCallBack(String instnttxnid);
-    void sendOTPSuccessCallBack(String message);
-    void verifyOTPSuccessCallBack(String message);
+    void uploadAttachmentSuccessCallback(byte[] imageData);
+    void scanDocumentSuccessCallback(byte[] imageData);
+    void submitDataSuccessCallback(FormSubmitData formSubmitData);
+    void getTransactionIDSuccessCallback(String instnttxnid);
+    void sendOTPSuccessCallback(String message);
+    void verifyOTPSuccessCallback(String message);
 
     //ERROR
-    void scanDocumentCancelledErrorCallBack(String message);
-    void scanDocumentCaptureErrorCallBack(String message);
-    void submitDataErrorCallBack(String message);
-    void getTransactionIDErrorCallBack(String message);
-    void sendOTPErrorCallBack(String message);
-    void verifyOTPErrorCallBack(String message);
+    void scanDocumentCancelledErrorCallback(String message);
+    void scanDocumentCaptureErrorCallback(String message);
+    void submitDataErrorCallback(String message);
+    void getTransactionIDErrorCallback(String message);
+    void sendOTPErrorCallback(String message);
+    void verifyOTPErrorCallback(String message);
 }

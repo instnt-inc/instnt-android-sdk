@@ -34,43 +34,42 @@ public class DocumentHandlerImpl implements DocumentHandler {
         this.networkModule = networkModule;
     }
 
-    private void uploadAttachment(DSResult dsResult, String instnttxnid, boolean ifFront) {
+    private void uploadAttachment(byte[] imageData, String instnttxnid, boolean isFront, boolean isSelfie) {
 
         Log.i(CommonUtils.LOG_TAG, "Calling UploadAttachment");
-        boolean isSelfie = false;
         String docSuffix = "F";
 
-        if(!ifFront)
+        if(!isFront)
             docSuffix = "B";
 
         if(isSelfie)
             docSuffix = "S";
 
-        getUploadUrlAndUploadDoc(dsResult, docSuffix, instnttxnid);
+        getUploadUrlAndUploadDoc(imageData, docSuffix, instnttxnid);
     }
 
-    private void getUploadUrlAndUploadDoc(DSResult dsResult, String docSuffix, String instnttxnid) {
+    private void getUploadUrlAndUploadDoc(byte[] imageData, String docSuffix, String instnttxnid) {
 
         Log.i(CommonUtils.LOG_TAG, "Calling Get document upload url");
         //Get presigned s3 url method on which file should upload
         networkModule.getUploadUrl(instnttxnid, docSuffix).subscribe(response->{
 
             Log.i(CommonUtils.LOG_TAG, "Get document upload URL successfully");
-            uploadDocumentAfterGetUrl(dsResult, response, docSuffix, instnttxnid);
+            uploadDocumentAfterGetUrl(imageData, response, docSuffix, instnttxnid);
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Have error when call get document upload URL", throwable);
         });
     }
 
-    private void uploadDocumentAfterGetUrl(DSResult dsResult, Map<String, Object> response, String docSuffix, String instnttxnid) {
+    private void uploadDocumentAfterGetUrl(byte[] imageData, Map<String, Object> response, String docSuffix, String instnttxnid) {
 
         Log.i(CommonUtils.LOG_TAG, "Upload document to the fetched presigned URL");
-        networkModule.uploadDocument(instnttxnid + docSuffix + ".jpg", (String) response.get("s3_key"), dsResult.image);
+        networkModule.uploadDocument(instnttxnid + docSuffix + ".jpg", (String) response.get("s3_key"), imageData);
         Log.i(CommonUtils.LOG_TAG, "Document uploaded successfully");
-        this.callbackHandler.uploadAttachmentSuccessCallBack(dsResult.image);
+        this.callbackHandler.uploadAttachmentSuccessCallback(imageData);
     }
 
-    private DSOptions getOptionsByDocumentType(boolean isFront, String documentType) {
+    private DSOptions getOptionsByDocumentType(boolean isFront, String documentType, boolean isAutoUpload) {
 
         Log.i(CommonUtils.LOG_TAG, "Going to get options by document type, DocumentType : " + documentType + ", IsFrontDocument : " + isFront);
         DSID1Type dsid1Type = null;
@@ -93,7 +92,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
                 //dsid1Options.enableFlashCapture = if(applicationSettings.flashCaptureEnabled) FlashCapture.Both else FlashCapture.None
                 dsid1Options.enableFlashCapture = FlashCapture.None;
                 //dsid1Options.imageCompressionQuality = applicationSettings.imageCompression / 100.0;
-                dsid1Options.showReviewScreen = true;
+                dsid1Options.showReviewScreen = !isAutoUpload;
                 //dsid1Options.targetDPI = (isBarcodeRetake ? 900 : 600);
                 dsid1Options.targetDPI = 600;
                 //dsid1Options.detectBarcodeOrMRZ = !applicationSettings.ignoreBarcode
@@ -118,18 +117,18 @@ public class DocumentHandlerImpl implements DocumentHandler {
 
     /**
      * Scan document
-     * @param ifFront
+     * @param isFront
      * @param isAutoUpload
      * @param documentType
      * @param context
      * @param documentVerifyLicenseKey
      */
     @Override
-    public void scanDocument(boolean ifFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) {
+    public void scanDocument(boolean isFront, boolean isSelfie, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) {
 
         Log.i(CommonUtils.LOG_TAG, "Calling Scan Document");
         DocumentHandlerImpl documentHandler = this;
-        DSOptions dsOptions = getOptionsByDocumentType(ifFront, documentType);
+        DSOptions dsOptions = getOptionsByDocumentType(isFront, documentType, isAutoUpload);
 
         DSHandler dsHandler = DSHandler.getInstance(context);
         DSHandler.staticLicenseKey = documentVerifyLicenseKey;
@@ -142,24 +141,24 @@ public class DocumentHandlerImpl implements DocumentHandler {
                 Log.i(CommonUtils.LOG_TAG, "Document scanned successfully");
                 documentHandler.dsResult = dsResult;
 
-                if(isAutoUpload)
-                    uploadAttachment(dsResult, documentHandler.instnttxnid, ifFront);
+                //if(isAutoUpload)
+                uploadAttachment(dsResult.image, documentHandler.instnttxnid, isFront, isSelfie);
 
-                documentHandler.callbackHandler.scanDocumentSuccessCallBack("Document scanned successfully");
+                documentHandler.callbackHandler.scanDocumentSuccessCallback(dsResult.image);
             }
 
             @Override
             public void scanWasCancelled() {
 
                 Log.w(CommonUtils.LOG_TAG, "Scan document was cancelled");
-                documentHandler.callbackHandler.scanDocumentCancelledErrorCallBack("Please approve scan");
+                documentHandler.callbackHandler.scanDocumentCancelledErrorCallback("Please approve scan");
             }
 
             @Override
             public void captureError(DSError dsError) {
 
                 Log.e(CommonUtils.LOG_TAG, "Scan document has return with error : " + dsError.message);
-                documentHandler.callbackHandler.scanDocumentCaptureErrorCallBack(dsError.message);
+                documentHandler.callbackHandler.scanDocumentCaptureErrorCallback(dsError.message);
             }
         });
 
@@ -168,12 +167,12 @@ public class DocumentHandlerImpl implements DocumentHandler {
 
     /**
      * Upload attachment
-     * @param ifFront
+     * @param isFront
      */
     @Override
-    public void uploadAttachment(boolean ifFront) {
+    public void uploadAttachment(byte[] imageData, boolean isFront, boolean isSelfie) {
 
-        uploadAttachment(this.dsResult, this.instnttxnid, ifFront);
+        uploadAttachment(imageData,this.instnttxnid, isFront, isSelfie);
     }
 
     /**

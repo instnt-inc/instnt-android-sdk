@@ -118,7 +118,7 @@ public class NetworkUtil {
      * @return
      */
     @SuppressLint("CheckResult")
-    public Observable<Map<String, Object>> sendOTP(String mobileNumber, String instnttxnid) {
+    public Observable<OTPResponse> sendOTP(String mobileNumber, String instnttxnid) {
         Log.i(CommonUtils.LOG_TAG, "Calling send OTP API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
@@ -142,7 +142,7 @@ public class NetworkUtil {
      * @return
      */
     @SuppressLint("CheckResult")
-    public Observable<Map<String, Object>> verifyOTP(String mobileNumber, String enteredOTP, String instnttxnid) {
+    public Observable<OTPResponse> verifyOTP(String mobileNumber, String enteredOTP, String instnttxnid) {
         Log.i(CommonUtils.LOG_TAG, "Calling verify OTP API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 

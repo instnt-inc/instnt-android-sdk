@@ -83,10 +83,10 @@ public class InstntSDKImpl implements InstntSDK {
             this.setInstnttxnid(response.getInstnttxnid());
             this.setWorkFlowDetail(response);
             this.formCodes = response;
-            this.callbackHandler.getTransactionIDSuccessCallBack(response.getInstnttxnid());
+            this.callbackHandler.getTransactionIDSuccessCallback(response.getInstnttxnid());
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Calling getTransactionID returns with error response", throwable);
-            this.callbackHandler.getTransactionIDErrorCallBack("Transaction initialization failed");
+            this.callbackHandler.getTransactionIDErrorCallback("Transaction initialization failed");
         });
     }
 
@@ -99,17 +99,17 @@ public class InstntSDKImpl implements InstntSDK {
      * @param documentVerifyLicenseKey
      */
     @Override
-    public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) {
-        documentHandler.scanDocument(isFront, isAutoUpload, documentType, context, documentVerifyLicenseKey);
+    public void scanDocument(boolean isFront, boolean isSelfie, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) {
+        documentHandler.scanDocument(isFront, isSelfie, isAutoUpload, documentType, context, documentVerifyLicenseKey);
     }
 
     /**
      * Upload attachment
-     * @param ifFront
+     * @param isFront
      */
     @Override
-    public void uploadAttachment(boolean ifFront) {
-        this.documentHandler.uploadAttachment(ifFront);
+    public void uploadAttachment(byte[] imageData, boolean isFront, boolean isSelfie) {
+        this.documentHandler.uploadAttachment(imageData, isFront, isSelfie);
     }
 
     /**
