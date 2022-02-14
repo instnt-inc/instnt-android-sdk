@@ -17,7 +17,7 @@ This documentation covers the basics of Instnt Android SDK. For a detailed overv
 - [Instnt functions](#instnt-functions)
 - [Assertion Response Payload](#assertion-response-payload)
 - [Resource links](#resource-links)
-
+  
 # Prerequisites
 
 * Sign in to your account on the Instnt Accept's dashboard and create a customer signup workflow that works for your company. Get the workflow ID, this ID is important during the integration with Instnt SDK.
@@ -39,7 +39,7 @@ dependencies {
 }
 ```
 
-## Initialization of a transaction
+## Initialize transaction
 To initialize the session and to begin the transacction use the `instantSDK = InstntSDK.init(this.formKey, serverUrl, this);` 
 
 **formKey** : workflowID
@@ -235,61 +235,61 @@ Instnt provides an `Interface` called `CallbackHandler` that should be used by y
 <tr><td class="confluenceTd"><p>
 
 ## <font size="2">uploadAttachmentSuccessCallback</font>
-</p></td><td class="confluenceTd"><p>Sucess callback when uploading an attachmnet is fuctionality is a success.</p></td><td class="confluenceTd"><p>(byte[] imageData)</p></td></tr>
+</p></td><td class="confluenceTd"><p> Callback fuction when uploading an attachmnet is a success.</p></td><td class="confluenceTd"><p>(byte[] imageData)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
 ## <font size="2">scanDocumentSuccessCallback</font>
-</p></td><td class="confluenceTd"><p>Function that handles the error callback during a transaction.</td><td class="confluenceTd"><p>(byte[] imageData)</p></td></tr>
+</p></td><td class="confluenceTd"><p> Callback function when scan document is a success.</p></td><td class="confluenceTd"><p>(byte[] imageData)</p></td></tr>
 <tr><td class="confluenceTd"><p>
 
 ## <font size="2">submitDataSuccessCallback</font>
-</p></td><td class="confluenceTd"><p>Function that handles the success callback during a transaction.</p></td><td class="confluenceTd"><p>(FormSubmitData formSubmitData)</p></td></tr>
+</p></td><td class="confluenceTd"><p> Callback function when submitting the data is successful.</p></td><td class="confluenceTd"><p>(FormSubmitData formSubmitData)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
 ## <font size="2">getTransactionIDSuccessCallback</font>
-</p></td><td class="confluenceTd"><p>Function that handles the error callback during a transaction.</td><td class="confluenceTd"><p>(String instnttxnid)</p></td></tr>
+</p></td><td class="confluenceTd"><p> Callback function when transaction ID is fetched successfully.</p></td><td class="confluenceTd"><p>(String instnttxnid)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
 ## <font size="2">sendOTPSuccessCallback</font>
-</p></td><td class="confluenceTd"><p>Function that handles the success callback during a transaction.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p> Callback function when sending OTP is a success.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
 ## <font size="2">verifyOTPSuccessCallback</font>
-</p></td><td class="confluenceTd"><p>Function that handles the error callback during a transaction.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p>Callback function when verifying the OTP is a success.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
 ## <font size="2">scanDocumentCancelledErrorCallback</font>
-</p></td><td class="confluenceTd"><p>Function that handles the success callback during a transaction.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p>Callback function when scan document functionality has error becasue the user cancels the scan.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
 ## <font size="2">scanDocumentCaptureErrorCallback</font>
-</p></td><td class="confluenceTd"><p>Function that handles the error callback during a transaction.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p>Callback function when scan document functionality has document capture error.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
 ## <font size="2">submitDataErrorCallback</font>
-</p></td><td class="confluenceTd"><p>Function that handles the success callback during a transaction.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p>Callback function when submitdata functionality has a error.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
 ## <font size="2">getTransactionIDErrorCallback</font>
-</p></td><td class="confluenceTd"><p>Function that handles the error callback during a transaction.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p>Callback function when there is a error while fetching the transaction id.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
 ## <font size="2">sendOTPErrorCallback</font>
-</p></td><td class="confluenceTd"><p>Function that handles the success callback during a transaction.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p>Callback function when send OTP functionality encounters error.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
 ## <font size="2">verifyOTPErrorCallback</font>
-</p></td><td class="confluenceTd"><p>Function that handles the error callback during a verify OTP error.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p>Callback function verify OTP functionality encounters error.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 
 </tbody></table>
