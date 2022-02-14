@@ -15,9 +15,6 @@ This documentation covers the basics of Instnt Android SDK. For a detailed overv
 - [Callback handler](#callback-handler)
 - [Instnt object](#instnt-object)
 - [Instnt functions](#instnt-functions)
-    * [Callback type](#callback-type)
-        * [Success callback enum](#success-callback-enum)
-        * [Error callback enum](#error-callback-enum)
 - [Assertion Response Payload](#assertion-response-payload)
 - [Resource links](#resource-links)
 
@@ -51,7 +48,8 @@ To initialize the session and to begin the transacction use the `instantSDK = In
 
 The function returns an [Instnt object](#instnt-object), that can be used for further processing of the various functionalities.
 
-See the following sample code implemmenttaion of initializing the transaction.
+
+Import the following `instntsdk` Interfaces and Classes for implementation.
 
 ```java
 import org.instnt.accept.instntsdk.enums.CallbackType;
@@ -60,31 +58,30 @@ import org.instnt.accept.instntsdk.model.FormField;
 import org.instnt.accept.instntsdk.InstntSDK;
 import org.instnt.accept.instntsdk.model.FormSubmitData;
 import org.instnt.accept.instntsdk.utils.CommonUtils;
-import org.instnt.accept.sample.databinding.ActivityCustomStepFormBinding;
-import org.instnt.accept.sample.view.BaseActivity;
-import org.instnt.accept.sample.view.render.BaseInputView;
-import org.instnt.accept.sample.view.render.TextInputView;
+```
 
+See the following sample code implemmenttaion of initializing the transaction.
 
-private InstntSDK instantSDK;
-private void init() {
+``` java
+import org.instnt.accept.instntsdk.InstntSDK;
+import org.instnt.accept.instntsdk.enums.CallbackType;
+import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
+import org.instnt.accept.instntsdk.model.FormSubmitData;
 
-        Bundle extras = getIntent().getExtras();
-        String serverUrl;
-        if (extras != null) {
-            this.formKey = extras.getString("formKey");
-            serverUrl = extras.getString("serverUrl");
-        } else {
-            CommonUtils.showToast(this, "Form key is not found. Please go back and proceed.");
-            return;
-        }
+import java.util.HashMap;
+import java.util.Map;
 
-        showProgressDialog(true);
-        instantSDK = InstntSDK.init(this.formKey, serverUrl, this);
-        binding.previous.setOnClickListener(v -> nextStep(false));
-        binding.next.setOnClickListener(v -> validateCurrentStep(true));
-        binding.submitAnotherForm.setOnClickListener(v -> reInitForm());
+public class MainActivity implements CallbackHandler  {
+
+    private InstntSDK instantSDK;
+
+    private void init() {
+        String formKey = "REPLACE_YOUR_FORM_KEY";
+        String serverURL = "REPLACE_YOUR_SERVER_URL";
+        instantSDK = InstntSDK.init(formKey, serverURL, this);
     }
+    }
+    
 ```
 
 
@@ -237,13 +234,63 @@ Instnt provides an `Interface` called `CallbackHandler` that should be used by y
 
 <tr><td class="confluenceTd"><p>
 
-## <font size="2">successCallBack</font>
-</p></td><td class="confluenceTd"><p>Function that handles the success callback during a transaction.</p></td><td class="confluenceTd"><p>(Object data, String message, CallbackType callbackType)</p></td></tr>
+## <font size="2">uploadAttachmentSuccessCallback</font>
+</p></td><td class="confluenceTd"><p>Sucess callback when uploading an attachmnet is fuctionality is a success.</p></td><td class="confluenceTd"><p>(byte[] imageData)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
-## <font size="2">errorCallBack</font>
-</p></td><td class="confluenceTd"><p>Function that handles the error callback during a transaction.</td><td class="confluenceTd"><p>(String message, CallbackType callbackType)</p></td></tr>
+## <font size="2">scanDocumentSuccessCallback</font>
+</p></td><td class="confluenceTd"><p>Function that handles the error callback during a transaction.</td><td class="confluenceTd"><p>(byte[] imageData)</p></td></tr>
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">submitDataSuccessCallback</font>
+</p></td><td class="confluenceTd"><p>Function that handles the success callback during a transaction.</p></td><td class="confluenceTd"><p>(FormSubmitData formSubmitData)</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">getTransactionIDSuccessCallback</font>
+</p></td><td class="confluenceTd"><p>Function that handles the error callback during a transaction.</td><td class="confluenceTd"><p>(String instnttxnid)</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">sendOTPSuccessCallback</font>
+</p></td><td class="confluenceTd"><p>Function that handles the success callback during a transaction.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">verifyOTPSuccessCallback</font>
+</p></td><td class="confluenceTd"><p>Function that handles the error callback during a transaction.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">scanDocumentCancelledErrorCallback</font>
+</p></td><td class="confluenceTd"><p>Function that handles the success callback during a transaction.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">scanDocumentCaptureErrorCallback</font>
+</p></td><td class="confluenceTd"><p>Function that handles the error callback during a transaction.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">submitDataErrorCallback</font>
+</p></td><td class="confluenceTd"><p>Function that handles the success callback during a transaction.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">getTransactionIDErrorCallback</font>
+</p></td><td class="confluenceTd"><p>Function that handles the error callback during a transaction.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">sendOTPErrorCallback</font>
+</p></td><td class="confluenceTd"><p>Function that handles the success callback during a transaction.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="2">verifyOTPErrorCallback</font>
+</p></td><td class="confluenceTd"><p>Function that handles the error callback during a verify OTP error.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
+
 
 </tbody></table>
 
@@ -269,6 +316,11 @@ Instnt provides an `Interface` called `CallbackHandler` that should be used by y
 
 ## <font size="3">init</font>
 </p></td><td class="confluenceTd"><p></p></td><td class="confluenceTd"><p>(String formKey, String serverUrl, CallbackHandler callbackHandler) </p></td><td class="confluenceTd"><p>Initializes an Instnt signup session. You need to implement the CallbackHandler class to handle the callbacks.</p></td></tr>
+
+<tr><td class="confluenceTd"><p>
+
+## <font size="3">scanDocument</font>
+</p></td><td class="confluenceTd"><p>(boolean ifFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) </td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>This fuction enables the document scan. Here the input parameter "Context" that is passed must be getBaseContext() method.</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
@@ -308,109 +360,6 @@ Instnt provides an `Interface` called `CallbackHandler` that should be used by y
 
 </tbody></table>
 
-
-
-## Callback type
-
-The callback can be checked via the enums interface provided by Instnt SDK.
-
-The following code represents the Callback type enum in the SDK:
-
-``` java
-
-public enum CallbackType {
-    SUCCESS_INIT_TRANSACTION,
-    SUCCESS_IMAGE_UPLOAD,
-    SUCCESS_FORM_SUBMIT,
-    SUCCESS_SEND_OTP,
-    SUCCESS_VERIFY_OTP,
-    SUCCESS_DOC_SCAN,
-
-    ERROR_INIT_TRANSACTION,
-    ERROR_FORM_SUBMIT,
-    ERROR_SEND_OTP,
-    ERROR_VERIFY_OTP,
-    ERROR_DOC_SCAN_CANCELLED,
-    ERROR_DOC_SCAN_NOT_CAPTURED,
-}
-
-```
-
-### Success callback enum
-
-<table data-layout="default" data-local-id="1461e79a-6df4-4f4b-b7df-a9a072096fd3" class="confluenceTable"><colgroup><col style="width: 173.0px;"><col style="width: 71.0px;"><col style="width: 65.0px;"></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Enum Callback</strong></p></th><th class="confluenceTh"><p><strong>Description</strong></p></th></tr>
-
-
-<tr><td class="confluenceTd"><p>
-
-## <font size="2"> SUCCESS_INIT_TRANSACTION</font>
-</p></td><td class="confluenceTd"><p>Callback when Init fuction/initialization is successful</p></td></tr>
-
-<tr><td class="confluenceTd"><p>
-
-## <font size="2">SUCCESS_IMAGE_UPLOAD</font>
-</p></td><td class="confluenceTd"><p>boolean ifFront </td></tr>
-
-<tr><td class="confluenceTd"><p>
-
-## <font size="2">SUCCESS_FORM_SUBMIT</font>
-</p></td><td class="confluenceTd"><p>documentType</p></td></tr>
-
-<tr><td class="confluenceTd"><p>
-
-## <font size="2">SUCCESS_SEND_OTP</font>
-</p></td><td class="confluenceTd"><p>Map < string, Object > body</p></td></tr>
-
-<tr><td class="confluenceTd"><p>
-
-## <font size="2">SUCCESS_VERIFY_OTP</font>
-
-</p></td><td class="confluenceTd"><p>instnttxnid</p></td></tr>
-
-<tr><td class="confluenceTd"><p>
-
-## <font size="2">SUCCESS_DOC_SCAN</font>
-
-</p></td><td class="confluenceTd"><p>function,mobileNumber</p></td></tr>
-</tbody></table>
-
-### Error callback enum
-
-<table data-layout="default" data-local-id="1461e79a-6df4-4f4b-b7df-a9a072096fd3" class="confluenceTable"><colgroup><col style="width: 173.0px;"><col style="width: 71.0px;"><col style="width: 65.0px;"></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Enum Callback</strong></p></th><th class="confluenceTh"><p><strong>Description</strong></p></th></tr>
-
-
-<tr><td class="confluenceTd"><p>
-
-## <font size="2">ERROR_INIT_TRANSACTION</font>
-</p></td><td class="confluenceTd"><p>Callback when Init fuction/initialization is not successful</p></td></tr>
-
-<tr><td class="confluenceTd"><p>
-
-## <font size="2">ERROR_FORM_SUBMIT</font>
-</p></td><td class="confluenceTd"><p>Callback when form submissionis not sucessful. </td></tr>
-
-<tr><td class="confluenceTd"><p>
-
-## <font size="2">ERROR_SEND_OTP</font>
-</p></td><td class="confluenceTd"><p>Callback when there is an error while sending OTP.</p></td></tr>
-
-<tr><td class="confluenceTd"><p>
-
-## <font size="2">ERROR_VERIFY_OTP</font>
-</p></td><td class="confluenceTd"><p>Callback when there is an error while verifying OTP</p></td></tr>
-
-<tr><td class="confluenceTd"><p>
-
-## <font size="2">ERROR_DOC_SCAN_CANCELLED</font>
-
-</p></td><td class="confluenceTd"><p>Callback when there is an error while document scan is canceled</p></td></tr>
-
-<tr><td class="confluenceTd"><p>
-
-## <font size="2">ERROR_DOC_SCAN_NOT_CAPTURED</font>
-
-</p></td><td class="confluenceTd"><p>Callback when there is an error while scanning the document. </p></td></tr>
-</tbody></table>
 
 # Assertion response payload
 
