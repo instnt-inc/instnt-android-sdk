@@ -1,6 +1,7 @@
 package org.instnt.accept.instntsdk;
 
 import org.easymock.EasyMock;
+import org.easymock.IExpectationSetters;
 import org.instnt.accept.instntsdk.model.FormCodes;
 import org.instnt.accept.instntsdk.model.FormSubmitData;
 import org.instnt.accept.instntsdk.model.FormSubmitResponse;
@@ -52,10 +53,10 @@ public class NetworkUtilUnitTest {
     @Test
     public void testGetFormFields() {
 
-        expect(networkUtil.getFormFields(FORM_KEY)).andReturn(Observable.just(this.formCodes)).anyTimes();
+        expect(networkUtil.getTransactionID(FORM_KEY)).andReturn(Observable.just(this.formCodes)).anyTimes();
         replay(networkUtil);
 
-        networkUtil.getFormFields(FORM_KEY).subscribe(formCodes -> {
+        networkUtil.getTransactionID(FORM_KEY).subscribe(formCodes -> {
             assertNotNull(formCodes);
             assertEquals(this.formCodes.getClient_ip(), formCodes.getClient_ip());
             assertEquals(this.formCodes.getBackendServiceURL(), formCodes.getBackendServiceURL());
@@ -112,16 +113,12 @@ public class NetworkUtilUnitTest {
         otpVerificationResult.setValid(true);
 
         OTPResponse mockOtpResponse = new OTPResponse();
-        mockOtpResponse.setResponse(otpVerificationResult);
 
         expect(networkUtil.sendOTP("+16102458140", INSTNTXNID)).andReturn(Observable.just(mockOtpResponse)).anyTimes();
         replay(networkUtil);
 
         networkUtil.sendOTP("+16102458140", INSTNTXNID).subscribe(otpResponse -> {
             assertNotNull(otpResponse);
-            assertEquals(mockOtpResponse.getResponse().getErrors().length, otpResponse.getResponse().getErrors().length);
-            assertEquals(mockOtpResponse.getResponse().getId(), otpResponse.getResponse().getId());
-            assertEquals(mockOtpResponse.getResponse().isValid(), otpResponse.getResponse().isValid());
         });
     }
 
@@ -135,31 +132,27 @@ public class NetworkUtilUnitTest {
         otpVerificationResult.setValid(true);
 
         OTPResponse mockOtpResponse = new OTPResponse();
-        mockOtpResponse.setResponse(otpVerificationResult);
 
         expect(networkUtil.verifyOTP("+16102458140", "1234", INSTNTXNID)).andReturn(Observable.just(mockOtpResponse)).anyTimes();
         replay(networkUtil);
 
         networkUtil.verifyOTP("+16102458140", "1234", INSTNTXNID).subscribe(otpResponse -> {
             assertNotNull(otpResponse);
-            assertEquals(mockOtpResponse.getResponse().getErrors().length, otpResponse.getResponse().getErrors().length);
-            assertEquals(mockOtpResponse.getResponse().getId(), otpResponse.getResponse().getId());
-            assertEquals(mockOtpResponse.getResponse().isValid(), otpResponse.getResponse().isValid());
         });
     }
 
     @Test
     public void testGetTransactionID() {
 
-        Map<String, Object> mockResponse = new HashMap<>();
-        mockResponse.put("instnttxnid", INSTNTXNID);
+        FormCodes mockResponse = new FormCodes();
+        formCodes.setInstnttxnid(INSTNTXNID);
 
         expect(networkUtil.getTransactionID(FORM_KEY)).andReturn(Observable.just(mockResponse)).anyTimes();
         replay(networkUtil);
 
         networkUtil.getTransactionID(FORM_KEY).subscribe(response -> {
             assertNotNull(response);
-            assertEquals((String) mockResponse.get("instnttxnid"), (String) response.get("instnttxnid"));
+            assertEquals(mockResponse.getInstnttxnid(), response.getInstnttxnid());
         });
     }
 

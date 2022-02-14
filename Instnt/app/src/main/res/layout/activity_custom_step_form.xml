@@ -201,6 +201,7 @@
                     android:src="@color/white"
                     android:contentDescription="Test"
                     android:visibility="gone"
+                    android:adjustViewBounds="true"
                     />
 
                 <TextView

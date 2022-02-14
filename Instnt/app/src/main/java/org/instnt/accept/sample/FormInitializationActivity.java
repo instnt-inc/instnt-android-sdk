@@ -10,6 +10,7 @@ import org.instnt.accept.sample.view.BaseActivity;
 
 public class FormInitializationActivity extends BaseActivity {
 
+    boolean isAutoUpload = false;
     ActivityFormInitializationBinding binding;
 
     @Override
@@ -23,6 +24,11 @@ public class FormInitializationActivity extends BaseActivity {
         binding.formid.setText("v1633477069641729");
         binding.serverUrl.setText("https://dev2-api.instnt.org/public/");
         binding.validServerUrls.setText("https://dev2-api.instnt.org/public/ \nhttps://sandbox-api.instnt.org/public/ \nhttps://api.instnt.org/public/");
+        binding.isAutoUpload.setChecked(this.isAutoUpload);
+        binding.isAutoUpload.setOnClickListener(v -> {
+            //Auto upload image
+            this.isAutoUpload = !this.isAutoUpload;
+        });
     }
 
     private void showForm() {
@@ -43,6 +49,7 @@ public class FormInitializationActivity extends BaseActivity {
         Intent intent = new Intent(this, CustomStepFormActivity.class);
         intent.putExtra("formKey", formKey);
         intent.putExtra("serverUrl", serverUrl);
+        intent.putExtra("isAutoUpload", this.isAutoUpload);
         startActivity(intent);
     }
 }

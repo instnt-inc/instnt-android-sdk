@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import org.instnt.accept.instntsdk.enums.CallbackType;
 import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
 import org.instnt.accept.instntsdk.model.FormField;
 import org.instnt.accept.instntsdk.InstntSDK;
@@ -35,14 +34,16 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     private static final String DOCUMENT_VERIFY_LICENSE_KEY = "AwG5mCdqXkmCj9oNEpGV8UauciP8s4cqFT848FfjUjwAZQJfa8ZvrEpmYsPME0RTo/Q0kRowDCGz7HPhfSdyeE7rOLtB3JAhuABdQ2R7dGhVy2EUdt5ENQBBIoveIZdf1pwVY2EUgDoGm8REDU+rr2C2";
-    private boolean isAutoUpload = true;
+    private boolean isAutoUpload = false;
     private boolean isFront;
+    private boolean isSelfie = false;
     private String documentType;
     private ActivityCustomStepFormBinding binding;
     private InstntSDK instantSDK;
     private int currentStep = 1;
     private int maxSteps = 9;
     private String formKey;
+    private byte[] imageData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         if (extras != null) {
             this.formKey = extras.getString("formKey");
             serverUrl = extras.getString("serverUrl");
+            this.isAutoUpload = extras.getBoolean("isAutoUpload");
         } else {
             CommonUtils.showToast(this, "Form key is not found. Please go back and proceed.");
             return;
@@ -98,7 +100,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
             case 3: {
 
                 //Check if otp verification enable
-                if(this.instantSDK.isOTPverificationEnable()) {
+                if(this.instantSDK.isOTPverificationEnabled()) {
                     showProgressDialog(true);
                     sendOTP();
                 } else {
@@ -123,7 +125,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 6: {
 
-                if(this.instantSDK.isDocumentVerificationEnable()) {
+                if(this.instantSDK.isDocumentVerificationEnabled()) {
                     this.isFront = true;
                     scanDocument("License");
                 } else {
@@ -135,7 +137,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 7: {
 
-                if(this.instantSDK.isDocumentVerificationEnable()) {
+                if(this.instantSDK.isDocumentVerificationEnabled()) {
                     this.isFront = false;
                     scanDocument("License");
                 } else {
@@ -233,7 +235,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 4: {
 
-                if(this.instantSDK.isOTPverificationEnable()) {
+                if(this.instantSDK.isOTPverificationEnabled()) {
                     binding.headText1.setText("Enter OTP");
                     binding.headText2.setVisibility(View.GONE);
 
@@ -271,7 +273,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 6: {
 
-                if(this.instantSDK.isDocumentVerificationEnable()) {
+                if(this.instantSDK.isDocumentVerificationEnabled()) {
                     binding.headText1.setText("Choose the document type");
                     binding.headText2.setText("As an added layer of security, we need to verify your identity before approving your application");
                     binding.headText2.setVisibility(View.VISIBLE);
@@ -293,7 +295,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
             case 7: {
 
-                if(this.instantSDK.isDocumentVerificationEnable()) {
+                if(this.instantSDK.isDocumentVerificationEnabled()) {
                     binding.headText1.setText("Review Capture Image");
                     binding.headText2.setVisibility(View.GONE);
                     binding.containerStep1Declaration.setVisibility(View.GONE);
@@ -335,7 +337,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, MY_CAMERA_REQUEST_CODE);
         } else {
-            instantSDK.scanDocument(this.isFront, this.isAutoUpload, documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
+            instantSDK.scanDocument(this.isFront, this.isSelfie, this.isAutoUpload, documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
         }
     }
 
@@ -487,15 +489,17 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         //END-------Step 5--------//
 
         binding.driverLicense.setChecked(true);
-
+        binding.uploadDocBtn.setVisibility(View.GONE);
+        /*
         if(this.isAutoUpload) {
             binding.uploadDocBtn.setVisibility(View.GONE);
         } else {
             binding.uploadDocBtn.setVisibility(View.VISIBLE);
             binding.uploadDocBtn.setOnClickListener(v -> {
-                this.instantSDK.uploadAttachment(this.isFront);
+                this.instantSDK.uploadAttachment(this.imageData, this.isFront, this.isSelfie);
             });
         }
+        */
     }
 
     /**
@@ -518,9 +522,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
             inputView.input(paramMap);
         }
 
-        Map<String, String> deviceInfoMap = this.instantSDK.getDeviceInfo(getBaseContext(), this.getWindowManager());
-        paramMap.put("mobileDeviceInfo", deviceInfoMap);
-        this.instantSDK.submitForm(paramMap);
+        this.instantSDK.submitData(getBaseContext(), this.getWindowManager(), paramMap);
     }
 
     private String convertObjectToString(Object obj) {
@@ -535,7 +537,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                instantSDK.scanDocument(this.isFront, this.isAutoUpload, this.documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
+                instantSDK.scanDocument(this.isFront, this.isSelfie, this.isAutoUpload, this.documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
             } else {
                 //Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
             }
@@ -543,67 +545,86 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
     }
 
     @Override
-    public void successCallBack(Object data, String message, CallbackType callbackType) {
+    public void uploadAttachmentSuccessCallback(byte[] imageData) {
+        this.imageData = imageData;
+        Bitmap bm = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
 
-        switch (callbackType) {
-
-            case SUCCESS_IMAGE_UPLOAD: {
-
-                byte[] imageData = (byte[]) data;
-                Bitmap bm = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-                DisplayMetrics dm = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-                binding.imageData.setMinimumHeight(dm.heightPixels);
-                binding.imageData.setMinimumWidth(dm.widthPixels);
-                binding.imageData.setImageBitmap(bm);
-                binding.imageData.setVisibility(View.VISIBLE);
-                break;
-            }
-
-            case SUCCESS_SEND_OTP:
-            case SUCCESS_VERIFY_OTP:
-            case SUCCESS_DOC_SCAN: {
-                showProgressDialog(false);
-                nextStep(true);
-                break;
-            }
-            case SUCCESS_INIT_TRANSACTION: {
-                showProgressDialog(false);
-                //init form fields
-                initFormFields();
-                break;
-            }
-            case SUCCESS_FORM_SUBMIT: {
-                showProgressDialog(false);
-                FormSubmitData formSubmitData = (FormSubmitData) data;
-                binding.decision.setText("Decision : " + formSubmitData.getDecision());
-                binding.jwtToken.setText(formSubmitData.getJwt());
-                nextStep(true);
-                break;
-            }
-        }
+        binding.imageData.setMinimumHeight(dm.heightPixels);
+        binding.imageData.setMinimumWidth(dm.widthPixels);
+        binding.imageData.setImageBitmap(bm);
+        binding.imageData.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void errorCallBack(String message, CallbackType callbackType) {
+    public void scanDocumentSuccessCallback(byte[] imageData) {
+        this.imageData = imageData;
+        showProgressDialog(false);
+        nextStep(true);
+    }
 
-        switch (callbackType) {
-            case ERROR_FORM_SUBMIT:
-            case ERROR_SEND_OTP:
-            case ERROR_VERIFY_OTP:
-            case ERROR_DOC_SCAN_CANCELLED:
-            case ERROR_DOC_SCAN_NOT_CAPTURED: {
-                showProgressDialog(false);
-                CommonUtils.showToast(this, message);
-                break;
-            }
-            case ERROR_INIT_TRANSACTION: {
-                CommonUtils.showToast(this, message);
-                Intent intent = new Intent(this, FormInitializationActivity.class);
-                startActivity(intent);
-                break;
-            }
-        }
+    @Override
+    public void submitDataSuccessCallback(FormSubmitData formSubmitData) {
+        showProgressDialog(false);
+        binding.decision.setText("Decision : " + formSubmitData.getDecision());
+        binding.jwtToken.setText(formSubmitData.getJwt());
+        nextStep(true);
+    }
+
+    @Override
+    public void getTransactionIDSuccessCallback(String instnttxnid) {
+        showProgressDialog(false);
+        //init form fields
+        initFormFields();
+    }
+
+    @Override
+    public void sendOTPSuccessCallback(String message) {
+        showProgressDialog(false);
+        nextStep(true);
+    }
+
+    @Override
+    public void verifyOTPSuccessCallback(String message) {
+        showProgressDialog(false);
+        nextStep(true);
+    }
+
+    @Override
+    public void scanDocumentCancelledErrorCallback(String message) {
+        showProgressDialog(false);
+        CommonUtils.showToast(this, message);
+    }
+
+    @Override
+    public void scanDocumentCaptureErrorCallback(String message) {
+        showProgressDialog(false);
+        CommonUtils.showToast(this, message);
+    }
+
+    @Override
+    public void submitDataErrorCallback(String message) {
+        showProgressDialog(false);
+        CommonUtils.showToast(this, message);
+    }
+
+    @Override
+    public void getTransactionIDErrorCallback(String message) {
+        CommonUtils.showToast(this, message);
+        Intent intent = new Intent(this, FormInitializationActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void sendOTPErrorCallback(String message) {
+        showProgressDialog(false);
+        CommonUtils.showToast(this, message);
+    }
+
+    @Override
+    public void verifyOTPErrorCallback(String message) {
+        showProgressDialog(false);
+        CommonUtils.showToast(this, message);
     }
 }

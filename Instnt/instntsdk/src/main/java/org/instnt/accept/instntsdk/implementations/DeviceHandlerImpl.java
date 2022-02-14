@@ -1,11 +1,13 @@
 package org.instnt.accept.instntsdk.implementations;
 
 import org.instnt.accept.instntsdk.interfaces.DeviceHandler;
+import org.instnt.accept.instntsdk.utils.CommonUtils;
 
 import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.WindowManager;
 
 import java.text.DecimalFormat;
@@ -14,8 +16,17 @@ import java.util.Map;
 
 public class DeviceHandlerImpl implements DeviceHandler {
 
+    /**
+     * Get device info
+     * @param context
+     * @param windowManager
+     * @return
+     */
     @Override
     public Map<String, String> getDeviceInfo(Context context, WindowManager windowManager) {
+
+        Log.i(CommonUtils.LOG_TAG, "Calling get device info");
+
         String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         DisplayMetrics dm = new DisplayMetrics();
         windowManager.getDefaultDisplay().getMetrics(dm);
