@@ -42,5 +42,5 @@ public interface ApiInterface {
 
     @Headers("Content-Type: application/json")
     @POST()
-    Observable<Map<String, Object>> verifyDocuments(@Header("User-Agent") String userAgent, @Url String url, @Body Map<String, Object> body);
+    Observable<String> verifyDocuments(@Header("User-Agent") String userAgent, @Url String url, @Body Map<String, Object> body);
 }

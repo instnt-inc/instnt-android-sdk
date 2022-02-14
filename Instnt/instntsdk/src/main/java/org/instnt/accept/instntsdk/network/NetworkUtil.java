@@ -245,7 +245,7 @@ public class NetworkUtil {
      * @return
      */
     @SuppressLint("CheckResult")
-    public Observable<Map<String, Object>> verifyDocuments(String documentType, String formKey, String instnttxnid) {
+    public Observable<String> verifyDocuments(String documentType, String formKey, String instnttxnid) {
     	
     	Log.i(CommonUtils.LOG_TAG, "Calling verify documents API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
