@@ -124,10 +124,11 @@ public class DocumentHandlerImpl implements DocumentHandler {
      * @param documentVerifyLicenseKey
      */
     @Override
-    public void scanDocument(boolean isFront, boolean isSelfie, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) {
+    public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) {
 
         Log.i(CommonUtils.LOG_TAG, "Calling Scan Document");
         DocumentHandlerImpl documentHandler = this;
+        boolean isSelfie = false;
         DSOptions dsOptions = getOptionsByDocumentType(isFront, documentType, isAutoUpload);
 
         DSHandler dsHandler = DSHandler.getInstance(context);

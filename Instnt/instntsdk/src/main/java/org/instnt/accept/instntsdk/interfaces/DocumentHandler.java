@@ -3,7 +3,7 @@ package org.instnt.accept.instntsdk.interfaces;
 import android.content.Context;
 
 public interface DocumentHandler {
-    void scanDocument(boolean isFront, boolean isSelfie, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey);
+    void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey);
     void uploadAttachment(byte[] imageData, boolean isFront, boolean isSelfie);
     void verifyDocuments(String documentType);
 
