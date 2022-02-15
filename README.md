@@ -17,13 +17,15 @@ This documentation covers the basics of Instnt Android SDK. For a detailed overv
 - [Instnt functions](#instnt-functions)
 - [Assertion Response Payload](#assertion-response-payload)
 - [Resource links](#resource-links)
-  
+
 # Prerequisites
 
 * Sign in to your account on the Instnt Accept's dashboard and create a customer signup workflow that works for your company. Get the workflow ID, this ID is important during the integration with Instnt SDK.
 Refer [Quick start guide](https://support.instnt.org/hc/en-us/articles/4408781136909) and [Developer guide, ](https://support.instnt.org/hc/en-us/articles/360055345112-Integration-Overview) for more information.
 
 * The integration of SDK depends on your workflow; read the [Instnt Accept integration process,](https://support.instnt.org/hc/en-us/articles/4418538578701-Instnt-Accept-Integration-Process) to understand the functionalities provided by Instnt and how to integrate SDK with your application.
+
+**Note:** ** The code provided in this documentation is from the sample app provided with the SDK. You control the client implementation entirely; there is no hard and fast rule to follow the sample code-- the sample is for understanding purposes only. **
 
 # Getting Started
 
@@ -40,7 +42,7 @@ dependencies {
 ```
 
 ## Initialize transaction
-To initialize the session and to begin the transacction use the `instantSDK = InstntSDK.init(this.formKey, serverUrl, this);` 
+To initialize the session and to begin the transaction use the `instantSDK = InstntSDK.init(this.formKey, serverUrl, this);`
 
 **formKey** : workflowID
 **ServerURl**: production URL or sandbox URL
@@ -81,7 +83,7 @@ public class MainActivity implements CallbackHandler  {
         instantSDK = InstntSDK.init(formKey, serverURL, this);
     }
     }
-    
+
 ```
 
 
@@ -133,7 +135,7 @@ binding.uploadDocBtn.setVisibility(View.VISIBLE);
 
 3. Next, verify the documents that were uploaded.
 
-Following sample code demonstrates the verify document process: 
+Following sample code demonstrates the verify document process:
 
 ``` java
 this.instantSDK.verifyDocuments("License");
@@ -192,7 +194,7 @@ private void verifyOTP() {
     }
 ```
 
-Please refer to the [library functions](#library-functions) listed below for more details. 
+Please refer to the [library functions](#library-functions) listed below for more details.
 
 # Submit form data
 
@@ -315,7 +317,7 @@ Instnt provides an `Interface` called `CallbackHandler` that should be used by y
 <tr><td class="confluenceTd"><p>
 
 ## <font size="3">init</font>
-</p></td><td class="confluenceTd"><p></p></td><td class="confluenceTd"><p>(String formKey, String serverUrl, CallbackHandler callbackHandler) </p></td><td class="confluenceTd"><p>Initializes an Instnt signup session. You need to implement the CallbackHandler class to handle the callbacks.</p></td></tr>
+</p></td><td class="confluenceTd"><p></p></td><td class="confluenceTd"><p>(String formKey, String serverUrl, CallbackHandler callbackHandler) </p></td><td class="confluenceTd"><p>Initializes a user signup session. You need to implement the CallbackHandler class to handle the callbacks.</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
@@ -352,14 +354,6 @@ Instnt provides an `Interface` called `CallbackHandler` that should be used by y
 ## <font size="3">verifyOTP</font>
 
 </p></td><td class="confluenceTd"><p>mobileNumber, otpCode</p></td><td class="confluenceTd"><p>here </p></td><td class="confluenceTd"><p>Verifies one-time password that was sent to the provided mobile number.</p></td></tr>
-
-<tr><td class="confluenceTd"><p>
-
-## <font size="3">getDeviceInfo</p>
-</p></td><td class="confluenceTd"><p>(Context context, WindowManager windowManager)</p></td><td class="confluenceTd"><p>Map < string, String ></p></td><td class="confluenceTd"><p>Gets the device info.</p></td></tr>
-
-</tbody></table>
-
 
 # Assertion response payload
 
