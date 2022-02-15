@@ -99,8 +99,8 @@ public class InstntSDKImpl implements InstntSDK {
      * @param documentVerifyLicenseKey
      */
     @Override
-    public void scanDocument(boolean isFront, boolean isSelfie, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) {
-        documentHandler.scanDocument(isFront, isSelfie, isAutoUpload, documentType, context, documentVerifyLicenseKey);
+    public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) {
+        documentHandler.scanDocument(isFront, isAutoUpload, documentType, context, documentVerifyLicenseKey);
     }
 
     /**

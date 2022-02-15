@@ -73,6 +73,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         binding.previous.setOnClickListener(v -> nextStep(false));
         binding.next.setOnClickListener(v -> validateCurrentStep(true));
         binding.submitAnotherForm.setOnClickListener(v -> reInitForm());
+        binding.signup.setOnClickListener(v -> reInitForm());
     }
 
     private void reInitForm() {
@@ -337,7 +338,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, MY_CAMERA_REQUEST_CODE);
         } else {
-            instantSDK.scanDocument(this.isFront, this.isSelfie, this.isAutoUpload, documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
+            instantSDK.scanDocument(this.isFront, this.isAutoUpload, documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
         }
     }
 
@@ -537,7 +538,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                instantSDK.scanDocument(this.isFront, this.isSelfie, this.isAutoUpload, this.documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
+                instantSDK.scanDocument(this.isFront, this.isAutoUpload, this.documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
             } else {
                 //Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
             }

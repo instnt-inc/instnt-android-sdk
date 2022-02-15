@@ -62,7 +62,7 @@ public interface InstntSDK {
      * @param context
      * @param documentVerifyLicenseKey
      */
-    void scanDocument(boolean isFront, boolean isSelfie, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey);
+    void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey);
 
     /**
      * Upload attachment
