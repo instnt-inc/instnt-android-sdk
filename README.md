@@ -48,7 +48,7 @@ Instnt treats each signup as a transction. To initialize the signup session and 
 **ServerURl**: production URL or sandbox URL
 **this** : CallbackHandler
 
-The function returns an [InstntSDK interface](#instnt-object), that interface can be used for further invocation of other SDK functionalities. This interface and various callback handlers listed below are the SDK artifacts that you need to interact with.
+The function returns an [InstntSDK interface](#instntsdk-interface), that interface can be used for further invocation of other SDK functionalities. This interface and various callback handlers listed below are the SDK artifacts that you need to interact with.
 
 
 See the following sample code implementaion of initializing the transaction.
@@ -170,7 +170,7 @@ private void verifyOTP() {
     }
 ```
 
-Please refer to the [InstntSDK interface](#instnt-object) methods listed below for more details.
+Please refer to the [InstntSDK interface](#instntsdk-interface) methods listed below for more details.
 
 # Submit form data
 
