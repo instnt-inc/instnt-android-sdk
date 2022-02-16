@@ -93,6 +93,8 @@ Document verification feature comes into the picture if you have enabled it duri
 
 When this feature is enabled, the physical capture and verification of Government-issued identification documents such as Driver's Licenses and Passportsare available.
 
+**Note:** Document Verification feature usage in your SDK requires a **License** **key**. Please contact the support at the email support@instnt.org for further assistance.
+
 Read the [Document Verification](https://support.instnt.org/hc/en-us/articles/4408781136909#heading-6) section of the Quickstart guide to understand better how to enable the feature.
 
 ## Document verification pre-requisites
