@@ -46,7 +46,7 @@ public class NetworkUtilUnitTest {
         formCodes.setDocumentVerification(true);
         formCodes.setExpires_on(1641550253);
         formCodes.setId(FORM_KEY);
-        formCodes.setOtp_verification(true);
+        formCodes.setOtpVerification(true);
         formCodes.setIdmetricsVersion("4.5.0.5");
     }
 
@@ -63,7 +63,7 @@ public class NetworkUtilUnitTest {
             assertEquals(this.formCodes.isDocumentVerification(), formCodes.isDocumentVerification());
             assertEquals(this.formCodes.getExpires_on(), formCodes.getExpires_on());
             assertEquals(this.formCodes.getId(), formCodes.getId());
-            assertEquals(this.formCodes.isOtp_verification(), formCodes.isOtp_verification());
+            assertEquals(this.formCodes.isOtpVerification(), formCodes.isOtpVerification());
             assertEquals(this.formCodes.getIdmetricsVersion(), formCodes.getIdmetricsVersion());
         });
     }
@@ -184,7 +184,7 @@ public class NetworkUtilUnitTest {
     @Test
     public void testVerifyDocuments() {
 
-        Map<String, Object> mockResponse = new HashMap<>();
+        String mockResponse = "";
         expect(networkUtil.verifyDocuments("License", FORM_KEY, INSTNTXNID)).andReturn(Observable.just(mockResponse)).anyTimes();
         replay(networkUtil);
 

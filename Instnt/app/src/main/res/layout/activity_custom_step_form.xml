@@ -320,14 +320,13 @@
                     android:id="@+id/signup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Signup"
-                    android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="true"
-                    android:textAllCaps="false"
-                    android:enabled="true"
-                    android:layout_marginStart="150dp"
                     android:layout_alignParentRight="true"
-                    />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="120dp"
+                    android:enabled="true"
+                    android:text="Restart Signup"
+                    android:textAllCaps="false" />
 
             </LinearLayout>
 
