@@ -231,7 +231,7 @@ private void submit() {
 
 Instnt provides an `Interface` called `CallbackHandler` that should be used by your application to handle the callback functions.
 
-<table data-layout="default" data-local-id="1461e79a-6df4-4f4b-b7df-a9a072096fd3" class="confluenceTable"><colgroup><col style="width: 173.0px;"><col style="width: 71.0px;"><col style="width: 65.0px;"></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Method</strong></p></th><th class="confluenceTh"><p><strong>Description</strong></p></th><th class="confluenceTh"><p><strong>Input Parameters</strong></p></th></tr>
+<table data-layout="default" data-local-id="1461e79a-6df4-4f4b-b7df-a9a072096fd3" class="confluenceTable"><colgroup><col style="width: 200.0px;"><col style="width: 250.0px;"><col style="width: 200.0px;"></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Method</strong></p></th><th class="confluenceTh"><p><strong>Description</strong></p></th><th class="confluenceTh"><p><strong>Input Parameters</strong></p></th></tr>
 
 
 <tr><td class="confluenceTd"><p>
@@ -315,45 +315,43 @@ Instnt provides an `Interface` called `CallbackHandler` that should be used by y
 
 
 <tr><td class="confluenceTd"><p>
-
-## <font size="3">init</font>
-</p></td><td class="confluenceTd"><p></p></td><td class="confluenceTd"><p>(String formKey, String serverUrl, CallbackHandler callbackHandler) </p></td><td class="confluenceTd"><p>Initializes a user signup session. You need to implement the CallbackHandler class to handle the callbacks.</p></td></tr>
+<a id="user-content-init" class="anchor" aria-hidden="true" href="#init">init
+</p></td><td class="confluenceTd"><p>(String formKey, String serverUrl, CallbackHandler callbackHandler)</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Initializes a user signup session. You need to implement the CallbackHandler class to handle the callbacks.</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
-
-## <font size="3">scanDocument</font>
+<a id="user-content-scanDocument" class="anchor" aria-hidden="true" href="#scandocument">
+scanDocument
 </p></td><td class="confluenceTd"><p>(boolean ifFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) </td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>This fuction enables the document scan. Here the input parameter "Context" that is passed must be getBaseContext() method.</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
-## <font size="3">uploadAttachment</font>
+<a id="user-content-uploadAttachment" class="anchor" aria-hidden="true" href="#uploadAttachment"> uploadAttachment
 </p></td><td class="confluenceTd"><p>boolean ifFront </td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Upload a document file to Instnt server. The input parameter is of the type boolean that represents if the front side of the document is being uploaded.</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
-## <font size="3">verifyDocuments</font>
+<a id="user-content-verifyDocuments" class="anchor" aria-hidden="true" href="#verifyDocuments">verifyDocuments
 </p></td><td class="confluenceTd"><p>documentType</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Initiate document verification on Instnt server.</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
-## <font size="3">submitForm</font>
+<a id="user-content-submitData" class="anchor" aria-hidden="true" href="#submitData">submitData
 </p></td><td class="confluenceTd"><p>Map < string, Object > body</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Submit the user entered data to Instnt server and initiate customer approval process.</p></td></tr>
 
+
 <tr><td class="confluenceTd"><p>
 
-## <font size="3">getTransactionID</font>
-
-</p></td><td class="confluenceTd"><p>instnttxnid</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Gets the ID for the current transaction.</p></td></tr>
-<tr><td class="confluenceTd"><p>
-
-## <font size="3">sendOTP</font>
+<a id="user-content-sendOTP" class="anchor" aria-hidden="true" href="#sendOTP">sendOTP
 
 </p></td><td class="confluenceTd"><p>function,mobileNumber</p></td><td class="confluenceTd"><p></p></td><td class="confluenceTd"><p>Sends one-time password to the mobile number provided.</p></td></tr>
 <tr><td class="confluenceTd"><p>
 
-## <font size="3">verifyOTP</font>
+<a id="user-content-verifyOTP" class="anchor" aria-hidden="true" href="#verifyOTP">verifyOTP
 
-</p></td><td class="confluenceTd"><p>mobileNumber, otpCode</p></td><td class="confluenceTd"><p>here </p></td><td class="confluenceTd"><p>Verifies one-time password that was sent to the provided mobile number.</p></td></tr>
+</p></td><td class="confluenceTd"><p>mobileNumber, otpCode</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Verifies one-time password that was sent to the provided mobile number.</p></td></tr>
+
+</tbody></table>
+
 
 # Assertion response payload
 
