@@ -68,14 +68,18 @@ public class FormCodes implements Serializable {
     private String signature;
 
     @SerializedName("otp_verification")
-    private boolean otp_verification;
+    private boolean otpVerification;
 
     @SerializedName("instnttxnid")
     private String instnttxnid;
 
-    public String getInstnttxnid() { return instnttxnid; }
+    public String getInstnttxnid() {
+        return instnttxnid;
+    }
 
-    public void setInstnttxnid(String instnttxnid) { this.instnttxnid = instnttxnid; }
+    public void setInstnttxnid(String instnttxnid) {
+        this.instnttxnid = instnttxnid;
+    }
 
     public String getId() {
         return id;
@@ -214,7 +218,7 @@ public class FormCodes implements Serializable {
     }
 
     public String getClient_ip() {
-        return client_ip;
+        areturn client_ip;
     }
 
     public void setClient_ip(String client_ip) {
@@ -237,11 +241,11 @@ public class FormCodes implements Serializable {
         this.signature = signature;
     }
 
-    public boolean isOtp_verification() {
-        return otp_verification;
+    public boolean isOtpVerification() {
+        return otpVerification;
     }
 
-    public void setOtp_verification(boolean otp_verification) {
-        this.otp_verification = otp_verification;
+    public void setOtpVerification(boolean otpVerification) {
+        this.otpVerification = otpVerification;
     }
 }

@@ -167,7 +167,7 @@ public class InstntSDKImpl implements InstntSDK {
      */
     @Override
     public boolean isOTPverificationEnabled() {
-        return this.formCodes.isOtp_verification();
+        return this.formCodes.isOtpVerification();
     }
 
     /**
