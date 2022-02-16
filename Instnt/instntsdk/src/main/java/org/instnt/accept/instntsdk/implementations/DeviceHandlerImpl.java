@@ -67,12 +67,12 @@ public class DeviceHandlerImpl implements DeviceHandler {
         map.put("screen_density", screen_density);
         map.put("user_value", User_value);
         map.put("host_value", Host_value);
-        map.put("version", Version);
+        //map.put("version", Version);
         map.put("api_level", API_level);
         map.put("build_id", Build_ID);
         map.put("build_time", Build_Time);
         map.put("fingerprint", Fingerprint);
-        map.put("osversion", _OSVERSION);
+        map.put("osversion", Version);
         map.put("release", _RELEASE);
         map.put("device", _DEVICE);
         map.put("model", _MODEL);
