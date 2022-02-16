@@ -491,16 +491,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
 
         binding.driverLicense.setChecked(true);
         binding.uploadDocBtn.setVisibility(View.GONE);
-        /*
-        if(this.isAutoUpload) {
-            binding.uploadDocBtn.setVisibility(View.GONE);
-        } else {
-            binding.uploadDocBtn.setVisibility(View.VISIBLE);
-            binding.uploadDocBtn.setOnClickListener(v -> {
-                this.instantSDK.uploadAttachment(this.imageData, this.isFront, this.isSelfie);
-            });
-        }
-        */
+
     }
 
     /**
@@ -524,13 +515,6 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
         }
 
         this.instantSDK.submitData(getBaseContext(), this.getWindowManager(), paramMap);
-    }
-
-    private String convertObjectToString(Object obj) {
-        Gson gson = new Gson();
-        String result = gson.toJson(obj);
-        Log.e("Super", "Result = " + result);
-        return result;
     }
 
     @Override
