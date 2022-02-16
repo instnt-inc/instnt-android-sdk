@@ -218,7 +218,7 @@ public class FormCodes implements Serializable {
     }
 
     public String getClient_ip() {
-        areturn client_ip;
+        return client_ip;
     }
 
     public void setClient_ip(String client_ip) {
