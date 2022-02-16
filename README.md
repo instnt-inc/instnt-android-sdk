@@ -42,36 +42,18 @@ dependencies {
 ```
 
 ## Initialize transaction
-To initialize the session and to begin the transaction use the `instantSDK = InstntSDK.init(this.formKey, serverUrl, this);`
+Instnt treats each signup as a transction. To initialize the signup session and to begin the transaction use the static method `instantSDK = InstntSDK.init(this.formKey, serverUrl, this);`
 
 **formKey** : workflowID
 **ServerURl**: production URL or sandbox URL
 **this** : CallbackHandler
 
-The function returns an [Instnt object](#instnt-object), that can be used for further processing of the various functionalities.
+The function returns an [InstntSDK interface](#instnt-object), that interface can be used for further invocation of other SDK functionalities. This interface and various callback handlers listed below are the SDK artifacts that you need to interact with.
 
-
-Import the following `instntsdk` Interfaces and Classes for implementation.
-
-```java
-import org.instnt.accept.instntsdk.enums.CallbackType;
-import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
-import org.instnt.accept.instntsdk.model.FormField;
-import org.instnt.accept.instntsdk.InstntSDK;
-import org.instnt.accept.instntsdk.model.FormSubmitData;
-import org.instnt.accept.instntsdk.utils.CommonUtils;
-```
 
 See the following sample code implementaion of initializing the transaction.
 
 ``` java
-import org.instnt.accept.instntsdk.InstntSDK;
-import org.instnt.accept.instntsdk.enums.CallbackType;
-import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
-import org.instnt.accept.instntsdk.model.FormSubmitData;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity implements CallbackHandler  {
 
@@ -95,17 +77,9 @@ When this feature is enabled, the physical capture and verification of Governmen
 
 **Note:** Document Verification feature usage in your SDK requires a **License** **key**. Please contact the support at the email support@instnt.org for further assistance.
 
-Read the [Document Verification](https://support.instnt.org/hc/en-us/articles/4408781136909#heading-6) section of the Quickstart guide to understand better how to enable the feature.
-
 ## Document verification pre-requisites
 
-* iOS and Android mobile devices with Chrome or Safari browsers are supported for document verification.
-
-* Desktop devices (laptops, PCs) are unsupported due to the poor quality of embedded cameras and lack of gyroscopes for orientation detection. While the feature will work on devices running Chrome or Safari browsers, the experience can vary.
-
-* Do not include HTML tags with IDs containing the prefix 'aid.' e.g. `<div id=’aidFooter’>` in your web app as this prefix is reserved to be used by the toolkit.
-
-* Document verification requires end-to-end communication over SSL to get permission to use the device camera.
+* Android mobile devices reasonabily updated OS version, modern hardware spec and a good camera
 
 ## Document verification steps
 
@@ -125,7 +99,7 @@ private void scanDocument(String documentType) {
 
 ```
 
-2. Next, upload the attachment. The document verification has an auto-upload feature which is turned on by default. It uploads the image to Instnt cloud storage once the image gets captured successfully.
+2. Next, upload the attachment. The document verification has an auto-upload feature which is turned on by default. It uploads the image to Instnt cloud storage once the image gets captured successfully. If you donot want autoUpload to be on, upload attachment method on InstntSDK interface to initiate the upload.
 
 Following sample code demonstrates the upload attachment process:
 
@@ -157,7 +131,7 @@ OTP functionality can be enabled by logging in Instnt dashboard and enabling OTP
 * Your app calls verify the OTP() SDK function to verify the OTP and pass mobile number and OTP code.
 * Instnt SDK calls Instnt API and returns the response upon successful OTP verification
 
-Instnt SDK provides two [library functions](#library-functions) to enable OTP. we have also provided the sample code for the implementation.
+InstntSDK provides two methods to conduct OTP verification. we have also provided the sample code for the implementation.
 
 1. sendOTP (mobileNumber)
 
@@ -196,7 +170,7 @@ private void verifyOTP() {
     }
 ```
 
-Please refer to the [library functions](#library-functions) listed below for more details.
+Please refer to the [InstntSDK interface](#instnt-object) methods listed below for more details.
 
 # Submit form data
 
@@ -298,20 +272,8 @@ Instnt provides an `Interface` called `CallbackHandler` that should be used by y
 
 </tbody></table>
 
-# Instnt object
+# InstntSDK interface
 
-<table data-layout="default" data-local-id="1461e79a-6df4-4f4b-b7df-a9a072096fd3" class="confluenceTable"><colgroup><col style="width: 173.0px;"><col style="width: 121.0px;"><col style="width: 465.0px;"></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Property</strong></p></th><th class="confluenceTh"><p><strong>Type</strong></p></th><th class="confluenceTh"><p><strong>Description</strong></p></th></tr>
-
-<tr><td class="confluenceTd"><p>instnttxnid</p></td><td class="confluenceTd"><p>UUID</p></td><td class="confluenceTd"><p>Instnt Transaction ID</p></td></tr>
-
-<tr><td class="confluenceTd"><p>formId</p></td><td class="confluenceTd"><p>string</p></td><td class="confluenceTd"><p>Instnt Form/Workflow ID</p></td></tr>
-
-<tr><td class="confluenceTd"><p>otpVerification</p></td><td class="confluenceTd"><p>boolean</p></td><td class="confluenceTd"><p>Whether Instnt Form/Workflow has OTP verification enabled</p></td></tr>
-
-<tr><td class="confluenceTd"><p>documentVerification</p></td><td class="confluenceTd"><p>boolean</p></td><td class="confluenceTd"><p>Whether Instnt Form/Workflow has document verification enabled</p></td></tr>
-</tbody></table>
-
-# Instnt functions
 
 <table data-layout="default" data-local-id="1461e79a-6df4-4f4b-b7df-a9a072096fd3" class="confluenceTable"><colgroup><col style="width: 173.0px;"><col style="width: 71.0px;"><col style="width: 65.0px;"></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Method</strong></p></th><th class="confluenceTh"><p><strong>Input Parameters</strong></p></th><th class="confluenceTh"><p><strong>Return Parameters</strong></p></th><th class="confluenceTh"><p><strong>Description</strong></p></th></tr>
 
@@ -352,14 +314,13 @@ scanDocument
 
 </p></td><td class="confluenceTd"><p>mobileNumber, otpCode</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Verifies one-time password that was sent to the provided mobile number.</p></td></tr>
 
+<tr><td class="confluenceTd"><p>getInstnttxnid</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>UUID</p></td><td class="confluenceTd"><p>Instnt Transaction ID</p></td></tr>
+
+<tr><td class="confluenceTd"><p>isOTPverificationEnabled</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>boolean</p></td><td class="confluenceTd"><p>Whether Instnt Form/Workflow has OTP verification enabled</p></td></tr>
+
+<tr><td class="confluenceTd"><p>isDocumentVerificationEnabled</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>boolean</p></td><td class="confluenceTd"><p>Whether Instnt Form/Workflow has document verification enabled</p></td></tr>
+
 </tbody></table>
-
-
-# Assertion response payload
-
-Now that you're connected to the sandbox environment, you can begin processing synthetic applicants provided to you by Instnt. The decisions applied to these synthetic applicants will be returned in the form of an assertion response payload that must be decrypted.
-
-For more information concerning the decryption and analysis of the assertion response payload refer to the [Data Encryption and Decryption](https://support.instnt.org/hc/en-us/articles/360045168511) and [Getting and Analyzing the Assertion Response](https://support.instnt.org/hc/en-us/articles/360044671691) articles in the Developer Guide.
 
 # Resource links
 - [Quick start guide](https://support.instnt.org/hc/en-us/articles/4408781136909)
