@@ -37,7 +37,7 @@ Note that a Workflow ID is required in order to properly execute the android fun
 ### Gradle
 ```
 dependencies {
-   implementation 'com.instant:instantsdk:1.0.0'
+   implementation 'com.instant:instantsdk:2.0.0'
 }
 ```
 
@@ -62,7 +62,7 @@ import org.instnt.accept.instntsdk.model.FormSubmitData;
 import org.instnt.accept.instntsdk.utils.CommonUtils;
 ```
 
-See the following sample code implemmenttaion of initializing the transaction.
+See the following sample code implementaion of initializing the transaction.
 
 ``` java
 import org.instnt.accept.instntsdk.InstntSDK;
@@ -91,7 +91,7 @@ public class MainActivity implements CallbackHandler  {
 
 Document verification feature comes into the picture if you have enabled it during the workflow creation.
 
-When this feature is enabled, the physical capture and verification of selfies and Government-issued identification documents such as Driver's Licenses and Passportsare available.
+When this feature is enabled, the physical capture and verification of Government-issued identification documents such as Driver's Licenses and Passportsare available.
 
 Read the [Document Verification](https://support.instnt.org/hc/en-us/articles/4408781136909#heading-6) section of the Quickstart guide to understand better how to enable the feature.
 
