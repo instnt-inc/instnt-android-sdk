@@ -5,7 +5,7 @@ This documentation covers the basics of Instnt Android SDK. For a detailed overv
 
 - [Prerequisites](#prerequisites)
 - [Getting started](#getting-started)
-     * [Initialization of a transaction](#initialization-of-a-transaction)
+     * [Initialization of a transaction](#initialize-transaction)
 - [Document verification](#document-verification)
     * [Document verification pre-requisites](#document-verification-pre-requisites)
     * [Document verifications steps](#document-verification-steps)
@@ -13,9 +13,7 @@ This documentation covers the basics of Instnt Android SDK. For a detailed overv
     * [OTP workflow ](#otp-flow )
 - [Submit form data](#submit-form-data)
 - [Callback handler](#callback-handler)
-- [Instnt object](#instnt-object)
-- [Instnt functions](#instnt-functions)
-- [Assertion Response Payload](#assertion-response-payload)
+- [InstntSDK interface](#instntsdk-interface)
 - [Resource links](#resource-links)
 
 # Prerequisites
