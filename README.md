@@ -217,8 +217,8 @@ Instnt provides an `Interface` called `CallbackHandler` that should be used by y
 <tr><td class="confluenceTd"><p>submitDataSuccessCallback
 </p></td><td class="confluenceTd"><p> Callback function when submitting the data is successful.</p></td><td class="confluenceTd"><p>(FormSubmitData formSubmitData)</p></td></tr>
 
-<tr><td class="confluenceTd"><p>getTransactionIDSuccessCallback
-</p></td><td class="confluenceTd"><p> Callback function when transaction ID is fetched successfully.</p></td><td class="confluenceTd"><p>(String instnttxnid)</p></td></tr>
+<tr><td class="confluenceTd"><p>initTransactionSuccessCallback
+</p></td><td class="confluenceTd"><p> Callback function when transaction is initialized successfully.</p></td><td class="confluenceTd"><p>(String instnttxnid)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>sendOTPSuccessCallback
 </p></td><td class="confluenceTd"><p> Callback function when sending OTP is a success.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
@@ -235,8 +235,8 @@ Instnt provides an `Interface` called `CallbackHandler` that should be used by y
 <tr><td class="confluenceTd"><p>submitDataErrorCallback
 </p></td><td class="confluenceTd"><p>Callback function when submitdata functionality has a error.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
-<tr><td class="confluenceTd"><p>getTransactionIDErrorCallback
-</p></td><td class="confluenceTd"><p>Callback function when there is a error while fetching the transaction id.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
+<tr><td class="confluenceTd"><p>initTransactionErrorCallback
+</p></td><td class="confluenceTd"><p>Callback function when there is a error while initializing a transaction.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>sendOTPErrorCallback
 </p></td><td class="confluenceTd"><p>Callback function when send OTP functionality encounters error.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
