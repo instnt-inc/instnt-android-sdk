@@ -18,17 +18,16 @@ This documentation covers the basics of Instnt Android SDK. For a detailed overv
 
 # Prerequisites
 
-* Sign in to your account on the Instnt Accept's dashboard and create a customer signup workflow that works for your company. Get the workflow ID, this ID is important during the integration with Instnt SDK.
+* Sign in to your account on the Instnt Accept's dashboard and create a customer signup workflow that works for your company. Get the workflow ID, which is essential while integrating with Instnt SDK.
 Refer [Quick start guide](https://support.instnt.org/hc/en-us/articles/4408781136909) and [Developer guide, ](https://support.instnt.org/hc/en-us/articles/360055345112-Integration-Overview) for more information.
 
-* The integration of SDK depends on your workflow; read the [Instnt Accept integration process,](https://support.instnt.org/hc/en-us/articles/4418538578701-Instnt-Accept-Integration-Process) to understand the functionalities provided by Instnt and how to integrate SDK with your application.
+* SDK integration depends on your workflow; read the [Instnt Accept integration process](https://support.instnt.org/hc/en-us/articles/4418538578701-Instnt-Accept-Integration-Process) to understand the functionalities provided by Instnt and how to integrate SDK with your application.
 
-**Note:** Your implementation with Instnt's SDK may diverge from the integration shown in sample app, please contact Instnt support team for additional questions related to Integration.
+**Note:** Your implementation with Instnt's SDK may diverge from the integration shown in the sample app. Please contact the Instnt support team for additional questions related to Integration.
 
 # Getting Started
 
-Note that a Workflow ID is required in order to properly execute the android functions. For more information concerning Workflow IDs, please visit
-[Instnt's documentation library.](https://support.instnt.org/hc/en-us/articles/360055345112-Integration-Overview)
+Note that a Workflow ID is required to execute the android functions properly. For more information concerning Workflow IDs, please visit [Instnt's documentation hub.](https://support.instnt.org/hc/en-us/articles/360055345112-Integration-Overview)
 
 **Install InstntSDK**
 
@@ -40,16 +39,16 @@ dependencies {
 ```
 
 ## Initialize transaction
-Instnt treats each signup as a transction. To initialize the signup session and to begin the transaction use the static method `instantSDK = InstntSDK.init(this.formKey, serverUrl, this);`
+Instnt treats each signup as a transaction. To initialize the signup session and to begin the transaction use the static method `instantSDK = InstntSDK.init(this.formKey, serverUrl, this);`
 
 **formKey** : workflowID
 **ServerURl**: production URL or sandbox URL
 **this** : CallbackHandler
 
-The function returns an [InstntSDK interface](#instntsdk-interface), that interface can be used for further invocation of other SDK functionalities. This interface and various callback handlers listed below are the SDK artifacts that you need to interact with.
+The function returns an [InstntSDK interface](#instntsdk-interface)object; that interface object is used to invoke other SDK functionalities. This interface and various callback handlers listed below are the SDK artifacts you need to interact with.
 
 
-See the following sample code implementaion of initializing the transaction.
+See the following sample code implementation of initializing the transaction.
 
 ``` java
 
@@ -71,18 +70,18 @@ public class MainActivity implements CallbackHandler  {
 
 Document verification feature comes into the picture if you have enabled it during the workflow creation.
 
-When this feature is enabled, the physical capture and verification of Government-issued identification documents such as Driver's Licenses and Passportsare available.
+When this feature is enabled, the physical capture and verification of Government-issued identification documents such as Driver's Licenses and Passports are available.
 
 **Note:** Document Verification feature usage in your SDK requires a **License** **key**. Please contact the support at the email support@instnt.org for further assistance.
 
 ## Document verification pre-requisites
 
-* Android mobile devices reasonabily updated OS version, modern hardware spec and a good camera
+* Android mobile devices reasonably updated OS version, modern hardware spec, and a good camera
 
 ## Document verification steps
 
 
-1. Firstly you need to initialize the device camera for capturing the images like font/backside of a Drivers's License, then obtain a pre-signed URL to scan and upload the document and is taken care of by functioning the SDK; see the following sample code:
+1. Firstly, you need to initialize the device camera for capturing the images like font/backside of a Drivers's License, then obtain a pre-signed URL to scan and upload the document and is taken care of by functioning the SDK; see the following sample code:
 
 ```java
 
@@ -203,46 +202,46 @@ private void submit() {
 
 # Callback handler
 
-Instnt provides an `Interface` called `CallbackHandler` that should be used by your application to handle the callback functions.
+Instnt provides an `Interface` called `CallbackHandler` to implement in your application to handle the callback functions.
 
 <table data-layout="default" data-local-id="1461e79a-6df4-4f4b-b7df-a9a072096fd3" class="confluenceTable"><colgroup><col style="width: 200.0px;"><col style="width: 250.0px;"><col style="width: 200.0px;"></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Method</strong></p></th><th class="confluenceTh"><p><strong>Description</strong></p></th><th class="confluenceTh"><p><strong>Input Parameters</strong></p></th></tr>
 
 
 <tr><td class="confluenceTd"><p>uploadAttachmentSuccessCallback
-</p></td><td class="confluenceTd"><p> Callback fuction when uploading an attachmnet is a success.</p></td><td class="confluenceTd"><p>(byte[] imageData)</p></td></tr>
+</p></td><td class="confluenceTd"><p> The callback function when uploading an attachment is a success.</p></td><td class="confluenceTd"><p>(byte[] imageData)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>scanDocumentSuccessCallback
-</p></td><td class="confluenceTd"><p> Callback function when scan document is a success.</p></td><td class="confluenceTd"><p>(byte[] imageData)</p></td></tr>
+</p></td><td class="confluenceTd"><p> The callback function when scan document is a success.</p></td><td class="confluenceTd"><p>(byte[] imageData)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>submitDataSuccessCallback
-</p></td><td class="confluenceTd"><p> Callback function when submitting the data is successful.</p></td><td class="confluenceTd"><p>(FormSubmitData formSubmitData)</p></td></tr>
+</p></td><td class="confluenceTd"><p> The callback function when submitting the data is successful.</p></td><td class="confluenceTd"><p>(FormSubmitData formSubmitData)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>initTransactionSuccessCallback
-</p></td><td class="confluenceTd"><p> Callback function when transaction is initialized successfully.</p></td><td class="confluenceTd"><p>(String instnttxnid)</p></td></tr>
+</p></td><td class="confluenceTd"><p> The callback function when transaction is initialized successfully.</p></td><td class="confluenceTd"><p>(String instnttxnid)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>sendOTPSuccessCallback
-</p></td><td class="confluenceTd"><p> Callback function when sending OTP is a success.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p> The callback function when sending a OTP is successful.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>verifyOTPSuccessCallback
-</p></td><td class="confluenceTd"><p>Callback function when verifying the OTP is a success.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p>The callback function when verifying the OTP is a success.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>scanDocumentCancelledErrorCallback
-</p></td><td class="confluenceTd"><p>Callback function when scan document functionality has error becasue the user cancels the scan.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p>The callback function when scan document functionality has error becasue the user cancels the scan.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>scanDocumentCaptureErrorCallback
-</p></td><td class="confluenceTd"><p>Callback function when scan document functionality has document capture error.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p>The callback function when scan document functionality has document capture error.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>submitDataErrorCallback
-</p></td><td class="confluenceTd"><p>Callback function when submitdata functionality has a error.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p>The callback function when submitdata functionality has a error.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>initTransactionErrorCallback
-</p></td><td class="confluenceTd"><p>Callback function when there is a error while initializing a transaction.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p>The callback function when there is a error while initializing a transaction.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>sendOTPErrorCallback
-</p></td><td class="confluenceTd"><p>Callback function when send OTP functionality encounters error.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p>The callback function when send OTP functionality encounters error.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>verifyOTPErrorCallback
-</p></td><td class="confluenceTd"><p>Callback function verify OTP functionality encounters error.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
+</p></td><td class="confluenceTd"><p>The callback function when verify OTP functionality encounters error.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 
 </tbody></table>
@@ -291,18 +290,18 @@ scanDocument
 
 <tr><td class="confluenceTd"><p>getInstnttxnid</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>UUID</p></td><td class="confluenceTd"><p>Instnt Transaction ID</p></td></tr>
 
-<tr><td class="confluenceTd"><p>isOTPverificationEnabled</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>boolean</p></td><td class="confluenceTd"><p>Whether Instnt Form/Workflow has OTP verification enabled</p></td></tr>
+<tr><td class="confluenceTd"><p>isOTPverificationEnabled</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>boolean</p></td><td class="confluenceTd"><p>Checks whether Instnt Form/Workflow has OTP verification enabled</p></td></tr>
 
-<tr><td class="confluenceTd"><p>isDocumentVerificationEnabled</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>boolean</p></td><td class="confluenceTd"><p>Whether Instnt Form/Workflow has document verification enabled</p></td></tr>
+<tr><td class="confluenceTd"><p>isDocumentVerificationEnabled</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>boolean</p></td><td class="confluenceTd"><p>Checks whether Instnt Form/Workflow has document verification enabled</p></td></tr>
 
 </tbody></table>
 
 # Resource links
 - [Quick start guide](https://support.instnt.org/hc/en-us/articles/4408781136909)
 - [Developer guide](https://support.instnt.org/hc/en-us/articles/360055345112-Integration-Overview)
-- [Instnt API endpoints](https://swagger.instnt.org/)
-- [Instnt support](https://support.instnt.org/hc/en-us)
+- [Instnt API documentation](https://api.instnt.org/doc/swagger/)
+- [Instnt documentation hub](https://support.instnt.org/hc/en-us)
 
 # License
 
-The instnt-reactjs SDK is under MIT license.
+The instnt-android SDK is under MIT license.
