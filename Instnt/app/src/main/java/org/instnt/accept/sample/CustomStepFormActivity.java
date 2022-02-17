@@ -558,7 +558,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
     }
 
     @Override
-    public void getTransactionIDSuccessCallback(String instnttxnid) {
+    public void initTransactionSuccessCallback(String instnttxnid) {
         showProgressDialog(false);
         //init form fields
         initFormFields();
@@ -595,7 +595,7 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
     }
 
     @Override
-    public void getTransactionIDErrorCallback(String message) {
+    public void initTransactionErrorCallback(String message) {
         CommonUtils.showToast(this, message);
         Intent intent = new Intent(this, FormInitializationActivity.class);
         startActivity(intent);

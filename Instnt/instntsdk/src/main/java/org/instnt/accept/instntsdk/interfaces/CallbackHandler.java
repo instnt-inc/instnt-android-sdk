@@ -9,7 +9,7 @@ public interface CallbackHandler {
     void uploadAttachmentSuccessCallback(byte[] imageData);
     void scanDocumentSuccessCallback(byte[] imageData);
     void submitDataSuccessCallback(FormSubmitData formSubmitData);
-    void getTransactionIDSuccessCallback(String instnttxnid);
+    void initTransactionSuccessCallback(String instnttxnid);
     void sendOTPSuccessCallback(String message);
     void verifyOTPSuccessCallback(String message);
 
@@ -17,7 +17,7 @@ public interface CallbackHandler {
     void scanDocumentCancelledErrorCallback(String message);
     void scanDocumentCaptureErrorCallback(String message);
     void submitDataErrorCallback(String message);
-    void getTransactionIDErrorCallback(String message);
+    void initTransactionErrorCallback(String message);
     void sendOTPErrorCallback(String message);
     void verifyOTPErrorCallback(String message);
 }

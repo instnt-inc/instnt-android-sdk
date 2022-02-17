@@ -83,10 +83,10 @@ public class InstntSDKImpl implements InstntSDK {
             this.setInstnttxnid(response.getInstnttxnid());
             this.setWorkFlowDetail(response);
             this.formCodes = response;
-            this.callbackHandler.getTransactionIDSuccessCallback(response.getInstnttxnid());
+            this.callbackHandler.initTransactionSuccessCallback(response.getInstnttxnid());
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Calling getTransactionID returns with error response", throwable);
-            this.callbackHandler.getTransactionIDErrorCallback("Transaction initialization failed");
+            this.callbackHandler.initTransactionErrorCallback("Transaction initialization failed");
         });
     }
 
