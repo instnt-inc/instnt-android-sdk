@@ -260,12 +260,12 @@ Instnt provides an `Interface` called `CallbackHandler` that should be used by y
 <tr><td class="confluenceTd"><p>
 <a id="user-content-scanDocument" class="anchor" aria-hidden="true" href="#scandocument">
 scanDocument
-</p></td><td class="confluenceTd"><p>(boolean ifFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) </td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>This fuction enables the document scan. Here the input parameter "Context" that is passed must be getBaseContext() method.</p></td></tr>
+</p></td><td class="confluenceTd"><p>(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) </td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>This fuction enables the document scan. Here the input parameter "Context" that is passed must be getBaseContext() method.</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
 <a id="user-content-uploadAttachment" class="anchor" aria-hidden="true" href="#uploadAttachment"> uploadAttachment
-</p></td><td class="confluenceTd"><p>boolean ifFront </td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Upload a document file to Instnt server. The input parameter is of the type boolean that represents if the front side of the document is being uploaded.</p></td></tr>
+</p></td><td class="confluenceTd"><p>boolean isFront </td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Upload a document file to Instnt server. The input parameter is of the type boolean that represents if the front side of the document is being uploaded.</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
