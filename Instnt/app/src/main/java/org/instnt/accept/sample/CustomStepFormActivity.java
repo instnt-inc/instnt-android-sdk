@@ -17,6 +17,7 @@ import org.instnt.accept.instntsdk.enums.ErrorCallbackType;
 import org.instnt.accept.instntsdk.model.FormField;
 import org.instnt.accept.instntsdk.InstntSDK;
 import org.instnt.accept.instntsdk.model.FormSubmitData;
+import org.instnt.accept.instntsdk.model.InstntImageData;
 import org.instnt.accept.instntsdk.utils.CommonUtils;
 import org.instnt.accept.sample.databinding.ActivityCustomStepFormBinding;
 import org.instnt.accept.sample.view.BaseActivity;
@@ -150,7 +151,6 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
 
                 showProgressDialog(true);
                 this.instantSDK.verifyDocuments("License");
-                this.submit();
                 break;
             }
         }
@@ -528,8 +528,8 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
     }
 
     @Override
-    public void uploadAttachmentSuccessCallback(byte[] imageData) {
-        this.imageData = imageData;
+    public void uploadAttachmentSuccessCallback(InstntImageData instntImageData) {
+        this.imageData = instntImageData.getImageData();
         Bitmap bm = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -541,8 +541,8 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
     }
 
     @Override
-    public void scanDocumentSuccessCallback(byte[] imageData) {
-        this.imageData = imageData;
+    public void scanDocumentSuccessCallback(InstntImageData instntImageData) {
+        this.imageData = instntImageData.getImageData();
         showProgressDialog(false);
         nextStep(true);
     }
@@ -572,6 +572,11 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
     public void verifyOTPSuccessCallback(String message) {
         showProgressDialog(false);
         nextStep(true);
+    }
+
+    @Override
+    public void verifyDocumentsInitiationCallback(String message) {
+        this.submit();
     }
 
     @Override

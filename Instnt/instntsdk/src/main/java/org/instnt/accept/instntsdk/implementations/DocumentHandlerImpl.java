@@ -18,6 +18,7 @@ import com.idmetrics.dc.utils.FlashCapture;
 import org.instnt.accept.instntsdk.InstntCallbackHandler;
 import org.instnt.accept.instntsdk.enums.ErrorCallbackType;
 import org.instnt.accept.instntsdk.interfaces.DocumentHandler;
+import org.instnt.accept.instntsdk.model.InstntImageData;
 import org.instnt.accept.instntsdk.network.NetworkUtil;
 import org.instnt.accept.instntsdk.utils.CommonUtils;
 
@@ -67,7 +68,15 @@ public class DocumentHandlerImpl implements DocumentHandler {
         Log.i(CommonUtils.LOG_TAG, "Upload document to the fetched presigned URL");
         networkModule.uploadDocument(instnttxnid + docSuffix + ".jpg", (String) response.get("s3_key"), imageData);
         Log.i(CommonUtils.LOG_TAG, "Document uploaded successfully");
-        this.instntCallbackHandler.uploadAttachmentSuccessCallback(imageData);
+        InstntImageData instntImageData = new InstntImageData();
+        instntImageData.setImageData(imageData);
+        if(docSuffix.equalsIgnoreCase("S")) {
+            instntImageData.setType("Selfie");
+        } else {
+            instntImageData.setType("License");
+        }
+        instntImageData.setDocumentSide(docSuffix);
+        this.instntCallbackHandler.uploadAttachmentSuccessCallback(instntImageData);
     }
 
     private DSOptions getOptionsByDocumentType(boolean isFront, String documentType, boolean isAutoUpload) {
@@ -145,8 +154,19 @@ public class DocumentHandlerImpl implements DocumentHandler {
 
                 //if(isAutoUpload)
                 uploadAttachment(dsResult.image, documentHandler.instnttxnid, isFront, isSelfie);
-
-                documentHandler.instntCallbackHandler.scanDocumentSuccessCallback(dsResult.image);
+                InstntImageData instntImageData = new InstntImageData();
+                instntImageData.setImageData(dsResult.image);
+                if(documentType.equalsIgnoreCase("license")) {
+                    instntImageData.setType("License");
+                } else {
+                    instntImageData.setType("Selfie");
+                }
+                if(isFront) {
+                    instntImageData.setDocumentSide("F");
+                } else {
+                    instntImageData.setDocumentSide("B");
+                }
+                documentHandler.instntCallbackHandler.scanDocumentSuccessCallback(instntImageData);
             }
 
             @Override
@@ -186,11 +206,14 @@ public class DocumentHandlerImpl implements DocumentHandler {
 
         Log.i(CommonUtils.LOG_TAG, "Calling verify documents");
         networkModule.verifyDocuments(documentType, this.formKey, this.instnttxnid).subscribe(response->{
+            String message = "Verify documents initiated successfully";
+            Log.i(CommonUtils.LOG_TAG, message);
+            this.instntCallbackHandler.verifyDocumentsInitiationCallback(message);
 
-            Log.i(CommonUtils.LOG_TAG, "Verify documents called successfully");
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Verify documents returns with error", throwable);
         });
+
     }
 
     /**
