@@ -32,9 +32,12 @@ Note that a Workflow ID is required to execute the android functions properly. F
 **Install InstntSDK**
 
 ### Gradle
+
+include the instnt SDK aar file in your apps' build.gradle dependency
+
 ```
 dependencies {
-   implementation 'com.instant:instantsdk:2.0.0'
+  implementation files('src/main/libs/instnt-sdk.aar')
 }
 ```
 
@@ -206,18 +209,21 @@ Instnt provides an `Interface` called `CallbackHandler` to implement in your app
 
 <table data-layout="default" data-local-id="1461e79a-6df4-4f4b-b7df-a9a072096fd3" class="confluenceTable"><colgroup><col style="width: 200.0px;"><col style="width: 250.0px;"><col style="width: 200.0px;"></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Method</strong></p></th><th class="confluenceTh"><p><strong>Description</strong></p></th><th class="confluenceTh"><p><strong>Input Parameters</strong></p></th></tr>
 
-
-<tr><td class="confluenceTd"><p>uploadAttachmentSuccessCallback
-</p></td><td class="confluenceTd"><p> The callback function when uploading an attachment is a success.</p></td><td class="confluenceTd"><p>(byte[] imageData)</p></td></tr>
+<tr><td class="confluenceTd"><p>initTransactionSuccessCallback
+</p></td><td class="confluenceTd"><p> The callback function when transaction is initialized successfully.</p></td><td class="confluenceTd"><p>(String instnttxnid)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>scanDocumentSuccessCallback
-</p></td><td class="confluenceTd"><p> The callback function when scan document is a success.</p></td><td class="confluenceTd"><p>(byte[] imageData)</p></td></tr>
+</p></td><td class="confluenceTd"><p> The callback function when scan document is a success.</p></td><td class="confluenceTd"><p>(InstntImageData imageData)</p></td></tr>
+
+<tr><td class="confluenceTd"><p>uploadAttachmentSuccessCallback
+</p></td><td class="confluenceTd"><p> The callback function when uploading an attachment is a success.</p></td><td class="confluenceTd"><p>(InstntImageData imageData)</p></td></tr>
+
+<tr><td class="confluenceTd"><p>verifyDocumentsInitiationCallback
+</p></td><td class="confluenceTd"><p> The callback function when document verificationi initiated successfully.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>submitDataSuccessCallback
 </p></td><td class="confluenceTd"><p> The callback function when submitting the data is successful.</p></td><td class="confluenceTd"><p>(FormSubmitData formSubmitData)</p></td></tr>
 
-<tr><td class="confluenceTd"><p>initTransactionSuccessCallback
-</p></td><td class="confluenceTd"><p> The callback function when transaction is initialized successfully.</p></td><td class="confluenceTd"><p>(String instnttxnid)</p></td></tr>
 
 <tr><td class="confluenceTd"><p>sendOTPSuccessCallback
 </p></td><td class="confluenceTd"><p> The callback function when sending a OTP is successful.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
@@ -225,24 +231,8 @@ Instnt provides an `Interface` called `CallbackHandler` to implement in your app
 <tr><td class="confluenceTd"><p>verifyOTPSuccessCallback
 </p></td><td class="confluenceTd"><p>The callback function when verifying the OTP is a success.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
 
-<tr><td class="confluenceTd"><p>scanDocumentCancelledErrorCallback
-</p></td><td class="confluenceTd"><p>The callback function when scan document functionality has error becasue the user cancels the scan.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
-
-<tr><td class="confluenceTd"><p>scanDocumentCaptureErrorCallback
-</p></td><td class="confluenceTd"><p>The callback function when scan document functionality has document capture error.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
-
-<tr><td class="confluenceTd"><p>submitDataErrorCallback
-</p></td><td class="confluenceTd"><p>The callback function when submitdata functionality has a error.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
-
-<tr><td class="confluenceTd"><p>initTransactionErrorCallback
-</p></td><td class="confluenceTd"><p>The callback function when there is a error while initializing a transaction.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
-
-<tr><td class="confluenceTd"><p>sendOTPErrorCallback
-</p></td><td class="confluenceTd"><p>The callback function when send OTP functionality encounters error.</p></td><td class="confluenceTd"><p>(String message)</p></td></tr>
-
-<tr><td class="confluenceTd"><p>verifyOTPErrorCallback
-</p></td><td class="confluenceTd"><p>The callback function when verify OTP functionality encounters error.</td><td class="confluenceTd"><p>(String message)</p></td></tr>
-
+<tr><td class="confluenceTd"><p>instntErrorCallback
+</p></td><td class="confluenceTd"><p>The callback function to handle error coming out from Instnt SDK.</p></td><td class="confluenceTd"><p>(String message, ErrorCallbackType errorCallbackType)</p></td></tr>
 
 </tbody></table>
 
