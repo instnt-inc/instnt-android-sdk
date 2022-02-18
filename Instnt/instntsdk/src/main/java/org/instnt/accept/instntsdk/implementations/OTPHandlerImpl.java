@@ -1,11 +1,10 @@
 package org.instnt.accept.instntsdk.implementations;
 
 import android.util.Log;
-import com.google.gson.Gson;
 
-import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
+import org.instnt.accept.instntsdk.InstntCallbackHandler;
+import org.instnt.accept.instntsdk.enums.ErrorCallbackType;
 import org.instnt.accept.instntsdk.interfaces.OTPHandler;
-import org.instnt.accept.instntsdk.model.OTPResponse;
 import org.instnt.accept.instntsdk.network.NetworkUtil;
 import org.instnt.accept.instntsdk.utils.CommonUtils;
 
@@ -13,7 +12,7 @@ public class OTPHandlerImpl implements OTPHandler {
 
     private NetworkUtil networkModule;
     private String instnttxnid;
-    private CallbackHandler callbackHandler;
+    private InstntCallbackHandler instntCallbackHandler;
 
     public OTPHandlerImpl(NetworkUtil networkModule) {
         this.networkModule = networkModule;
@@ -31,13 +30,13 @@ public class OTPHandlerImpl implements OTPHandler {
             Log.i(CommonUtils.LOG_TAG, "Send OTP called successfully");        
             if(otpResponse != null && otpResponse.getResponse().getErrors() != null && otpResponse.getResponse().getErrors().length > 0) {
                 Log.e(CommonUtils.LOG_TAG, "Send OTP called successfully but returns with error : " + otpResponse.getResponse().getErrors()[0]);
-                this.callbackHandler.sendOTPErrorCallback(otpResponse.getResponse().getErrors()[0]);
+                this.instntCallbackHandler.instntErrorCallback(otpResponse.getResponse().getErrors()[0], ErrorCallbackType.SEND_OTP_ERROR);
                 return;
             }
-            this.callbackHandler.sendOTPSuccessCallback("OTP sent successfully");
+            this.instntCallbackHandler.sendOTPSuccessCallback("OTP sent successfully");
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Send OTP returns with error", throwable);
-            this.callbackHandler.sendOTPErrorCallback("Failed to send OTP");
+            this.instntCallbackHandler.instntErrorCallback("Failed to send OTP", ErrorCallbackType.SEND_OTP_ERROR);
         });
     }
 
@@ -54,13 +53,13 @@ public class OTPHandlerImpl implements OTPHandler {
             Log.i(CommonUtils.LOG_TAG, "Verify OTP called successfully");
             if(otpResponse != null && otpResponse.getResponse().getErrors() != null && otpResponse.getResponse().getErrors().length > 0) {
                 Log.e(CommonUtils.LOG_TAG, "Verify OTP called successfully but returns with error : " + otpResponse.getResponse().getErrors()[0]);
-                this.callbackHandler.verifyOTPErrorCallback(otpResponse.getResponse().getErrors()[0]);
+                this.instntCallbackHandler.instntErrorCallback(otpResponse.getResponse().getErrors()[0], ErrorCallbackType.VERIFY_OTP_ERROR);
                 return;
             }
-            this.callbackHandler.verifyOTPSuccessCallback("OTP verified successfully");
+            this.instntCallbackHandler.verifyOTPSuccessCallback("OTP verified successfully");
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Verify OTP returns with error", throwable);
-            this.callbackHandler.verifyOTPErrorCallback(CommonUtils.getErrorMessage(throwable));
+            this.instntCallbackHandler.instntErrorCallback(CommonUtils.getErrorMessage(throwable), ErrorCallbackType.VERIFY_OTP_ERROR);
         });
     }
 
@@ -76,11 +75,11 @@ public class OTPHandlerImpl implements OTPHandler {
 
     /**
      * Set call back handler
-     * @param callbackHandler
+     * @param instntCallbackHandler
      */
     @Override
-    public void setCallbackHandler(CallbackHandler callbackHandler) {
+    public void setCallbackHandler(InstntCallbackHandler instntCallbackHandler) {
         Log.i(CommonUtils.LOG_TAG, "Set callbackHandler");
-        this.callbackHandler = callbackHandler;
+        this.instntCallbackHandler = instntCallbackHandler;
     }
 }

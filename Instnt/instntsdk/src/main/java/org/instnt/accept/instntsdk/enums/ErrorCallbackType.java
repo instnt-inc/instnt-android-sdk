@@ -1,0 +1,5 @@
+package org.instnt.accept.instntsdk.enums;
+
+public enum ErrorCallbackType {
+    SUBMIT_FORM_ERROR, INIT_TRANSACTION_ERROR, SEND_OTP_ERROR, VERIFY_OTP_ERROR, SCAN_DOCUMENT_CANCELLED_ERROR, SCAN_DOCUMENT_CAPTURE_ERROR
+}

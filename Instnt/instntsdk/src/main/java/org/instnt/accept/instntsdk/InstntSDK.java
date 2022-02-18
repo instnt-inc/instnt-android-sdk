@@ -3,12 +3,7 @@ package org.instnt.accept.instntsdk;
 import android.content.Context;
 import android.view.WindowManager;
 
-import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
-import org.instnt.accept.instntsdk.interfaces.DeviceHandler;
-import org.instnt.accept.instntsdk.interfaces.DocumentHandler;
-import org.instnt.accept.instntsdk.interfaces.FormHandler;
 import org.instnt.accept.instntsdk.implementations.InstntSDKImpl;
-import org.instnt.accept.instntsdk.interfaces.OTPHandler;
 
 import java.util.Map;
 
@@ -20,11 +15,11 @@ public interface InstntSDK {
      * Initialize instntSDK
      * @param formKey
      * @param serverUrl
-     * @param callbackHandler
+     * @param instntCallbackHandler
      * @return
      */
-    static InstntSDK init(String formKey, String serverUrl, CallbackHandler callbackHandler) {
-        instance.initTransaction(formKey, serverUrl, callbackHandler);
+    static InstntSDK init(String formKey, String serverUrl, InstntCallbackHandler instntCallbackHandler) {
+        instance.initTransaction(formKey, serverUrl, instntCallbackHandler);
         return instance;
     }
 
@@ -32,9 +27,9 @@ public interface InstntSDK {
      * Initialize transaction
      * @param formKey
      * @param serverUrl
-     * @param callbackHandler
+     * @param instntCallbackHandler
      */
-    void initTransaction(String formKey, String serverUrl, CallbackHandler callbackHandler);
+    void initTransaction(String formKey, String serverUrl, InstntCallbackHandler instntCallbackHandler);
 
     /**
      * Get instnt transaction id

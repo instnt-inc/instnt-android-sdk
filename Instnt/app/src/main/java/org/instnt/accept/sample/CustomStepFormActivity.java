@@ -7,15 +7,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.google.gson.Gson;
-
-import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
+import org.instnt.accept.instntsdk.InstntCallbackHandler;
+import org.instnt.accept.instntsdk.enums.ErrorCallbackType;
 import org.instnt.accept.instntsdk.model.FormField;
 import org.instnt.accept.instntsdk.InstntSDK;
 import org.instnt.accept.instntsdk.model.FormSubmitData;
@@ -30,7 +28,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CustomStepFormActivity extends BaseActivity implements CallbackHandler {
+public class CustomStepFormActivity extends BaseActivity implements InstntCallbackHandler {
 
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     private static final String DOCUMENT_VERIFY_LICENSE_KEY = "AwG5mCdqXkmCj9oNEpGV8UauciP8s4cqFT848FfjUjwAZQJfa8ZvrEpmYsPME0RTo/Q0kRowDCGz7HPhfSdyeE7rOLtB3JAhuABdQ2R7dGhVy2EUdt5ENQBBIoveIZdf1pwVY2EUgDoGm8REDU+rr2C2";
@@ -577,39 +575,23 @@ public class CustomStepFormActivity extends BaseActivity implements CallbackHand
     }
 
     @Override
-    public void scanDocumentCancelledErrorCallback(String message) {
-        showProgressDialog(false);
-        CommonUtils.showToast(this, message);
-    }
-
-    @Override
-    public void scanDocumentCaptureErrorCallback(String message) {
-        showProgressDialog(false);
-        CommonUtils.showToast(this, message);
-    }
-
-    @Override
-    public void submitDataErrorCallback(String message) {
-        showProgressDialog(false);
-        CommonUtils.showToast(this, message);
-    }
-
-    @Override
-    public void initTransactionErrorCallback(String message) {
-        CommonUtils.showToast(this, message);
-        Intent intent = new Intent(this, FormInitializationActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
-    public void sendOTPErrorCallback(String message) {
-        showProgressDialog(false);
-        CommonUtils.showToast(this, message);
-    }
-
-    @Override
-    public void verifyOTPErrorCallback(String message) {
-        showProgressDialog(false);
-        CommonUtils.showToast(this, message);
+    public void instntErrorCallback(String message, ErrorCallbackType errorCallbackType) {
+        switch (errorCallbackType) {
+            case SUBMIT_FORM_ERROR:
+            case SEND_OTP_ERROR:
+            case VERIFY_OTP_ERROR:
+            case SCAN_DOCUMENT_CANCELLED_ERROR:
+            case SCAN_DOCUMENT_CAPTURE_ERROR: {
+                showProgressDialog(false);
+                CommonUtils.showToast(this, message);
+                break;
+            }
+            case INIT_TRANSACTION_ERROR: {
+                CommonUtils.showToast(this, message);
+                Intent intent = new Intent(this, FormInitializationActivity.class);
+                startActivity(intent);
+                break;
+            }
+        }
     }
 }

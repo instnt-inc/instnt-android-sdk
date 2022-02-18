@@ -15,7 +15,8 @@ import com.idmetrics.dc.utils.DSResult;
 import com.idmetrics.dc.utils.DSSide;
 import com.idmetrics.dc.utils.FlashCapture;
 
-import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
+import org.instnt.accept.instntsdk.InstntCallbackHandler;
+import org.instnt.accept.instntsdk.enums.ErrorCallbackType;
 import org.instnt.accept.instntsdk.interfaces.DocumentHandler;
 import org.instnt.accept.instntsdk.network.NetworkUtil;
 import org.instnt.accept.instntsdk.utils.CommonUtils;
@@ -25,7 +26,7 @@ import java.util.Map;
 public class DocumentHandlerImpl implements DocumentHandler {
 
     private NetworkUtil networkModule;
-    private CallbackHandler callbackHandler;
+    private InstntCallbackHandler instntCallbackHandler;
     private String formKey;
     private String instnttxnid;
     private DSResult dsResult;
@@ -66,7 +67,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
         Log.i(CommonUtils.LOG_TAG, "Upload document to the fetched presigned URL");
         networkModule.uploadDocument(instnttxnid + docSuffix + ".jpg", (String) response.get("s3_key"), imageData);
         Log.i(CommonUtils.LOG_TAG, "Document uploaded successfully");
-        this.callbackHandler.uploadAttachmentSuccessCallback(imageData);
+        this.instntCallbackHandler.uploadAttachmentSuccessCallback(imageData);
     }
 
     private DSOptions getOptionsByDocumentType(boolean isFront, String documentType, boolean isAutoUpload) {
@@ -145,21 +146,21 @@ public class DocumentHandlerImpl implements DocumentHandler {
                 //if(isAutoUpload)
                 uploadAttachment(dsResult.image, documentHandler.instnttxnid, isFront, isSelfie);
 
-                documentHandler.callbackHandler.scanDocumentSuccessCallback(dsResult.image);
+                documentHandler.instntCallbackHandler.scanDocumentSuccessCallback(dsResult.image);
             }
 
             @Override
             public void scanWasCancelled() {
 
                 Log.w(CommonUtils.LOG_TAG, "Scan document was cancelled");
-                documentHandler.callbackHandler.scanDocumentCancelledErrorCallback("Please approve scan");
+                documentHandler.instntCallbackHandler.instntErrorCallback("Please approve scan", ErrorCallbackType.SCAN_DOCUMENT_CANCELLED_ERROR);
             }
 
             @Override
             public void captureError(DSError dsError) {
 
                 Log.e(CommonUtils.LOG_TAG, "Scan document has return with error : " + dsError.message);
-                documentHandler.callbackHandler.scanDocumentCaptureErrorCallback(dsError.message);
+                documentHandler.instntCallbackHandler.instntErrorCallback(dsError.message, ErrorCallbackType.SCAN_DOCUMENT_CAPTURE_ERROR);
             }
         });
 
@@ -214,11 +215,11 @@ public class DocumentHandlerImpl implements DocumentHandler {
 
     /**
      * Set callback handler
-     * @param callbackHandler
+     * @param instntCallbackHandler
      */
     @Override
-    public void setCallbackHandler(CallbackHandler callbackHandler) {
+    public void setCallbackHandler(InstntCallbackHandler instntCallbackHandler) {
         Log.i(CommonUtils.LOG_TAG, "Set callbackHandler");
-        this.callbackHandler = callbackHandler;
+        this.instntCallbackHandler = instntCallbackHandler;
     }
 }

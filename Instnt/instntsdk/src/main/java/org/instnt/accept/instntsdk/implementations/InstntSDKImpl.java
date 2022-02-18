@@ -5,7 +5,8 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import org.instnt.accept.instntsdk.InstntSDK;
-import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
+import org.instnt.accept.instntsdk.InstntCallbackHandler;
+import org.instnt.accept.instntsdk.enums.ErrorCallbackType;
 import org.instnt.accept.instntsdk.interfaces.DeviceHandler;
 import org.instnt.accept.instntsdk.interfaces.DocumentHandler;
 import org.instnt.accept.instntsdk.interfaces.FormHandler;
@@ -25,7 +26,7 @@ public class InstntSDKImpl implements InstntSDK {
     private NetworkUtil networkModule;
     private String instnttxnid;
     private String formKey;
-    private CallbackHandler callbackHandler;
+    private InstntCallbackHandler instntCallbackHandler;
     private FormCodes formCodes;
 
     public InstntSDKImpl() {
@@ -57,25 +58,25 @@ public class InstntSDKImpl implements InstntSDK {
         this.formHandler.setWorkFlowDetail(formCodes);
     }
 
-    private void setCallbackHandler(CallbackHandler callbackHandler) {
-        this.callbackHandler = callbackHandler;
-        this.documentHandler.setCallbackHandler(callbackHandler);
-        this.formHandler.setCallbackHandler(callbackHandler);
-        this.otpHandler.setCallbackHandler(callbackHandler);
+    private void setCallbackHandler(InstntCallbackHandler instntCallbackHandler) {
+        this.instntCallbackHandler = instntCallbackHandler;
+        this.documentHandler.setCallbackHandler(instntCallbackHandler);
+        this.formHandler.setCallbackHandler(instntCallbackHandler);
+        this.otpHandler.setCallbackHandler(instntCallbackHandler);
     }
 
     /**
      * Initialize transaction
      * @param formKey
      * @param serverUrl
-     * @param callbackHandler
+     * @param instntCallbackHandler
      */
     @Override
-    public void initTransaction(String formKey, String serverUrl, CallbackHandler callbackHandler) {
+    public void initTransaction(String formKey, String serverUrl, InstntCallbackHandler instntCallbackHandler) {
 
         this.setServerURL(serverUrl);
         this.setFormKey(formKey);
-        this.setCallbackHandler(callbackHandler);
+        this.setCallbackHandler(instntCallbackHandler);
 
         Log.i(CommonUtils.LOG_TAG, "Calling getTransactionID");
         networkModule.getTransactionID(this.formKey).subscribe(response->{
@@ -83,10 +84,10 @@ public class InstntSDKImpl implements InstntSDK {
             this.setInstnttxnid(response.getInstnttxnid());
             this.setWorkFlowDetail(response);
             this.formCodes = response;
-            this.callbackHandler.initTransactionSuccessCallback(response.getInstnttxnid());
+            this.instntCallbackHandler.initTransactionSuccessCallback(response.getInstnttxnid());
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Calling getTransactionID returns with error response", throwable);
-            this.callbackHandler.initTransactionErrorCallback("Transaction initialization failed");
+            this.instntCallbackHandler.instntErrorCallback("Transaction initialization failed", ErrorCallbackType.INIT_TRANSACTION_ERROR);
         });
     }
 

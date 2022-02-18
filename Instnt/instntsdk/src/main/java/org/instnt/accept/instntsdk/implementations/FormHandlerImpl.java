@@ -2,7 +2,8 @@ package org.instnt.accept.instntsdk.implementations;
 
 import android.util.Log;
 
-import org.instnt.accept.instntsdk.interfaces.CallbackHandler;
+import org.instnt.accept.instntsdk.InstntCallbackHandler;
+import org.instnt.accept.instntsdk.enums.ErrorCallbackType;
 import org.instnt.accept.instntsdk.model.FormCodes;
 import org.instnt.accept.instntsdk.interfaces.FormHandler;
 import org.instnt.accept.instntsdk.network.NetworkUtil;
@@ -19,7 +20,7 @@ public class FormHandlerImpl implements FormHandler {
 
     private NetworkUtil networkModule;
     private FormCodes formCodes;
-    private CallbackHandler callbackHandler;
+    private InstntCallbackHandler instntCallbackHandler;
     private String instnttxnid;
 
     public FormHandlerImpl(NetworkUtil networkModule) {
@@ -62,21 +63,21 @@ public class FormHandlerImpl implements FormHandler {
         Log.i(CommonUtils.LOG_TAG, "Calling submit form API");
         networkModule.submit(formCodes.getSubmitURL(), body).subscribe( success-> {
             Log.i(CommonUtils.LOG_TAG, "Submit form called successfully");
-            this.callbackHandler.submitDataSuccessCallback(success.getData());
+            this.instntCallbackHandler.submitDataSuccessCallback(success.getData());
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Submit form returns with error", throwable);
-            this.callbackHandler.submitDataErrorCallback(CommonUtils.getErrorMessage(throwable));
+            this.instntCallbackHandler.instntErrorCallback(CommonUtils.getErrorMessage(throwable), ErrorCallbackType.SUBMIT_FORM_ERROR);
         });
     }
 
     /**
      * Set callback handler
-     * @param callbackHandler
+     * @param instntCallbackHandler
      */
     @Override
-    public void setCallbackHandler(CallbackHandler callbackHandler) {
+    public void setCallbackHandler(InstntCallbackHandler instntCallbackHandler) {
         Log.i(CommonUtils.LOG_TAG, "Set callbackHandler");
-        this.callbackHandler = callbackHandler;
+        this.instntCallbackHandler = instntCallbackHandler;
     }
 
     /**
