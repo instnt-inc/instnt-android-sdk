@@ -71,7 +71,6 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
         instantSDK = InstntSDK.init(this.formKey, serverUrl, this);
         binding.previous.setOnClickListener(v -> nextStep(false));
         binding.next.setOnClickListener(v -> validateCurrentStep(true));
-        binding.submitAnotherForm.setOnClickListener(v -> reInitForm());
         binding.signup.setOnClickListener(v -> reInitForm());
     }
 
@@ -127,6 +126,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
 
                 if(this.instantSDK.isDocumentVerificationEnabled()) {
                     this.isFront = true;
+                    this.documentType = "License";
                     scanDocument("License");
                 } else {
                     nextStep(isNext);
@@ -139,6 +139,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
 
                 if(this.instantSDK.isDocumentVerificationEnabled()) {
                     this.isFront = false;
+                    this.documentType = "License";
                     scanDocument("License");
                 } else {
                     nextStep(isNext);
@@ -150,7 +151,11 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
             case 8: {
 
                 showProgressDialog(true);
-                this.instantSDK.verifyDocuments("License", this.instantSDK.getInstnttxnid());
+                if(this.instantSDK.isDocumentVerificationEnabled()) {
+                    this.instantSDK.verifyDocuments("License", this.instantSDK.getInstnttxnid());
+                } else {
+                    this.submit();
+                }
                 break;
             }
         }
