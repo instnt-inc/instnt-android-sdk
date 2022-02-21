@@ -24,7 +24,6 @@ public class InstntSDKImpl implements InstntSDK {
     private FormHandler formHandler;
     private DeviceHandler deviceHandler;
     private NetworkUtil networkModule;
-    private String instnttxnid;
     private String formKey;
     private InstntCallbackHandler instntCallbackHandler;
     private FormCodes formCodes;
@@ -44,13 +43,6 @@ public class InstntSDKImpl implements InstntSDK {
     private void setFormKey(String formKey) {
         this.formKey = formKey;
         this.documentHandler.setFormKey(formKey);
-    }
-
-    private void setInstnttxnid(String instnttxnid) {
-        this.instnttxnid = instnttxnid;
-        this.documentHandler.setInstnttxnid(instnttxnid);
-        this.otpHandler.setInstnttxnid(instnttxnid);
-        this.formHandler.setInstnttxnid(instnttxnid);
     }
 
     private void setWorkFlowDetail(FormCodes formCodes) {
@@ -81,9 +73,7 @@ public class InstntSDKImpl implements InstntSDK {
         Log.i(CommonUtils.LOG_TAG, "Calling getTransactionID");
         networkModule.getTransactionID(this.formKey).subscribe(response->{
             Log.i(CommonUtils.LOG_TAG, "Calling getTransactionID returns with success response");
-            this.setInstnttxnid(response.getInstnttxnid());
             this.setWorkFlowDetail(response);
-            this.formCodes = response;
             this.instntCallbackHandler.initTransactionSuccessCallback(response.getInstnttxnid());
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Calling getTransactionID returns with error response", throwable);
@@ -100,8 +90,8 @@ public class InstntSDKImpl implements InstntSDK {
      * @param documentVerifyLicenseKey
      */
     @Override
-    public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) {
-        documentHandler.scanDocument(isFront, isAutoUpload, documentType, context, documentVerifyLicenseKey);
+    public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey, String instnttxnid) {
+        documentHandler.scanDocument(isFront, isAutoUpload, documentType, context, documentVerifyLicenseKey, instnttxnid);
     }
 
     /**
@@ -109,8 +99,8 @@ public class InstntSDKImpl implements InstntSDK {
      * @param isFront
      */
     @Override
-    public void uploadAttachment(byte[] imageData, boolean isFront, boolean isSelfie) {
-        this.documentHandler.uploadAttachment(imageData, isFront, isSelfie);
+    public void uploadAttachment(byte[] imageData, boolean isFront, boolean isSelfie, String instnttxnid) {
+        this.documentHandler.uploadAttachment(imageData, isFront, isSelfie, instnttxnid);
     }
 
     /**
@@ -118,8 +108,8 @@ public class InstntSDKImpl implements InstntSDK {
      * @param documentType
      */
     @Override
-    public void verifyDocuments(String documentType) {
-        this.documentHandler.verifyDocuments(documentType);
+    public void verifyDocuments(String documentType, String instnttxnid) {
+        this.documentHandler.verifyDocuments(documentType, instnttxnid);
     }
 
     /**
@@ -129,9 +119,9 @@ public class InstntSDKImpl implements InstntSDK {
      * @param body
      */
     @Override
-    public void submitData(Context context, WindowManager windowManager, Map<String, Object> body) {
+    public void submitData(Context context, WindowManager windowManager, Map<String, Object> body, String instnttxnid) {
         body.put("mobileDeviceInfo", deviceHandler.getDeviceInfo(context, windowManager));
-        this.formHandler.submitData(body);
+        this.formHandler.submitData(body, instnttxnid);
     }
 
     /**
@@ -139,8 +129,8 @@ public class InstntSDKImpl implements InstntSDK {
      * @param mobileNumber
      */
     @Override
-    public void sendOTP(String mobileNumber) {
-        otpHandler.sendOTP(mobileNumber);
+    public void sendOTP(String mobileNumber, String instnttxnid) {
+        otpHandler.sendOTP(mobileNumber, instnttxnid);
     }
 
     /**
@@ -149,8 +139,8 @@ public class InstntSDKImpl implements InstntSDK {
      * @param otpCode
      */
     @Override
-    public void verifyOTP(String mobileNumber, String otpCode) {
-        otpHandler.verifyOTP(mobileNumber, otpCode);
+    public void verifyOTP(String mobileNumber, String otpCode, String instnttxnid) {
+        otpHandler.verifyOTP(mobileNumber, otpCode, instnttxnid);
     }
 
     /**
@@ -159,7 +149,7 @@ public class InstntSDKImpl implements InstntSDK {
      */
     @Override
     public String getInstnttxnid() {
-        return this.instnttxnid;
+        return this.formCodes.getInstnttxnid();
     }
 
     /**

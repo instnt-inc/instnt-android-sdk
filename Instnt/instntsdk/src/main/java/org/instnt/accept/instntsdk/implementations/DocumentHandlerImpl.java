@@ -29,7 +29,6 @@ public class DocumentHandlerImpl implements DocumentHandler {
     private NetworkUtil networkModule;
     private InstntCallbackHandler instntCallbackHandler;
     private String formKey;
-    private String instnttxnid;
     private DSResult dsResult;
 
     public DocumentHandlerImpl(NetworkUtil networkModule) {
@@ -134,7 +133,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
      * @param documentVerifyLicenseKey
      */
     @Override
-    public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) {
+    public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey, String instnttxnid) {
 
         Log.i(CommonUtils.LOG_TAG, "Calling Scan Document");
         DocumentHandlerImpl documentHandler = this;
@@ -153,7 +152,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
                 documentHandler.dsResult = dsResult;
 
                 //if(isAutoUpload)
-                uploadAttachment(dsResult.image, documentHandler.instnttxnid, isFront, isSelfie);
+                uploadAttachment(dsResult.image, instnttxnid, isFront, isSelfie);
                 InstntImageData instntImageData = new InstntImageData();
                 instntImageData.setImageData(dsResult.image);
                 if(documentType.equalsIgnoreCase("license")) {
@@ -192,9 +191,9 @@ public class DocumentHandlerImpl implements DocumentHandler {
      * @param isFront
      */
     @Override
-    public void uploadAttachment(byte[] imageData, boolean isFront, boolean isSelfie) {
+    public void uploadAttachment(byte[] imageData, boolean isFront, boolean isSelfie, String instnttxnid) {
 
-        uploadAttachment(imageData,this.instnttxnid, isFront, isSelfie);
+        uploadAttachment(imageData, instnttxnid, isFront, isSelfie);
     }
 
     /**
@@ -202,10 +201,10 @@ public class DocumentHandlerImpl implements DocumentHandler {
      * @param documentType
      */
     @Override
-    public void verifyDocuments(String documentType) {
+    public void verifyDocuments(String documentType, String instnttxnid) {
 
         Log.i(CommonUtils.LOG_TAG, "Calling verify documents");
-        networkModule.verifyDocuments(documentType, this.formKey, this.instnttxnid).subscribe(response->{
+        networkModule.verifyDocuments(documentType, this.formKey, instnttxnid).subscribe(response->{
             String message = "Verify documents initiated successfully";
             Log.i(CommonUtils.LOG_TAG, message);
             this.instntCallbackHandler.verifyDocumentsInitiationCallback(message);
@@ -224,16 +223,6 @@ public class DocumentHandlerImpl implements DocumentHandler {
     public void setFormKey(String formKey) {
         Log.i(CommonUtils.LOG_TAG, "Set form key");
         this.formKey = formKey;
-    }
-
-    /**
-     * Set instnt transaction id
-     * @param instnttxnid
-     */
-    @Override
-    public void setInstnttxnid(String instnttxnid) {
-        Log.i(CommonUtils.LOG_TAG, "Set instnttxnid");
-        this.instnttxnid = instnttxnid;
     }
 
     /**

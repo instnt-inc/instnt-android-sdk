@@ -11,7 +11,6 @@ import org.instnt.accept.instntsdk.utils.CommonUtils;
 public class OTPHandlerImpl implements OTPHandler {
 
     private NetworkUtil networkModule;
-    private String instnttxnid;
     private InstntCallbackHandler instntCallbackHandler;
 
     public OTPHandlerImpl(NetworkUtil networkModule) {
@@ -23,10 +22,10 @@ public class OTPHandlerImpl implements OTPHandler {
      * @param mobileNumber
      */
     @Override
-    public void sendOTP(String mobileNumber) {
+    public void sendOTP(String mobileNumber, String instnttxnid) {
 
         Log.i(CommonUtils.LOG_TAG, "Calling Send OTP");
-        networkModule.sendOTP(mobileNumber, this.instnttxnid).subscribe(otpResponse->{
+        networkModule.sendOTP(mobileNumber, instnttxnid).subscribe(otpResponse->{
             Log.i(CommonUtils.LOG_TAG, "Send OTP called successfully");        
             if(otpResponse != null && otpResponse.getResponse().getErrors() != null && otpResponse.getResponse().getErrors().length > 0) {
                 Log.e(CommonUtils.LOG_TAG, "Send OTP called successfully but returns with error : " + otpResponse.getResponse().getErrors()[0]);
@@ -46,10 +45,10 @@ public class OTPHandlerImpl implements OTPHandler {
      * @param otpCode
      */
     @Override
-    public void verifyOTP(String mobileNumber, String otpCode) {
+    public void verifyOTP(String mobileNumber, String otpCode, String instnttxnid) {
 
         Log.i(CommonUtils.LOG_TAG, "Calling verify OTP");
-        networkModule.verifyOTP(mobileNumber, otpCode, this.instnttxnid).subscribe(otpResponse->{
+        networkModule.verifyOTP(mobileNumber, otpCode, instnttxnid).subscribe(otpResponse->{
             Log.i(CommonUtils.LOG_TAG, "Verify OTP called successfully");
             if(otpResponse != null && otpResponse.getResponse().getErrors() != null && otpResponse.getResponse().getErrors().length > 0) {
                 Log.e(CommonUtils.LOG_TAG, "Verify OTP called successfully but returns with error : " + otpResponse.getResponse().getErrors()[0]);
@@ -61,16 +60,6 @@ public class OTPHandlerImpl implements OTPHandler {
             Log.e(CommonUtils.LOG_TAG, "Verify OTP returns with error", throwable);
             this.instntCallbackHandler.instntErrorCallback(CommonUtils.getErrorMessage(throwable), ErrorCallbackType.VERIFY_OTP_ERROR);
         });
-    }
-
-    /**
-     * Set instnt transaction id
-     * @param instnttxnid
-     */
-    @Override
-    public void setInstnttxnid(String instnttxnid) {
-        Log.i(CommonUtils.LOG_TAG, "Set instnttxnid");
-        this.instnttxnid = instnttxnid;
     }
 
     /**

@@ -57,19 +57,19 @@ public interface InstntSDK {
      * @param context
      * @param documentVerifyLicenseKey
      */
-    void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey);
+    void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey, String instnttxnid);
 
     /**
      * Upload attachment
      * @param isFront
      */
-    void uploadAttachment(byte[] imageData, boolean isFront, boolean isSelfie);
+    void uploadAttachment(byte[] imageData, boolean isFront, boolean isSelfie, String instnttxnid);
 
     /**
      * Verify documents
      * @param documentType
      */
-    void verifyDocuments(String documentType);
+    void verifyDocuments(String documentType, String instnttxnid);
 
     /**
      * Submit form
@@ -77,18 +77,18 @@ public interface InstntSDK {
      * @param windowManager
      * @param body
      */
-    void submitData(Context context, WindowManager windowManager, Map<String, Object> body);
+    void submitData(Context context, WindowManager windowManager, Map<String, Object> body, String instnttxnid);
 
     /**
      * Send OTP
      * @param mobileNumber
      */
-    void sendOTP(String mobileNumber);
+    void sendOTP(String mobileNumber, String instnttxnid);
 
     /**
      * Verify OTP
      * @param mobileNumber
      * @param otpCode
      */
-    void verifyOTP(String mobileNumber, String otpCode);
+    void verifyOTP(String mobileNumber, String otpCode, String instnttxnid);
 }

@@ -21,7 +21,6 @@ public class FormHandlerImpl implements FormHandler {
     private NetworkUtil networkModule;
     private FormCodes formCodes;
     private InstntCallbackHandler instntCallbackHandler;
-    private String instnttxnid;
 
     public FormHandlerImpl(NetworkUtil networkModule) {
         this.networkModule = networkModule;
@@ -32,7 +31,7 @@ public class FormHandlerImpl implements FormHandler {
      * @param body
      */
     @Override
-    public void submitData(Map<String, Object> body) {
+    public void submitData(Map<String, Object> body, String instnttxnid) {
 
         Log.i(CommonUtils.LOG_TAG, "Calling Submit form");
         try {
@@ -41,8 +40,8 @@ public class FormHandlerImpl implements FormHandler {
             Log.e(CommonUtils.LOG_TAG, "Encode mobile number " + (String) body.get("mobileNumber") + " have error", e);
         }
 
-        body.put("signature", this.instnttxnid);
-        body.put("OTPSignature", this.instnttxnid);
+        body.put("signature", instnttxnid);
+        body.put("OTPSignature", instnttxnid);
         body.put("form_key", formCodes.getId());
 
         Map <String, Object> fingerMap = new HashMap<>();
@@ -78,16 +77,6 @@ public class FormHandlerImpl implements FormHandler {
     public void setCallbackHandler(InstntCallbackHandler instntCallbackHandler) {
         Log.i(CommonUtils.LOG_TAG, "Set callbackHandler");
         this.instntCallbackHandler = instntCallbackHandler;
-    }
-
-    /**
-     * Set instnt transaction id
-     * @param instnttxnid
-     */
-    @Override
-    public void setInstnttxnid(String instnttxnid) {
-        Log.i(CommonUtils.LOG_TAG, "Set instnttxnid");
-        this.instnttxnid = instnttxnid;
     }
 
     /**

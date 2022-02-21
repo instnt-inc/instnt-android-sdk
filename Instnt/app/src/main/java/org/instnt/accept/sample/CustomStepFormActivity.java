@@ -150,7 +150,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
             case 8: {
 
                 showProgressDialog(true);
-                this.instantSDK.verifyDocuments("License");
+                this.instantSDK.verifyDocuments("License", this.instantSDK.getInstnttxnid());
                 break;
             }
         }
@@ -336,7 +336,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, MY_CAMERA_REQUEST_CODE);
         } else {
-            instantSDK.scanDocument(this.isFront, this.isAutoUpload, documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
+            instantSDK.scanDocument(this.isFront, this.isAutoUpload, documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY, this.instantSDK.getInstnttxnid());
         }
     }
 
@@ -354,7 +354,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
             return;
         }
 
-        this.instantSDK.sendOTP(mobileNumber);
+        this.instantSDK.sendOTP(mobileNumber, this.instantSDK.getInstnttxnid());
     }
 
     private void verifyOTP() {
@@ -367,7 +367,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
         TextView otpText = view1.findViewById(org.instnt.accept.instntsdk.R.id.value);
         String otpCode = otpText.getText() == null ? null : otpText.getText().toString();
 
-        this.instantSDK.verifyOTP(mobileNumber, otpCode);
+        this.instantSDK.verifyOTP(mobileNumber, otpCode, this.instantSDK.getInstnttxnid());
     }
 
     private static boolean isValidE123(String s) {
@@ -512,7 +512,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
             inputView.input(paramMap);
         }
 
-        this.instantSDK.submitData(getBaseContext(), this.getWindowManager(), paramMap);
+        this.instantSDK.submitData(getBaseContext(), this.getWindowManager(), paramMap, this.instantSDK.getInstnttxnid());
     }
 
     @Override
@@ -520,7 +520,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                instantSDK.scanDocument(this.isFront, this.isAutoUpload, this.documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
+                instantSDK.scanDocument(this.isFront, this.isAutoUpload, this.documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY, this.instantSDK.getInstnttxnid());
             } else {
                 //Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
             }
