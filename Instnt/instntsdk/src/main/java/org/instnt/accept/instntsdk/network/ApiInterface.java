@@ -22,7 +22,7 @@ import retrofit2.http.Url;
 public interface ApiInterface {
 
     @Headers("Content-Type: application/json")
-    @POST()
+    @PUT()
     Observable<FormSubmitResponse> submitForm(@Header("User-Agent") String userAgent, @Url String url, @Body Map<String, Object> body);
 
     @Headers("Content-Type: application/json")
