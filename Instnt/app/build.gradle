@@ -37,6 +37,7 @@ android {
         dataBinding = true
         viewBinding = true
     }
+
 }
 
 ext {
@@ -47,11 +48,13 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation project(':instntsdk')
+    //implementation project(':instntsdk')
+    implementation files('src/main/libs/instntsdk-release.aar')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'com.google.android.gms:play-services-vision:17.0.2'
 }
+
