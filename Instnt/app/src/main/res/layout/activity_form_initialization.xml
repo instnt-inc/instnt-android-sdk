@@ -10,35 +10,30 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/formid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Form Key"
-            android:background="@color/transparent"/>
+            android:hint="Form Key"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/server_url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Server URL"
-            android:background="@color/transparent"/>
+            android:hint="Server URL"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent">
+        android:layout_height="wrap_content">
 
         <Switch
             android:id="@+id/isAutoUpload"
