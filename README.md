@@ -25,7 +25,14 @@ Refer [Quick start guide](https://support.instnt.org/hc/en-us/articles/440878113
 
 **Note:** Your implementation with Instnt's SDK may diverge from the integration shown in the sample app. Please contact the Instnt support team for additional questions related to Integration.
 
+# Requirements
+
+* Android Studio 3+
+* Android 4.4 (API 19+)
+
 # Getting Started
+
+Instnt android SDK is comprised of android components and mechanisms to facilitate communication between your application, user device and Instnt's APIs.
 
 Note that a Workflow ID is required to execute the android functions properly. For more information concerning Workflow IDs, please visit [Instnt's documentation hub.](https://support.instnt.org/hc/en-us/articles/360055345112-Integration-Overview)
 
@@ -37,7 +44,7 @@ include the instnt SDK aar file in your apps' build.gradle dependency
 
 ```
 dependencies {
-  implementation files('src/main/libs/instnt-sdk.aar')
+      implementation 'org.instnt:instntsdk:2.0.1'
 }
 ```
 
@@ -48,7 +55,7 @@ Instnt treats each signup as a transaction. To initialize the signup session and
 **ServerURl**: production URL or sandbox URL
 **this** : CallbackHandler
 
-The function returns an [InstntSDK interface](#instntsdk-interface)object; that interface object is used to invoke other SDK functionalities. This interface and various callback handlers listed below are the SDK artifacts you need to interact with.
+The function returns an [InstntSDK interface](#instntsdk-interface) object; that interface object is used to invoke other SDK functionalities. This interface and various callback handlers listed below are the SDK artifacts you need to interact with.
 
 
 See the following sample code implementation of initializing the transaction.
@@ -61,9 +68,8 @@ public class MainActivity implements CallbackHandler  {
 
     private void init() {
         String formKey = "REPLACE_YOUR_FORM_KEY";
-        String serverURL = "REPLACE_YOUR_SERVER_URL";
+        String serverURL = "REPLACE_SERVER_URL"; // sandbox or production
         instantSDK = InstntSDK.init(formKey, serverURL, this);
-    }
     }
 
 ```
@@ -89,13 +95,12 @@ When this feature is enabled, the physical capture and verification of Governmen
 ```java
 
 private void scanDocument(String documentType) {
-        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, MY_CAMERA_REQUEST_CODE);
-        } else {
-            instantSDK.scanDocument(this.isFront, this.isAutoUpload, documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY);
-        }
+    if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, MY_CAMERA_REQUEST_CODE);
+    } else {
+        instantSDK.scanDocument(this.isFront, this.isAutoUpload, documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY, this.instantSDK.getInstnttxnid());
     }
-
+}
 
 ```
 
@@ -106,7 +111,8 @@ Following sample code demonstrates the upload attachment process:
 ```java
 binding.uploadDocBtn.setVisibility(View.VISIBLE);
             binding.uploadDocBtn.setOnClickListener(v -> {
-                this.instantSDK.uploadAttachment(this.isFront);
+                this.instantSDK.uploadAttachment(imageData, true, false, this.instantSDK.getInstnttxnid());
+
 ```
 
 3. Next, verify the documents that were uploaded.
@@ -114,7 +120,7 @@ binding.uploadDocBtn.setVisibility(View.VISIBLE);
 Following sample code demonstrates the verify document process:
 
 ``` java
-this.instantSDK.verifyDocuments("License");
+this.instantSDK.verifyDocuments("License", this.instantSDK.getInstnttxnid());
 ```
 
 # OTP (One-Time Passcode)
@@ -138,40 +144,37 @@ InstntSDK provides two methods to conduct OTP verification. we have also provide
 ```java
 private void sendOTP() {
 
-        //Call send otp api
-        View view = binding.containerStep3Contact.getChildAt(0);
-        TextView mobile = view.findViewById(org.instnt.accept.instntsdk.R.id.value);
-        String mobileNumber = mobile.getText() == null ? null : mobile.getText().toString();
+    //Call send otp api
+    View view = binding.containerStep3Contact.getChildAt(0);
+    TextView mobile = view.findViewById(org.instnt.accept.instntsdk.R.id.value);
+    String mobileNumber = mobile.getText() == null ? null : mobile.getText().toString();
 
-        //Validate number
-        if (!isValidE123(mobileNumber)) {
-            showProgressDialog(false);
-            CommonUtils.showToast(getBaseContext(), "Please enter a valid number with country code");
-            return;
-        }
-
-        this.instantSDK.sendOTP(mobileNumber);
+    //Validate number
+    if (!isValidE123(mobileNumber)) {
+        showProgressDialog(false);
+        CommonUtils.showToast(getBaseContext(), "Please enter a valid number with country code");
+        return;
     }
+
+    this.instantSDK.sendOTP(mobileNumber, this.instantSDK.getInstnttxnid());
+}
 ```
 2. verifyOTP(mobileNumber, otpCode)
 
 ```java
 private void verifyOTP() {
 
-        View view = binding.containerStep3Contact.getChildAt(0);
-        TextView mobile = view.findViewById(org.instnt.accept.instntsdk.R.id.value);
-        String mobileNumber = mobile.getText() == null ? null : mobile.getText().toString();
+    View view = binding.containerStep3Contact.getChildAt(0);
+    TextView mobile = view.findViewById(org.instnt.accept.instntsdk.R.id.value);
+    String mobileNumber = mobile.getText() == null ? null : mobile.getText().toString();
 
-        View view1 = binding.containerStep4Otp.getChildAt(1);
-        TextView otpText = view1.findViewById(org.instnt.accept.instntsdk.R.id.value);
-        String otpCode = otpText.getText() == null ? null : otpText.getText().toString();
+    View view1 = binding.containerStep4Otp.getChildAt(1);
+    TextView otpText = view1.findViewById(org.instnt.accept.instntsdk.R.id.value);
+    String otpCode = otpText.getText() == null ? null : otpText.getText().toString();
 
-        this.instantSDK.verifyOTP(mobileNumber, otpCode);
-    }
+    this.instantSDK.verifyOTP(mobileNumber, otpCode, this.instantSDK.getInstnttxnid());
+}
 ```
-
-Please refer to the [InstntSDK interface](#instntsdk-interface) methods listed below for more details.
-
 # Submit form data
 
 After gathering all the relevant end-user information and processing the documents, you can submit all the data to Instnt via a function.
@@ -202,6 +205,8 @@ private void submit() {
     }
 
 ```
+
+Please refer to the [InstntSDK interface](#instntsdk-interface) methods listed below for more details.
 
 # Callback handler
 
@@ -249,34 +254,34 @@ Instnt provides an `Interface` called `CallbackHandler` to implement in your app
 <tr><td class="confluenceTd"><p>
 <a id="user-content-scanDocument" class="anchor" aria-hidden="true" href="#scandocument">
 scanDocument
-</p></td><td class="confluenceTd"><p>(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey) </td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>This fuction enables the document scan. Here the input parameter "Context" that is passed must be getBaseContext() method.</p></td></tr>
+</p></td><td class="confluenceTd"><p>(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey, String instnttxnid) </td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>This fuction enables the document scan. Here the input parameter "Context" that is passed must be getBaseContext() method.</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
 <a id="user-content-uploadAttachment" class="anchor" aria-hidden="true" href="#uploadAttachment"> uploadAttachment
-</p></td><td class="confluenceTd"><p>boolean isFront </td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Upload a document file to Instnt server. The input parameter is of the type boolean that represents if the front side of the document is being uploaded.</p></td></tr>
+</p></td><td class="confluenceTd"><p>(byte[] imageData, boolean isFront, boolean isSelfie, String instnttxnid) </td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Upload a document file to Instnt server. The input parameter is of the type boolean that represents if the front side of the document is being uploaded.</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
 <a id="user-content-verifyDocuments" class="anchor" aria-hidden="true" href="#verifyDocuments">verifyDocuments
-</p></td><td class="confluenceTd"><p>documentType</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Initiate document verification on Instnt server.</p></td></tr>
+</p></td><td class="confluenceTd"><p>(String documentType, String instnttxnid)</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Initiate document verification on Instnt server.</p></td></tr>
 
 <tr><td class="confluenceTd"><p>
 
 <a id="user-content-submitData" class="anchor" aria-hidden="true" href="#submitData">submitData
-</p></td><td class="confluenceTd"><p>Map < string, Object > body</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Submit the user entered data to Instnt server and initiate customer approval process.</p></td></tr>
+</p></td><td class="confluenceTd"><p>(Context context, WindowManager windowManager, Map < string, Object > body, String instnttxnid)</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Submit the user entered data to Instnt server and initiate customer approval process.</p></td></tr>
 
 
 <tr><td class="confluenceTd"><p>
 
 <a id="user-content-sendOTP" class="anchor" aria-hidden="true" href="#sendOTP">sendOTP
 
-</p></td><td class="confluenceTd"><p>function,mobileNumber</p></td><td class="confluenceTd"><p></p></td><td class="confluenceTd"><p>Sends one-time password to the mobile number provided.</p></td></tr>
+</p></td><td class="confluenceTd"><p>(String mobileNumber, String instnttxnid)</p></td><td class="confluenceTd"><p></p></td><td class="confluenceTd"><p>Sends one-time password to the mobile number provided. The mobile number need to be in international format starting with + and country code</p></td></tr>
 <tr><td class="confluenceTd"><p>
 
 <a id="user-content-verifyOTP" class="anchor" aria-hidden="true" href="#verifyOTP">verifyOTP
 
-</p></td><td class="confluenceTd"><p>mobileNumber, otpCode</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Verifies one-time password that was sent to the provided mobile number.</p></td></tr>
+</p></td><td class="confluenceTd"><p>(String mobileNumber, String otpCode, String instnttxnid)</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>Verifies one-time password that was sent to the provided mobile number.</p></td></tr>
 
 <tr><td class="confluenceTd"><p>getInstnttxnid</p></td><td class="confluenceTd"><p> </p></td><td class="confluenceTd"><p>UUID</p></td><td class="confluenceTd"><p>Instnt Transaction ID</p></td></tr>
 
