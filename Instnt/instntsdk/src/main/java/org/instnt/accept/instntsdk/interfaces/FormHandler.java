@@ -10,4 +10,5 @@ public interface FormHandler {
 
     void setCallbackHandler(InstntCallbackHandler instntCallbackHandler);
     void setWorkFlowDetail(FormCodes formCodes);
+    void setServerUrl(String serverUrl);
 }

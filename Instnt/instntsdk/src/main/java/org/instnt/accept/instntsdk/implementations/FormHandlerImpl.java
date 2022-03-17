@@ -21,9 +21,15 @@ public class FormHandlerImpl implements FormHandler {
     private NetworkUtil networkModule;
     private FormCodes formCodes;
     private InstntCallbackHandler instntCallbackHandler;
+    private String serverUrl;
 
     public FormHandlerImpl(NetworkUtil networkModule) {
         this.networkModule = networkModule;
+    }
+
+    public void setServerUrl(String serverUrl) {
+        Log.i(CommonUtils.LOG_TAG, "Set serverUrl");
+        this.serverUrl = serverUrl;
     }
 
     /**
@@ -60,7 +66,7 @@ public class FormHandlerImpl implements FormHandler {
         }
 
         Log.i(CommonUtils.LOG_TAG, "Calling submit form API");
-        networkModule.submit(formCodes.getSubmitURL(), body).subscribe( success-> {
+        networkModule.submit(this.serverUrl + "transactions/" + instnttxnid, body).subscribe( success-> {
             Log.i(CommonUtils.LOG_TAG, "Submit form called successfully");
             this.instntCallbackHandler.submitDataSuccessCallback(success.getData());
         }, throwable -> {

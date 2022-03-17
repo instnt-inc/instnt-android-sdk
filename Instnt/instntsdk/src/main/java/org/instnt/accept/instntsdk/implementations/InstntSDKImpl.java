@@ -38,6 +38,7 @@ public class InstntSDKImpl implements InstntSDK {
 
     private void setServerURL(String serverURL) {
         networkModule.setServerUrl(serverURL);
+        formHandler.setServerUrl(serverURL);
     }
 
     private void setFormKey(String formKey) {
