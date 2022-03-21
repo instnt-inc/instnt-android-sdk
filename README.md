@@ -44,7 +44,7 @@ include the instnt SDK aar file in your apps' build.gradle dependency
 
 ```
 dependencies {
-      implementation 'org.instnt:instntsdk:2.0.2'
+      implementation 'org.instnt:instntsdk:2.0.3'
 }
 ```
 
