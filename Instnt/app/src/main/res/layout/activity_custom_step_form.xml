@@ -228,7 +228,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="true"
                     android:textAllCaps="false"
-                    android:enabled="false"/>
+                    android:enabled="true"/>
 
             </LinearLayout>
 

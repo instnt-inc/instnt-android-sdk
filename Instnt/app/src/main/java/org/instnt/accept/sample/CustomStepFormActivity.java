@@ -338,6 +338,10 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
     }
 
     private void scanDocument(String documentType) {
+        if(!this.isAutoUpload) {
+            binding.next.setEnabled(false);
+            binding.uploadDocBtn.setVisibility(View.VISIBLE);
+        }
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, MY_CAMERA_REQUEST_CODE);
         } else {
@@ -493,8 +497,15 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
         //END-------Step 5--------//
 
         binding.driverLicense.setChecked(true);
-        binding.uploadDocBtn.setVisibility(View.GONE);
-
+        if(this.isAutoUpload) {
+            binding.uploadDocBtn.setVisibility(View.GONE);
+        } else {
+            binding.uploadDocBtn.setVisibility(View.VISIBLE);
+            binding.uploadDocBtn.setOnClickListener(v -> {
+                showProgressDialog(true);
+                this.instantSDK.uploadAttachment(this.imageData, this.isFront, this.isSelfie, this.instantSDK.getInstnttxnid());
+            });
+        }
     }
 
     /**
@@ -534,6 +545,16 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
 
     @Override
     public void uploadAttachmentSuccessCallback(InstntImageData instntImageData) {
+        if(!this.isAutoUpload) {
+            showProgressDialog(false);
+            binding.next.setEnabled(true);
+            CommonUtils.showToast(this, "Document uploaded successfully");
+            binding.uploadDocBtn.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void scanDocumentSuccessCallback(InstntImageData instntImageData) {
         this.imageData = instntImageData.getImageData();
         Bitmap bm = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
         DisplayMetrics dm = new DisplayMetrics();
@@ -543,11 +564,6 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
         binding.imageData.setMinimumWidth(dm.widthPixels);
         binding.imageData.setImageBitmap(bm);
         binding.imageData.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void scanDocumentSuccessCallback(InstntImageData instntImageData) {
-        this.imageData = instntImageData.getImageData();
         showProgressDialog(false);
         nextStep(true);
     }

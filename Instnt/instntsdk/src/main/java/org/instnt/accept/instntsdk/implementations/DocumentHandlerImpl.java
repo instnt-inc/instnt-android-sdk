@@ -151,8 +151,8 @@ public class DocumentHandlerImpl implements DocumentHandler {
                 Log.i(CommonUtils.LOG_TAG, "Document scanned successfully");
                 documentHandler.dsResult = dsResult;
 
-                //if(isAutoUpload)
-                uploadAttachment(dsResult.image, instnttxnid, isFront, isSelfie);
+                if(isAutoUpload)
+                    uploadAttachment(dsResult.image, instnttxnid, isFront, isSelfie);
                 InstntImageData instntImageData = new InstntImageData();
                 instntImageData.setImageData(dsResult.image);
                 if(documentType.equalsIgnoreCase("license")) {
