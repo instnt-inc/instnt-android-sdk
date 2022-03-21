@@ -39,31 +39,36 @@ public class FormHandlerImpl implements FormHandler {
     @Override
     public void submitData(Map<String, Object> body, String instnttxnid) {
 
+        if(body == null)  {
+            body = new HashMap<>();
+        }
         Log.i(CommonUtils.LOG_TAG, "Calling Submit form");
         try {
-            body.put("mobileNumber", URLEncoder.encode((String) body.get("mobileNumber"), "UTF-8"));
+            if(body.containsKey("mobileNumber") && body.get("mobileNumber") != null) {
+                body.put("mobileNumber", URLEncoder.encode((String) body.get("mobileNumber"), "UTF-8"));
+            }
         } catch (UnsupportedEncodingException e) {
             Log.e(CommonUtils.LOG_TAG, "Encode mobile number " + (String) body.get("mobileNumber") + " have error", e);
         }
 
         body.put("signature", instnttxnid);
         body.put("OTPSignature", instnttxnid);
-        body.put("form_key", formCodes.getId());
 
         Map <String, Object> fingerMap = new HashMap<>();
-        fingerMap.put("requestId", formCodes.getFingerprint());
-        fingerMap.put("visitorId", formCodes.getFingerprint());
-        fingerMap.put("visitorFound", true);
-
-        body.put("fingerprint", fingerMap);
-        body.put("client_referer_url", formCodes.getBackendServiceURL());
-
-        try {
-            body.put("client_referer_host", new URL(formCodes.getBackendServiceURL()).getHost());
-        } catch (MalformedURLException e) {
-            Log.e(CommonUtils.LOG_TAG, "Add client referer host url having error, setting client_referer_host to blank", e);
-            body.put("client_referer_host", "");
+        if(formCodes != null) {
+            body.put("form_key", formCodes.getId());
+            fingerMap.put("requestId", formCodes.getFingerprint());
+            fingerMap.put("visitorId", formCodes.getFingerprint());
+            body.put("client_referer_url", formCodes.getBackendServiceURL());
+            try {
+                body.put("client_referer_host", new URL(formCodes.getBackendServiceURL()).getHost());
+            } catch (MalformedURLException e) {
+                Log.e(CommonUtils.LOG_TAG, "Add client referer host url having error, setting client_referer_host to blank", e);
+                body.put("client_referer_host", "");
+            }
         }
+        fingerMap.put("visitorFound", true);
+        body.put("fingerprint", fingerMap);
 
         Log.i(CommonUtils.LOG_TAG, "Calling submit form API");
         networkModule.submit(this.serverUrl + "transactions/" + instnttxnid, body).subscribe( success-> {
