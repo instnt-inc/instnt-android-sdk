@@ -101,7 +101,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
                 //dsid1Options.enableFlashCapture = if(applicationSettings.flashCaptureEnabled) FlashCapture.Both else FlashCapture.None
                 dsid1Options.enableFlashCapture = FlashCapture.None;
                 //dsid1Options.imageCompressionQuality = applicationSettings.imageCompression / 100.0;
-                dsid1Options.showReviewScreen = !isAutoUpload;
+                dsid1Options.showReviewScreen = true;
                 //dsid1Options.targetDPI = (isBarcodeRetake ? 900 : 600);
                 dsid1Options.targetDPI = 600;
                 //dsid1Options.detectBarcodeOrMRZ = !applicationSettings.ignoreBarcode
