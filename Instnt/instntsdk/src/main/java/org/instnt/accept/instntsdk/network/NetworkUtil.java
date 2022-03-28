@@ -40,10 +40,18 @@ public class NetworkUtil {
     private String serverUrl;
     private String userAgent = System.getProperty("http.agent");
 
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
     public void setServerUrl(String serverUrl) {
 
         Log.i(CommonUtils.LOG_TAG, "Set serverUrl");
         this.serverUrl = serverUrl;
+    }
+
+    public String getServerUrl() {
+        return this.serverUrl;
     }
 
     public NetworkUtil() {}

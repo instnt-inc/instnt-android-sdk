@@ -34,13 +34,15 @@ public class CommonUtils {
 //                }else {
 //                    errorMsg = throwable.getLocalizedMessage();
 //                }
-            }else {
+            } else {
                 errorMsg = throwable.getLocalizedMessage();
             }
-        }else {
+        } else {
             errorMsg = throwable.getLocalizedMessage();
         }
-
+        if(errorMsg == null) {
+            return "Internal server error";
+        }
         return errorMsg;
     }
 }

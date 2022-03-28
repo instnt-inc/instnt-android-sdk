@@ -32,6 +32,10 @@ android {
         dataBinding = true
         viewBinding = true
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 ext {

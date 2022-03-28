@@ -7,6 +7,7 @@ import android.view.WindowManager;
 import org.instnt.accept.instntsdk.InstntSDK;
 import org.instnt.accept.instntsdk.InstntCallbackHandler;
 import org.instnt.accept.instntsdk.enums.ErrorCallbackType;
+import org.instnt.accept.instntsdk.exceptions.InstntSDKValidationException;
 import org.instnt.accept.instntsdk.interfaces.DeviceHandler;
 import org.instnt.accept.instntsdk.interfaces.DocumentHandler;
 import org.instnt.accept.instntsdk.interfaces.FormHandler;
@@ -92,6 +93,7 @@ public class InstntSDKImpl implements InstntSDK {
      */
     @Override
     public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey, String instnttxnid) {
+        validateSDKSetup(instnttxnid);
         documentHandler.scanDocument(isFront, isAutoUpload, documentType, context, documentVerifyLicenseKey, instnttxnid);
     }
 
@@ -101,6 +103,7 @@ public class InstntSDKImpl implements InstntSDK {
      */
     @Override
     public void uploadAttachment(byte[] imageData, boolean isFront, boolean isSelfie, String instnttxnid) {
+        validateSDKSetup(instnttxnid);
         this.documentHandler.uploadAttachment(imageData, isFront, isSelfie, instnttxnid);
     }
 
@@ -110,6 +113,7 @@ public class InstntSDKImpl implements InstntSDK {
      */
     @Override
     public void verifyDocuments(String documentType, String instnttxnid) {
+        validateSDKSetup(instnttxnid);
         this.documentHandler.verifyDocuments(documentType, instnttxnid);
     }
 
@@ -121,6 +125,7 @@ public class InstntSDKImpl implements InstntSDK {
      */
     @Override
     public void submitData(Context context, WindowManager windowManager, Map<String, Object> body, String instnttxnid) {
+        validateSDKSetup(instnttxnid);
         body.put("mobileDeviceInfo", deviceHandler.getDeviceInfo(context, windowManager));
         this.formHandler.submitData(body, instnttxnid);
     }
@@ -131,6 +136,7 @@ public class InstntSDKImpl implements InstntSDK {
      */
     @Override
     public void sendOTP(String mobileNumber, String instnttxnid) {
+        validateSDKSetup(instnttxnid);
         otpHandler.sendOTP(mobileNumber, instnttxnid);
     }
 
@@ -141,6 +147,7 @@ public class InstntSDKImpl implements InstntSDK {
      */
     @Override
     public void verifyOTP(String mobileNumber, String otpCode, String instnttxnid) {
+        validateSDKSetup(instnttxnid);
         otpHandler.verifyOTP(mobileNumber, otpCode, instnttxnid);
     }
 
@@ -169,5 +176,21 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public boolean isDocumentVerificationEnabled() {
         return this.formCodes.isDocumentVerification();
+    }
+
+    private void validateSDKSetup(String instnttxnid) {
+        String defaultMessage = "Please call InstntSDK.init() method to properly initialize the SDK";
+        if(networkModule == null) {
+            throw new InstntSDKValidationException("Instnt SDK has not been initialized correctly. " + defaultMessage);
+        } else if(networkModule.getServerUrl() == null || networkModule.getServerUrl().length() == 0) {
+            throw new InstntSDKValidationException("serverURL is not setup. " + defaultMessage);
+        }
+        else if(this.instntCallbackHandler == null) {
+            throw new InstntSDKValidationException("instntCallbackHandler is not setup. " + defaultMessage);
+        } else if(formKey == null || formKey.length() == 0) {
+            throw new InstntSDKValidationException("formKey is not setup. " + defaultMessage);
+        } else if(instnttxnid == null || instnttxnid.length() == 0) {
+            throw new InstntSDKValidationException("instntTxnId is not valid. The provided instntTxnId is " + instnttxnid);
+        }
     }
 }

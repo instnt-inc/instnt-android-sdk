@@ -4,6 +4,7 @@ import android.util.Log;
 
 import org.instnt.accept.instntsdk.InstntCallbackHandler;
 import org.instnt.accept.instntsdk.enums.ErrorCallbackType;
+import org.instnt.accept.instntsdk.exceptions.InstntSDKValidationException;
 import org.instnt.accept.instntsdk.model.FormCodes;
 import org.instnt.accept.instntsdk.interfaces.FormHandler;
 import org.instnt.accept.instntsdk.network.NetworkUtil;
@@ -71,9 +72,17 @@ public class FormHandlerImpl implements FormHandler {
         body.put("fingerprint", fingerMap);
 
         Log.i(CommonUtils.LOG_TAG, "Calling submit form API");
+
+        if(this.instntCallbackHandler == null) {
+            throw new InstntSDKValidationException("instntCallbackHandler is not setup.");
+        }
         networkModule.submit(this.serverUrl + "transactions/" + instnttxnid, body).subscribe( success-> {
             Log.i(CommonUtils.LOG_TAG, "Submit form called successfully");
-            this.instntCallbackHandler.submitDataSuccessCallback(success.getData());
+            if(success != null) {
+                this.instntCallbackHandler.submitDataSuccessCallback(success.getData());
+            } else {
+                this.instntCallbackHandler.instntErrorCallback("Internal server error", ErrorCallbackType.SUBMIT_FORM_ERROR);
+            }
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Submit form returns with error", throwable);
             this.instntCallbackHandler.instntErrorCallback(CommonUtils.getErrorMessage(throwable), ErrorCallbackType.SUBMIT_FORM_ERROR);
