@@ -37,4 +37,26 @@ public class CommonUtilsTest {
         String message = CommonUtils.getErrorMessage(throwable);
         Assert.assertEquals(message, "Internal server error");
     }
+
+    @Test
+    public void testWithKeyMessageInErrorResponse() throws IOException, JSONException {
+
+        String errorContent = "{\"message\":\"Endpoint request timed out\"}";
+        Response response = Response.error(422, ResponseBody.create(MediaType.parse("application/json"), errorContent));
+        Throwable throwable = new HttpException(response);
+
+        String message = CommonUtils.getErrorMessage(throwable);
+        Assert.assertEquals(message, "Endpoint request timed out");
+    }
+
+    @Test
+    public void testWithDifferentMessagePattern() throws IOException, JSONException {
+
+        String errorContent = "{\"anUnknownKey\":\"Any unknown message\"}";
+        Response response = Response.error(422, ResponseBody.create(MediaType.parse("application/json"), errorContent));
+        Throwable throwable = new HttpException(response);
+
+        String message = CommonUtils.getErrorMessage(throwable);
+        Assert.assertEquals(message, "{\"anUnknownKey\":\"Any unknown message\"}");
+    }
 }
