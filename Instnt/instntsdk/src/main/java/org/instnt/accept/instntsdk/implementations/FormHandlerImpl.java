@@ -40,9 +40,8 @@ public class FormHandlerImpl implements FormHandler {
     @Override
     public void submitData(Map<String, Object> body, String instnttxnid) {
 
-        if(body == null)  {
-            body = new HashMap<>();
-        }
+        if(instnttxnid == null || instnttxnid.length() < 1) throw new InstntSDKValidationException("Please pass valid instnttxnid");
+        if(body == null) body = new HashMap<>();
         Log.i(CommonUtils.LOG_TAG, "Calling Submit form");
         try {
             if(body.containsKey("mobileNumber") && body.get("mobileNumber") != null) {
@@ -73,12 +72,11 @@ public class FormHandlerImpl implements FormHandler {
 
         Log.i(CommonUtils.LOG_TAG, "Calling submit form API");
 
-        if(this.instntCallbackHandler == null) {
-            throw new InstntSDKValidationException("instntCallbackHandler is not setup.");
-        }
+        if(this.instntCallbackHandler == null) throw new InstntSDKValidationException("instntCallbackHandler is not setup.");
+
         networkModule.submit(this.serverUrl + "transactions/" + instnttxnid, body).subscribe( success-> {
             Log.i(CommonUtils.LOG_TAG, "Submit form called successfully");
-            if(success != null) {
+            if(success != null && success.getData() != null) {
                 this.instntCallbackHandler.submitDataSuccessCallback(success.getData());
             } else {
                 this.instntCallbackHandler.instntErrorCallback("Internal server error", ErrorCallbackType.SUBMIT_FORM_ERROR);

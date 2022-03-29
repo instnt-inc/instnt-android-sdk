@@ -1,7 +1,11 @@
 package org.instnt.accept.instntsdk.utils;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.json.JSONException;
 
@@ -21,19 +25,20 @@ public class CommonUtils {
     public static String getErrorMessage(Throwable throwable) throws JSONException, IOException {
         String errorMsg = "";
         if (throwable instanceof HttpException) {
-
             HttpException error = (HttpException) throwable;
-
-            if (error.response() != null && Objects.requireNonNull(error.response()).errorBody() != null){
+            if (error.response() != null && Objects.requireNonNull(error.response()).errorBody() != null) {
                 errorMsg = error.response().errorBody().string();
-//                String errorBody = error.response().errorBody().string();
-//                JSONObject errorParentObj = new JSONObject(errorBody);
-//
-//                if (!errorParentObj.isNull("errorMessage")){
-//                    errorMsg = errorParentObj.getString("errorMessage");
-//                }else {
-//                    errorMsg = throwable.getLocalizedMessage();
-//                }
+                try {
+                    JsonParser parser = new JsonParser();
+                    JsonObject json = (JsonObject) parser.parse(errorMsg);
+                    if (!json.isJsonNull() && json.has("errorMessage")) {
+                        errorMsg = json.get("errorMessage").getAsString();
+                    } else if (!json.isJsonNull() && json.has("message")) {
+                        errorMsg = json.get("message").getAsString();
+                    }
+                } catch (Exception e) {
+                    Log.i(CommonUtils.LOG_TAG, "Parsing error, no errorMessage key in response, so passing response message as it is");
+                }
             } else {
                 errorMsg = throwable.getLocalizedMessage();
             }
