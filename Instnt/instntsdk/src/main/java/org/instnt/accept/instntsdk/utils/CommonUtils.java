@@ -46,7 +46,7 @@ public class CommonUtils {
             errorMsg = throwable.getLocalizedMessage();
         }
         if(errorMsg == null) {
-            return "Internal server error";
+            return "Unprocessable Error";
         }
         return errorMsg;
     }
