@@ -49,18 +49,14 @@ public class InstntSDKImpl implements InstntSDK {
         this.setCallbackHandler(instntCallbackHandler);
     }
 
-    @Deprecated
     public void setNetworkModule(NetworkUtil networkUtil) {
         this.networkModule = networkUtil;
     }
 
-    @Deprecated
     public void setDocumentHandler(DocumentHandler documentHandler) { this.documentHandler = documentHandler; }
 
-    @Deprecated
     public void setFormHandler(FormHandler formHandler) { this.formHandler = formHandler; }
 
-    @Deprecated
     public void setDeviceHandler(DeviceHandler deviceHandler) { this.deviceHandler = deviceHandler; }
 
     private void setServerURL(String serverURL) {
