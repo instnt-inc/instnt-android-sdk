@@ -16,6 +16,7 @@ import com.idmetrics.dc.utils.DSSide;
 import com.idmetrics.dc.utils.FlashCapture;
 
 import org.instnt.accept.instntsdk.InstntCallbackHandler;
+import org.instnt.accept.instntsdk.enums.DocumentType;
 import org.instnt.accept.instntsdk.enums.ErrorCallbackType;
 import org.instnt.accept.instntsdk.interfaces.DocumentHandler;
 import org.instnt.accept.instntsdk.model.InstntImageData;
@@ -78,13 +79,13 @@ public class DocumentHandlerImpl implements DocumentHandler {
         this.instntCallbackHandler.uploadAttachmentSuccessCallback(instntImageData);
     }
 
-    private DSOptions getOptionsByDocumentType(boolean isFront, String documentType, boolean isAutoUpload) {
+    private DSOptions getOptionsByDocumentType(boolean isFront, DocumentType documentType, boolean isAutoUpload) {
 
-        Log.i(CommonUtils.LOG_TAG, "Going to get options by document type, DocumentType : " + documentType + ", IsFrontDocument : " + isFront);
+        Log.i(CommonUtils.LOG_TAG, "Going to get options by document type, DocumentType : " + documentType.name() + ", IsFrontDocument : " + isFront);
         DSID1Type dsid1Type = null;
 
         try {
-            dsid1Type = DSID1Type.valueOf(documentType);
+            dsid1Type = DSID1Type.valueOf(documentType.name());
         } catch (Exception e) {
             Log.e(CommonUtils.LOG_TAG, "Document type mismatch with allowed types, passed document type : " + documentType + ", Auto taken document type : " + DSID1Type.License.toString(), e);
             dsid1Type = DSID1Type.License;
@@ -133,7 +134,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
      * @param documentVerifyLicenseKey
      */
     @Override
-    public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey, String instnttxnid) {
+    public void scanDocument(boolean isFront, boolean isAutoUpload, DocumentType documentType, Context context, String documentVerifyLicenseKey, String instnttxnid) {
 
         Log.i(CommonUtils.LOG_TAG, "Calling Scan Document");
         DocumentHandlerImpl documentHandler = this;
@@ -155,7 +156,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
                     uploadAttachment(dsResult.image, instnttxnid, isFront, isSelfie);
                 InstntImageData instntImageData = new InstntImageData();
                 instntImageData.setImageData(dsResult.image);
-                if(documentType.equalsIgnoreCase("license")) {
+                if(documentType.equals(DocumentType.License)) {
                     instntImageData.setType("License");
                 } else {
                     instntImageData.setType("Selfie");
@@ -201,7 +202,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
      * @param documentType
      */
     @Override
-    public void verifyDocuments(String documentType, String instnttxnid) {
+    public void verifyDocuments(DocumentType documentType, String instnttxnid) {
 
         Log.i(CommonUtils.LOG_TAG, "Calling verify documents");
         networkModule.verifyDocuments(documentType, this.formKey, instnttxnid).subscribe(response->{

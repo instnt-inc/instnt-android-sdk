@@ -3,13 +3,12 @@ package org.instnt.accept.instntsdk;
 import android.content.Context;
 import android.view.WindowManager;
 
+import org.instnt.accept.instntsdk.enums.DocumentType;
 import org.instnt.accept.instntsdk.implementations.InstntSDKImpl;
 
 import java.util.Map;
 
 public interface InstntSDK {
-
-    InstntSDK instance = new InstntSDKImpl();
 
     /**
      * Initialize instntSDK
@@ -19,17 +18,15 @@ public interface InstntSDK {
      * @return
      */
     static InstntSDK init(String formKey, String serverUrl, InstntCallbackHandler instntCallbackHandler) {
-        instance.initTransaction(formKey, serverUrl, instntCallbackHandler);
+        InstntSDK instance = new InstntSDKImpl(formKey, serverUrl, instntCallbackHandler);
+        instance.initTransaction();
         return instance;
     }
 
     /**
      * Initialize transaction
-     * @param formKey
-     * @param serverUrl
-     * @param instntCallbackHandler
      */
-    void initTransaction(String formKey, String serverUrl, InstntCallbackHandler instntCallbackHandler);
+    void initTransaction();
 
     /**
      * Get instnt transaction id
@@ -57,7 +54,7 @@ public interface InstntSDK {
      * @param context
      * @param documentVerifyLicenseKey
      */
-    void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey, String instnttxnid);
+    void scanDocument(boolean isFront, boolean isAutoUpload, DocumentType documentType, Context context, String documentVerifyLicenseKey, String instnttxnid);
 
     /**
      * Upload attachment
@@ -69,7 +66,7 @@ public interface InstntSDK {
      * Verify documents
      * @param documentType
      */
-    void verifyDocuments(String documentType, String instnttxnid);
+    void verifyDocuments(DocumentType documentType, String instnttxnid);
 
     /**
      * Submit form

@@ -6,10 +6,10 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.instnt.accept.instntsdk.enums.DocumentType;
 import org.instnt.accept.instntsdk.model.FormCodes;
 import org.instnt.accept.instntsdk.model.FormSubmitResponse;
 import org.instnt.accept.instntsdk.model.OTPResponse;
-
 import org.instnt.accept.instntsdk.utils.CommonUtils;
 import org.json.JSONObject;
 
@@ -253,14 +253,14 @@ public class NetworkUtil {
      * @return
      */
     @SuppressLint("CheckResult")
-    public Observable<String> verifyDocuments(String documentType, String formKey, String instnttxnid) {
+    public Observable<String> verifyDocuments(DocumentType documentType, String formKey, String instnttxnid) {
     	
     	Log.i(CommonUtils.LOG_TAG, "Calling verify documents API");
         ApiInterface apiInterface = getApiService(this.serverUrl);
 
         Map<String, Object> body = new HashMap<>();
         body.put("formKey", formKey);
-        body.put("documentType", documentType);
+        body.put("documentType", documentType.name());
         body.put("instnttxnid", instnttxnid);
 
         String url = this.serverUrl + "transactions/" + instnttxnid + "/attachments/verify/";

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import org.instnt.accept.instntsdk.InstntCallbackHandler;
+import org.instnt.accept.instntsdk.enums.DocumentType;
 import org.instnt.accept.instntsdk.enums.ErrorCallbackType;
 import org.instnt.accept.instntsdk.model.FormField;
 import org.instnt.accept.instntsdk.InstntSDK;
@@ -152,7 +153,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
 
                 showProgressDialog(true);
                 if(this.instantSDK.isDocumentVerificationEnabled()) {
-                    this.instantSDK.verifyDocuments("License", this.instantSDK.getInstnttxnid());
+                    this.instantSDK.verifyDocuments(DocumentType.valueOf("License"), this.instantSDK.getInstnttxnid());
                 } else {
                     this.submit();
                 }
@@ -345,7 +346,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION}, MY_CAMERA_REQUEST_CODE);
         } else {
-            instantSDK.scanDocument(this.isFront, this.isAutoUpload, documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY, this.instantSDK.getInstnttxnid());
+            instantSDK.scanDocument(this.isFront, this.isAutoUpload, DocumentType.valueOf(documentType), getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY, this.instantSDK.getInstnttxnid());
         }
     }
 
@@ -536,7 +537,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                instantSDK.scanDocument(this.isFront, this.isAutoUpload, this.documentType, getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY, this.instantSDK.getInstnttxnid());
+                instantSDK.scanDocument(this.isFront, this.isAutoUpload, DocumentType.valueOf(this.documentType), getBaseContext(), DOCUMENT_VERIFY_LICENSE_KEY, this.instantSDK.getInstnttxnid());
             } else {
                 //Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
             }

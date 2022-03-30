@@ -1,7 +1,12 @@
 package org.instnt.accept.instntsdk;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.easymock.EasyMock;
-import org.easymock.IExpectationSetters;
+import org.instnt.accept.instntsdk.enums.DocumentType;
 import org.instnt.accept.instntsdk.model.FormCodes;
 import org.instnt.accept.instntsdk.model.FormSubmitData;
 import org.instnt.accept.instntsdk.model.FormSubmitResponse;
@@ -10,12 +15,6 @@ import org.instnt.accept.instntsdk.model.OTPVerificationResult;
 import org.instnt.accept.instntsdk.network.NetworkUtil;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -185,10 +184,10 @@ public class NetworkUtilUnitTest {
     public void testVerifyDocuments() {
 
         String mockResponse = "";
-        expect(networkUtil.verifyDocuments("License", FORM_KEY, INSTNTXNID)).andReturn(Observable.just(mockResponse)).anyTimes();
+        expect(networkUtil.verifyDocuments(DocumentType.valueOf("License"), FORM_KEY, INSTNTXNID)).andReturn(Observable.just(mockResponse)).anyTimes();
         replay(networkUtil);
 
-        networkUtil.verifyDocuments("License", FORM_KEY, INSTNTXNID).subscribe(response -> {
+        networkUtil.verifyDocuments(DocumentType.valueOf("License"), FORM_KEY, INSTNTXNID).subscribe(response -> {
             assertNotNull(response);
         });
     }
