@@ -45,7 +45,7 @@ public class CommonUtils {
         } else {
             errorMsg = throwable.getLocalizedMessage();
         }
-        if(errorMsg == null) {
+        if(errorMsg == null || errorMsg.length() == 0) {
             return "Unprocessable Error";
         }
         return errorMsg;
