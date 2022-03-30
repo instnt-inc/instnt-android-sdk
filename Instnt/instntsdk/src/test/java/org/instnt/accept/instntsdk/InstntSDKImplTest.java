@@ -15,6 +15,8 @@ import org.instnt.accept.instntsdk.exceptions.InstntSDKValidationException;
 import org.instnt.accept.instntsdk.implementations.InstntSDKImpl;
 import org.instnt.accept.instntsdk.interfaces.DeviceHandler;
 import org.instnt.accept.instntsdk.interfaces.DocumentHandler;
+import org.instnt.accept.instntsdk.interfaces.FormHandler;
+import org.instnt.accept.instntsdk.interfaces.OTPHandler;
 import org.instnt.accept.instntsdk.model.FormCodes;
 import org.instnt.accept.instntsdk.model.FormSubmitData;
 import org.instnt.accept.instntsdk.model.InstntImageData;
@@ -38,7 +40,9 @@ public class InstntSDKImplTest implements InstntCallbackHandler {
     private InstntSDKImpl instntSDKImpl;
     private NetworkUtil networkUtilEasy;
     private DocumentHandler documentHandler;
+    private FormHandler formHandler;
     private DeviceHandler deviceHandler;
+    private OTPHandler otpHandler;
     private FormCodes formCodes;
     private Context context;
     private WindowManager windowManager;
@@ -52,6 +56,8 @@ public class InstntSDKImplTest implements InstntCallbackHandler {
         this.context = EasyMock.createNiceMock(Context.class);
         this.deviceHandler = EasyMock.createNiceMock(DeviceHandler.class);
         this.windowManager = EasyMock.createNiceMock(WindowManager.class);
+        this.formHandler = EasyMock.createNiceMock(FormHandler.class);
+        this.otpHandler = EasyMock.createNiceMock(OTPHandler.class);
 
         formCodes = new FormCodes();
         formCodes.setId("v1633477069641729");
@@ -229,5 +235,124 @@ public class InstntSDKImplTest implements InstntCallbackHandler {
         this.instntSDKImpl.setDocumentHandler(this.documentHandler);
         replay(this.documentHandler);
         this.instntSDKImpl.verifyDocuments(DocumentType.License, null);
+    }
+
+    @Test
+    public void submitDataTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.setFormHandler(this.formHandler);
+        this.instntSDKImpl.setDeviceHandler(this.deviceHandler);
+        replay(this.formHandler);
+        this.instntSDKImpl.submitData(this.context, this.windowManager, this.body, INSTNTXNID);
+    }
+
+    @Test(expected = InstntSDKValidationException.class)
+    public void submitDataContextNullTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.setFormHandler(this.formHandler);
+        this.instntSDKImpl.setDeviceHandler(this.deviceHandler);
+        replay(this.formHandler);
+        this.instntSDKImpl.submitData(null, this.windowManager, this.body, INSTNTXNID);
+    }
+
+    @Test(expected = InstntSDKValidationException.class)
+    public void submitDataWindowManagerNullTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.setFormHandler(this.formHandler);
+        this.instntSDKImpl.setDeviceHandler(this.deviceHandler);
+        replay(this.formHandler);
+        this.instntSDKImpl.submitData(this.context, null, this.body, INSTNTXNID);
+    }
+
+    @Test(expected = InstntSDKValidationException.class)
+    public void submitDataBodyNullTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.setFormHandler(this.formHandler);
+        this.instntSDKImpl.setDeviceHandler(this.deviceHandler);
+        replay(this.formHandler);
+        this.instntSDKImpl.submitData(this.context, this.windowManager, null, INSTNTXNID);
+    }
+
+    @Test(expected = InstntSDKValidationException.class)
+    public void submitDataInstnttxnidNullTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.setFormHandler(this.formHandler);
+        this.instntSDKImpl.setDeviceHandler(this.deviceHandler);
+        replay(this.formHandler);
+        this.instntSDKImpl.submitData(this.context, this.windowManager, this.body, null);
+    }
+
+    @Test
+    public void sendOTPTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.setOTPHandler(this.otpHandler);
+        replay(this.otpHandler);
+        this.instntSDKImpl.sendOTP("+11234567890", INSTNTXNID);
+    }
+
+    @Test(expected = InstntSDKValidationException.class)
+    public void sendOTPMobileNumberNullTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.setOTPHandler(this.otpHandler);
+        replay(this.otpHandler);
+        this.instntSDKImpl.sendOTP(null, INSTNTXNID);
+    }
+
+    @Test(expected = InstntSDKValidationException.class)
+    public void sendOTPInstnttxnidNullTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.setOTPHandler(this.otpHandler);
+        replay(this.otpHandler);
+        this.instntSDKImpl.sendOTP("+11234567890", null);
+    }
+
+    @Test
+    public void verifyOTPTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.setOTPHandler(this.otpHandler);
+        replay(this.otpHandler);
+        this.instntSDKImpl.verifyOTP("+11234567890", "1234", INSTNTXNID);
+    }
+
+    @Test(expected = InstntSDKValidationException.class)
+    public void verifyOTPMobileNumberNullTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.setOTPHandler(this.otpHandler);
+        replay(this.otpHandler);
+        this.instntSDKImpl.verifyOTP(null, "1234", INSTNTXNID);
+    }
+
+    @Test(expected = InstntSDKValidationException.class)
+    public void verifyOTPOtpCodeNullTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.setOTPHandler(this.otpHandler);
+        replay(this.otpHandler);
+        this.instntSDKImpl.verifyOTP("+11234567890", null, INSTNTXNID);
+    }
+
+    @Test(expected = InstntSDKValidationException.class)
+    public void verifyOTPInstnttxnidNullTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.setOTPHandler(this.otpHandler);
+        replay(this.otpHandler);
+        this.instntSDKImpl.verifyOTP("+11234567890", "1234", null);
+    }
+
+    @Test(expected = InstntSDKValidationException.class)
+    public void getInstnttxnidTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.getInstnttxnid();
+    }
+
+    @Test(expected = InstntSDKValidationException.class)
+    public void isOTPverificationEnabledTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.isOTPverificationEnabled();
+    }
+
+    @Test(expected = InstntSDKValidationException.class)
+    public void isDocumentVerificationEnabledTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.isDocumentVerificationEnabled();
     }
 }

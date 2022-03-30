@@ -59,6 +59,8 @@ public class InstntSDKImpl implements InstntSDK {
 
     public void setDeviceHandler(DeviceHandler deviceHandler) { this.deviceHandler = deviceHandler; }
 
+    public void setOTPHandler(OTPHandler otpHandler) { this.otpHandler = otpHandler; }
+
     private void setServerURL(String serverURL) {
         this.serverUrl = serverURL;
         networkModule.setServerUrl(serverURL);
@@ -184,7 +186,7 @@ public class InstntSDKImpl implements InstntSDK {
     public void verifyOTP(String mobileNumber, String otpCode, String instnttxnid) {
 
         InstntValidate.validateMobileNumber(mobileNumber);
-        InstntValidate.validateOtpCode(instnttxnid);
+        InstntValidate.validateOtpCode(otpCode);
         InstntValidate.validateInstnttxnid(instnttxnid);
 
         otpHandler.verifyOTP(mobileNumber, otpCode, instnttxnid);
