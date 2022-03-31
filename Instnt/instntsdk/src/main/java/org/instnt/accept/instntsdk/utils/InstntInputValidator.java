@@ -10,7 +10,7 @@ import org.instnt.accept.instntsdk.model.FormCodes;
 
 import java.util.Map;
 
-public class InstntValidate {
+public class InstntInputValidator {
 
     public static void validateFormKey(String formKey) {
         if(formKey == null || formKey.isEmpty()) throw new InstntSDKValidationException("Please pass valid form key");
@@ -24,8 +24,13 @@ public class InstntValidate {
         if(instntCallbackHandler == null) throw new InstntSDKValidationException("Please implement InstntCallbackHandler and pass this object to instntCallbackHandler");
     }
 
-    public static void validateDocumentType(DocumentType documentType) {
-        if(documentType == null) throw new InstntSDKValidationException("Please pass valid documentType");
+    public static void validateDocumentType(String documentType) {
+        if(documentType == null || documentType.isEmpty()) throw new InstntSDKValidationException("Please pass valid documentType");
+        try {
+            DocumentType.valueOf(documentType);
+        } catch (Exception e) {
+            throw new InstntSDKValidationException("Please pass valid documentType. Possible values are [" + DocumentType.getAllNames() + "]");
+        }
     }
 
     public static void validateContext(Context context) {

@@ -164,11 +164,19 @@ public class InstntSDKImplTest implements InstntCallbackHandler {
     }
 
     @Test(expected = InstntSDKValidationException.class)
+    public void scanDocumentDocumentTypeDifferentValueTest() {
+        this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
+        this.instntSDKImpl.setDocumentHandler(this.documentHandler);
+        replay(this.documentHandler);
+        this.instntSDKImpl.scanDocument(false, true, "NotExistEnumKey", this.context, "TestLicenceKey", INSTNTXNID);
+    }
+
+    @Test(expected = InstntSDKValidationException.class)
     public void scanDocumentContextNullTest() {
         this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
         this.instntSDKImpl.setDocumentHandler(this.documentHandler);
         replay(this.documentHandler);
-        this.instntSDKImpl.scanDocument(false, true, DocumentType.License, null, "TestLicenceKey", INSTNTXNID);
+        this.instntSDKImpl.scanDocument(false, true, "License", null, "TestLicenceKey", INSTNTXNID);
     }
 
     @Test(expected = InstntSDKValidationException.class)
@@ -176,7 +184,7 @@ public class InstntSDKImplTest implements InstntCallbackHandler {
         this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
         this.instntSDKImpl.setDocumentHandler(this.documentHandler);
         replay(this.documentHandler);
-        this.instntSDKImpl.scanDocument(false, true, DocumentType.License, this.context, null, INSTNTXNID);
+        this.instntSDKImpl.scanDocument(false, true, "License", this.context, null, INSTNTXNID);
     }
 
     @Test(expected = InstntSDKValidationException.class)
@@ -184,7 +192,7 @@ public class InstntSDKImplTest implements InstntCallbackHandler {
         this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
         this.instntSDKImpl.setDocumentHandler(this.documentHandler);
         replay(this.documentHandler);
-        this.instntSDKImpl.scanDocument(false, true, DocumentType.License, this.context, "TestLicenceKey", null);
+        this.instntSDKImpl.scanDocument(false, true, "License", this.context, "TestLicenceKey", null);
     }
 
     @Test
@@ -218,7 +226,7 @@ public class InstntSDKImplTest implements InstntCallbackHandler {
         this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
         this.instntSDKImpl.setDocumentHandler(this.documentHandler);
         replay(this.documentHandler);
-        this.instntSDKImpl.verifyDocuments(DocumentType.License, INSTNTXNID);
+        this.instntSDKImpl.verifyDocuments("License", INSTNTXNID);
     }
 
     @Test(expected = InstntSDKValidationException.class)
@@ -234,7 +242,7 @@ public class InstntSDKImplTest implements InstntCallbackHandler {
         this.instntSDKImpl = new InstntSDKImpl(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
         this.instntSDKImpl.setDocumentHandler(this.documentHandler);
         replay(this.documentHandler);
-        this.instntSDKImpl.verifyDocuments(DocumentType.License, null);
+        this.instntSDKImpl.verifyDocuments("License", null);
     }
 
     @Test

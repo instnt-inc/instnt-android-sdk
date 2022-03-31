@@ -8,7 +8,6 @@ import org.instnt.accept.instntsdk.InstntCallbackHandler;
 import org.instnt.accept.instntsdk.InstntSDK;
 import org.instnt.accept.instntsdk.enums.DocumentType;
 import org.instnt.accept.instntsdk.enums.ErrorCallbackType;
-import org.instnt.accept.instntsdk.exceptions.InstntSDKValidationException;
 import org.instnt.accept.instntsdk.interfaces.DeviceHandler;
 import org.instnt.accept.instntsdk.interfaces.DocumentHandler;
 import org.instnt.accept.instntsdk.interfaces.FormHandler;
@@ -16,7 +15,7 @@ import org.instnt.accept.instntsdk.interfaces.OTPHandler;
 import org.instnt.accept.instntsdk.model.FormCodes;
 import org.instnt.accept.instntsdk.network.NetworkUtil;
 import org.instnt.accept.instntsdk.utils.CommonUtils;
-import org.instnt.accept.instntsdk.utils.InstntValidate;
+import org.instnt.accept.instntsdk.utils.InstntInputValidator;
 
 import java.util.Map;
 
@@ -34,9 +33,9 @@ public class InstntSDKImpl implements InstntSDK {
 
     public InstntSDKImpl(String formKey, String serverUrl, InstntCallbackHandler instntCallbackHandler) {
 
-        InstntValidate.validateFormKey(formKey);
-        InstntValidate.validateServerUrl(serverUrl);
-        InstntValidate.validateInstntCallbackHandler(instntCallbackHandler);
+        InstntInputValidator.validateFormKey(formKey);
+        InstntInputValidator.validateServerUrl(serverUrl);
+        InstntInputValidator.validateInstntCallbackHandler(instntCallbackHandler);
 
         networkModule = new NetworkUtil();
         documentHandler = new DocumentHandlerImpl(networkModule);
@@ -110,14 +109,14 @@ public class InstntSDKImpl implements InstntSDK {
      * @param documentVerifyLicenseKey
      */
     @Override
-    public void scanDocument(boolean isFront, boolean isAutoUpload, DocumentType documentType, Context context, String documentVerifyLicenseKey, String instnttxnid) {
+    public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey, String instnttxnid) {
 
-        InstntValidate.validateDocumentType(documentType);
-        InstntValidate.validateContext(context);
-        InstntValidate.validateDocumentVerifyLicenseKey(documentVerifyLicenseKey);
-        InstntValidate.validateInstnttxnid(instnttxnid);
+        InstntInputValidator.validateDocumentType(documentType);
+        InstntInputValidator.validateContext(context);
+        InstntInputValidator.validateDocumentVerifyLicenseKey(documentVerifyLicenseKey);
+        InstntInputValidator.validateInstnttxnid(instnttxnid);
 
-        documentHandler.scanDocument(isFront, isAutoUpload, documentType, context, documentVerifyLicenseKey, instnttxnid);
+        documentHandler.scanDocument(isFront, isAutoUpload, DocumentType.valueOf(documentType), context, documentVerifyLicenseKey, instnttxnid);
     }
 
     /**
@@ -127,8 +126,8 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void uploadAttachment(byte[] imageData, boolean isFront, boolean isSelfie, String instnttxnid) {
 
-        InstntValidate.validateImageData(imageData);
-        InstntValidate.validateInstnttxnid(instnttxnid);
+        InstntInputValidator.validateImageData(imageData);
+        InstntInputValidator.validateInstnttxnid(instnttxnid);
 
         this.documentHandler.uploadAttachment(imageData, isFront, isSelfie, instnttxnid);
     }
@@ -138,12 +137,12 @@ public class InstntSDKImpl implements InstntSDK {
      * @param documentType
      */
     @Override
-    public void verifyDocuments(DocumentType documentType, String instnttxnid) {
+    public void verifyDocuments(String documentType, String instnttxnid) {
 
-        InstntValidate.validateDocumentType(documentType);
-        InstntValidate.validateInstnttxnid(instnttxnid);
+        InstntInputValidator.validateDocumentType(documentType);
+        InstntInputValidator.validateInstnttxnid(instnttxnid);
 
-        this.documentHandler.verifyDocuments(documentType, instnttxnid);
+        this.documentHandler.verifyDocuments(DocumentType.valueOf(documentType), instnttxnid);
     }
 
     /**
@@ -155,10 +154,10 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void submitData(Context context, WindowManager windowManager, Map<String, Object> body, String instnttxnid) {
 
-        InstntValidate.validateContext(context);
-        InstntValidate.validateWindowManager(windowManager);
-        InstntValidate.validateBody(body);
-        InstntValidate.validateInstnttxnid(instnttxnid);
+        InstntInputValidator.validateContext(context);
+        InstntInputValidator.validateWindowManager(windowManager);
+        InstntInputValidator.validateBody(body);
+        InstntInputValidator.validateInstnttxnid(instnttxnid);
 
         body.put("mobileDeviceInfo", deviceHandler.getDeviceInfo(context, windowManager));
         this.formHandler.submitData(body, instnttxnid);
@@ -171,8 +170,8 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void sendOTP(String mobileNumber, String instnttxnid) {
 
-        InstntValidate.validateMobileNumber(mobileNumber);
-        InstntValidate.validateInstnttxnid(instnttxnid);
+        InstntInputValidator.validateMobileNumber(mobileNumber);
+        InstntInputValidator.validateInstnttxnid(instnttxnid);
 
         otpHandler.sendOTP(mobileNumber, instnttxnid);
     }
@@ -185,9 +184,9 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void verifyOTP(String mobileNumber, String otpCode, String instnttxnid) {
 
-        InstntValidate.validateMobileNumber(mobileNumber);
-        InstntValidate.validateOtpCode(otpCode);
-        InstntValidate.validateInstnttxnid(instnttxnid);
+        InstntInputValidator.validateMobileNumber(mobileNumber);
+        InstntInputValidator.validateOtpCode(otpCode);
+        InstntInputValidator.validateInstnttxnid(instnttxnid);
 
         otpHandler.verifyOTP(mobileNumber, otpCode, instnttxnid);
     }
@@ -199,7 +198,7 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public String getInstnttxnid() {
 
-        InstntValidate.validateFormCodes(this.formCodes);
+        InstntInputValidator.validateFormCodes(this.formCodes);
         return this.formCodes.getInstnttxnid();
     }
 
@@ -210,7 +209,7 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public boolean isOTPverificationEnabled() {
 
-        InstntValidate.validateFormCodes(this.formCodes);
+        InstntInputValidator.validateFormCodes(this.formCodes);
         return this.formCodes.isOtpVerification();
     }
 
@@ -221,7 +220,7 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public boolean isDocumentVerificationEnabled() {
 
-        InstntValidate.validateFormCodes(this.formCodes);
+        InstntInputValidator.validateFormCodes(this.formCodes);
         return this.formCodes.isDocumentVerification();
     }
 

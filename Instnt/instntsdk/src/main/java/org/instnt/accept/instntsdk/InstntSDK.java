@@ -3,7 +3,6 @@ package org.instnt.accept.instntsdk;
 import android.content.Context;
 import android.view.WindowManager;
 
-import org.instnt.accept.instntsdk.enums.DocumentType;
 import org.instnt.accept.instntsdk.implementations.InstntSDKImpl;
 
 import java.util.Map;
@@ -54,7 +53,7 @@ public interface InstntSDK {
      * @param context
      * @param documentVerifyLicenseKey
      */
-    void scanDocument(boolean isFront, boolean isAutoUpload, DocumentType documentType, Context context, String documentVerifyLicenseKey, String instnttxnid);
+    void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey, String instnttxnid);
 
     /**
      * Upload attachment
@@ -66,7 +65,7 @@ public interface InstntSDK {
      * Verify documents
      * @param documentType
      */
-    void verifyDocuments(DocumentType documentType, String instnttxnid);
+    void verifyDocuments(String documentType, String instnttxnid);
 
     /**
      * Submit form
