@@ -330,8 +330,13 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
                     binding.containerStep7Review.setVisibility(View.VISIBLE);
                     binding.containerStep8Success.setVisibility(View.GONE);
                 } else {
-                    this.currentStep = 8;
-                    validateCurrentStep(isNext);
+                    if(isNext) {
+                        this.currentStep = 8;
+                        validateCurrentStep(isNext);
+                    } else {
+                        this.currentStep = 5;
+                        nextStep(isNext);
+                    }
                 }
 
                 break;
