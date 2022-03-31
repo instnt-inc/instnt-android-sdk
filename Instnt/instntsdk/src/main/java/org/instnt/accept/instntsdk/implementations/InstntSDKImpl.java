@@ -120,7 +120,8 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey, String instnttxnid) {
 
-        Log.i(CommonUtils.LOG_TAG, "Calling scanDocument");
+        Log.i(CommonUtils.LOG_TAG, "Calling scanDocument with instnttxnid: " + instnttxnid + " , isFront: " + isFront + " , isAutoUpload: "
+                + isAutoUpload + " , documentType : " + documentType + " , documentVerifyLicenseKey : " + documentVerifyLicenseKey);
 
         InstntInputValidator.validateDocumentType(documentType);
         InstntInputValidator.validateContext(context);
@@ -137,7 +138,7 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void uploadAttachment(byte[] imageData, boolean isFront, boolean isSelfie, String instnttxnid) {
 
-        Log.i(CommonUtils.LOG_TAG, "Calling uploadAttachment");
+        Log.i(CommonUtils.LOG_TAG, "Calling uploadAttachment with instnttxnid : " + instnttxnid + " , isFront : " + isFront + " , isSelfie : " + isSelfie);
 
         InstntInputValidator.validateImageData(imageData);
         InstntInputValidator.validateInstnttxnid(instnttxnid);
@@ -152,7 +153,7 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void verifyDocuments(String documentType, String instnttxnid) {
 
-        Log.i(CommonUtils.LOG_TAG, "Calling verifyDocuments");
+        Log.i(CommonUtils.LOG_TAG, "Calling verifyDocuments with instnttxnid : " + instnttxnid + " , documentType: " + documentType);
 
         InstntInputValidator.validateDocumentType(documentType);
         InstntInputValidator.validateInstnttxnid(instnttxnid);
@@ -169,7 +170,7 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void submitData(Context context, WindowManager windowManager, Map<String, Object> body, String instnttxnid) {
 
-        Log.i(CommonUtils.LOG_TAG, "Calling submitData");
+        Log.i(CommonUtils.LOG_TAG, "Calling submitData with instnttxnid : " + instnttxnid + " , body : " + body.toString());
 
         InstntInputValidator.validateContext(context);
         InstntInputValidator.validateWindowManager(windowManager);
@@ -187,7 +188,7 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void sendOTP(String mobileNumber, String instnttxnid) {
 
-        Log.i(CommonUtils.LOG_TAG, "Calling sendOTP");
+        Log.i(CommonUtils.LOG_TAG, "Calling sendOTP with instnttxnid : " + instnttxnid + " , mobileNumber : " + mobileNumber);
 
         InstntInputValidator.validateMobileNumber(mobileNumber);
         InstntInputValidator.validateInstnttxnid(instnttxnid);
@@ -203,7 +204,7 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void verifyOTP(String mobileNumber, String otpCode, String instnttxnid) {
 
-        Log.i(CommonUtils.LOG_TAG, "Calling verifyOTP");
+        Log.i(CommonUtils.LOG_TAG, "Calling verifyOTP with instnttxnid : " + instnttxnid + " , mobileNumber: " + mobileNumber + " , otpCode : " + otpCode);
 
         InstntInputValidator.validateMobileNumber(mobileNumber);
         InstntInputValidator.validateOtpCode(otpCode);
@@ -220,8 +221,8 @@ public class InstntSDKImpl implements InstntSDK {
     public String getInstnttxnid() {
 
         Log.i(CommonUtils.LOG_TAG, "Calling getInstnttxnid");
-
         InstntInputValidator.validateFormCodes(this.formCodes);
+        Log.i(CommonUtils.LOG_TAG, "Instnttxnid : " + this.formCodes.getInstnttxnid());
         return this.formCodes.getInstnttxnid();
     }
 
@@ -233,8 +234,8 @@ public class InstntSDKImpl implements InstntSDK {
     public boolean isOTPverificationEnabled() {
 
         Log.i(CommonUtils.LOG_TAG, "Calling isOTPverificationEnabled");
-
         InstntInputValidator.validateFormCodes(this.formCodes);
+        Log.i(CommonUtils.LOG_TAG, "Instnttxnid : " + this.formCodes.getInstnttxnid());
         return this.formCodes.isOtpVerification();
     }
 
@@ -246,8 +247,8 @@ public class InstntSDKImpl implements InstntSDK {
     public boolean isDocumentVerificationEnabled() {
 
         Log.i(CommonUtils.LOG_TAG, "Calling isDocumentVerificationEnabled");
-
         InstntInputValidator.validateFormCodes(this.formCodes);
+        Log.i(CommonUtils.LOG_TAG, "Instnttxnid : " + this.formCodes.getInstnttxnid());
         return this.formCodes.isDocumentVerification();
     }
 }
