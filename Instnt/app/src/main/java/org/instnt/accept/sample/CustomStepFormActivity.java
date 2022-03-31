@@ -35,6 +35,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     private static final String DOCUMENT_VERIFY_LICENSE_KEY = "AwG5mCdqXkmCj9oNEpGV8UauciP8s4cqFT848FfjUjwAZQJfa8ZvrEpmYsPME0RTo/Q0kRowDCGz7HPhfSdyeE7rOLtB3JAhuABdQ2R7dGhVy2EUdt5ENQBBIoveIZdf1pwVY2EUgDoGm8REDU+rr2C2";
     private boolean isAutoUpload = false;
+    private boolean isIncludeDocumentUpload = true;
     private boolean isFront;
     private boolean isSelfie = false;
     private String documentType;
@@ -63,6 +64,9 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
             this.formKey = extras.getString("formKey");
             serverUrl = extras.getString("serverUrl");
             this.isAutoUpload = extras.getBoolean("isAutoUpload");
+            this.isIncludeDocumentUpload = extras.getBoolean("isIncludeDocumentUpload");
+            this.binding.scanAndUploadDocumentBtn.setVisibility(View.GONE);
+            this.binding.scanAndUploadDocumentBtn.setOnClickListener(v -> processScanAndUploadDocument());
         } else {
             CommonUtils.showToast(this, "Form key is not found. Please go back and proceed.");
             return;
@@ -73,6 +77,17 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
         binding.previous.setOnClickListener(v -> nextStep(false));
         binding.next.setOnClickListener(v -> validateCurrentStep(true));
         binding.signup.setOnClickListener(v -> reInitForm());
+    }
+
+    private void processScanAndUploadDocument() {
+
+        this.currentStep = 5;
+        this.isIncludeDocumentUpload = true;
+        binding.previous.setVisibility(View.VISIBLE);
+        binding.next.setVisibility(View.VISIBLE);
+        binding.next.setEnabled(true);
+        this.binding.scanAndUploadDocumentBtn.setVisibility(View.GONE);
+        nextStep(true);
     }
 
     private void reInitForm() {
@@ -125,7 +140,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
 
             case 6: {
 
-                if(this.instantSDK.isDocumentVerificationEnabled()) {
+                if(this.instantSDK.isDocumentVerificationEnabled() && this.isIncludeDocumentUpload) {
                     this.isFront = true;
                     this.documentType = "License";
                     scanDocument("License");
@@ -138,7 +153,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
 
             case 7: {
 
-                if(this.instantSDK.isDocumentVerificationEnabled()) {
+                if(this.instantSDK.isDocumentVerificationEnabled() && this.isIncludeDocumentUpload) {
                     this.isFront = false;
                     this.documentType = "License";
                     scanDocument("License");
@@ -152,7 +167,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
             case 8: {
 
                 showProgressDialog(true);
-                if(this.instantSDK.isDocumentVerificationEnabled()) {
+                if(this.instantSDK.isDocumentVerificationEnabled() && this.isIncludeDocumentUpload) {
                     this.instantSDK.verifyDocuments("License", this.instantSDK.getInstnttxnid());
                 } else {
                     this.submit();
@@ -278,7 +293,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
 
             case 6: {
 
-                if(this.instantSDK.isDocumentVerificationEnabled()) {
+                if(this.instantSDK.isDocumentVerificationEnabled() && this.isIncludeDocumentUpload) {
                     binding.headText1.setText("Choose the document type");
                     binding.headText2.setText("As an added layer of security, we need to verify your identity before approving your application");
                     binding.headText2.setVisibility(View.VISIBLE);
@@ -300,7 +315,7 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
 
             case 7: {
 
-                if(this.instantSDK.isDocumentVerificationEnabled()) {
+                if(this.instantSDK.isDocumentVerificationEnabled() && this.isIncludeDocumentUpload) {
                     binding.headText1.setText("Review Capture Image");
                     binding.headText2.setVisibility(View.GONE);
                     binding.containerStep1Declaration.setVisibility(View.GONE);
@@ -574,6 +589,12 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
         showProgressDialog(false);
         binding.decision.setText("Decision : " + formSubmitData.getDecision());
         binding.jwtToken.setText(formSubmitData.getJwt());
+
+        if(this.isIncludeDocumentUpload) {
+            this.binding.scanAndUploadDocumentBtn.setVisibility(View.GONE);
+        } else {
+            this.binding.scanAndUploadDocumentBtn.setVisibility(View.VISIBLE);
+        }
         nextStep(true);
     }
 

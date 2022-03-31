@@ -11,6 +11,7 @@ import org.instnt.accept.sample.view.BaseActivity;
 public class FormInitializationActivity extends BaseActivity {
 
     boolean isAutoUpload = false;
+    boolean isIncludeDocumentUpload = false;
     ActivityFormInitializationBinding binding;
 
     @Override
@@ -28,6 +29,10 @@ public class FormInitializationActivity extends BaseActivity {
         binding.isAutoUpload.setOnClickListener(v -> {
             //Auto upload image
             this.isAutoUpload = !this.isAutoUpload;
+        });
+        binding.isIncludeDocumentUpload.setOnClickListener(v -> {
+            //Auto upload image
+            this.isIncludeDocumentUpload = !this.isIncludeDocumentUpload;
         });
     }
 
@@ -50,6 +55,7 @@ public class FormInitializationActivity extends BaseActivity {
         intent.putExtra("formKey", formKey);
         intent.putExtra("serverUrl", serverUrl);
         intent.putExtra("isAutoUpload", this.isAutoUpload);
+        intent.putExtra("isIncludeDocumentUpload", this.isIncludeDocumentUpload);
         startActivity(intent);
     }
 }
