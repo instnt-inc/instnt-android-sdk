@@ -79,8 +79,11 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
         binding.signup.setOnClickListener(v -> reInitForm());
     }
 
+    private boolean isSubmitAgain = false;
+
     private void processScanAndUploadDocument() {
 
+        this.isSubmitAgain = true;
         this.currentStep = 5;
         this.isIncludeDocumentUpload = true;
         binding.previous.setVisibility(View.VISIBLE);
@@ -542,6 +545,10 @@ public class CustomStepFormActivity extends BaseActivity implements InstntCallba
         for (int i = 0; i<binding.containerStep5Address.getChildCount(); i++) {
             BaseInputView inputView = (BaseInputView) binding.containerStep5Address.getChildAt(i);
             inputView.input(paramMap);
+        }
+
+        if(this.isSubmitAgain) {
+            paramMap = new HashMap<>();
         }
 
         this.instantSDK.submitData(getBaseContext(), this.getWindowManager(), paramMap, this.instantSDK.getInstnttxnid());

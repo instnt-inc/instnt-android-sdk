@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Is include document upload before submit form" />
+            android:text="Document Verification Mandatory" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
