@@ -170,7 +170,7 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void submitData(Context context, WindowManager windowManager, Map<String, Object> body, String instnttxnid) {
 
-        Log.i(CommonUtils.LOG_TAG, "Calling submitData with instnttxnid : " + instnttxnid + " , body : " + body.toString());
+        Log.i(CommonUtils.LOG_TAG, "Calling submitData with instnttxnid : " + instnttxnid);
 
         InstntInputValidator.validateContext(context);
         InstntInputValidator.validateWindowManager(windowManager);
