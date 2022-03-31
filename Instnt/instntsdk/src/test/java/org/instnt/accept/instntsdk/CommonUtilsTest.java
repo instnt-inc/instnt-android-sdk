@@ -35,7 +35,7 @@ public class CommonUtilsTest {
 
         Throwable throwable = new Exception();
         String message = CommonUtils.getErrorMessage(throwable);
-        Assert.assertEquals(message, "Unprocessable Error");
+        Assert.assertEquals(message, "Unspecified Error");
     }
 
     @Test

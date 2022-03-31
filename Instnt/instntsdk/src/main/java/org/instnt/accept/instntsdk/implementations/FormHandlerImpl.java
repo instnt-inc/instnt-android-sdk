@@ -79,7 +79,7 @@ public class FormHandlerImpl implements FormHandler {
             if(success != null && success.getData() != null) {
                 this.instntCallbackHandler.submitDataSuccessCallback(success.getData());
             } else {
-                this.instntCallbackHandler.instntErrorCallback("Unprocessable Error", ErrorCallbackType.SUBMIT_FORM_ERROR);
+                this.instntCallbackHandler.instntErrorCallback("Unspecified Error", ErrorCallbackType.SUBMIT_FORM_ERROR);
             }
         }, throwable -> {
             Log.e(CommonUtils.LOG_TAG, "Submit form returns with error", throwable);

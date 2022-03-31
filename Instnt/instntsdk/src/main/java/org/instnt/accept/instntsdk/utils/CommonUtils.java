@@ -22,32 +22,36 @@ public class CommonUtils {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
-    public static String getErrorMessage(Throwable throwable) throws JSONException, IOException {
-        String errorMsg = "";
-        if (throwable instanceof HttpException) {
-            HttpException error = (HttpException) throwable;
-            if (error.response() != null && Objects.requireNonNull(error.response()).errorBody() != null) {
-                errorMsg = error.response().errorBody().string();
-                try {
-                    JsonParser parser = new JsonParser();
-                    JsonObject json = (JsonObject) parser.parse(errorMsg);
-                    if (!json.isJsonNull() && json.has("errorMessage")) {
-                        errorMsg = json.get("errorMessage").getAsString();
-                    } else if (!json.isJsonNull() && json.has("message")) {
-                        errorMsg = json.get("message").getAsString();
+    public static String getErrorMessage(Throwable throwable) {
+        try {
+            String errorMsg = "";
+            if (throwable instanceof HttpException) {
+                HttpException error = (HttpException) throwable;
+                if (error.response() != null && Objects.requireNonNull(error.response()).errorBody() != null) {
+                    errorMsg = error.response().errorBody().string();
+                    try {
+                        JsonParser parser = new JsonParser();
+                        JsonObject json = (JsonObject) parser.parse(errorMsg);
+                        if (!json.isJsonNull() && json.has("errorMessage")) {
+                            errorMsg = json.get("errorMessage").getAsString();
+                        } else if (!json.isJsonNull() && json.has("message")) {
+                            errorMsg = json.get("message").getAsString();
+                        }
+                    } catch (Exception e) {
+                        Log.i(CommonUtils.LOG_TAG, "Parsing error, no errorMessage key in response, so passing response message as it is");
                     }
-                } catch (Exception e) {
-                    Log.i(CommonUtils.LOG_TAG, "Parsing error, no errorMessage key in response, so passing response message as it is");
+                } else {
+                    errorMsg = throwable.getLocalizedMessage();
                 }
             } else {
                 errorMsg = throwable.getLocalizedMessage();
             }
-        } else {
-            errorMsg = throwable.getLocalizedMessage();
+            if(errorMsg == null || errorMsg.length() == 0) {
+                return "Unspecified Error";
+            }
+            return errorMsg;
+        } catch (Exception e) {
+            return "Unspecified Error";
         }
-        if(errorMsg == null || errorMsg.length() == 0) {
-            return "Unprocessable Error";
-        }
-        return errorMsg;
     }
 }
