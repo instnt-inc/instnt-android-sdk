@@ -111,6 +111,8 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void scanDocument(boolean isFront, boolean isAutoUpload, String documentType, Context context, String documentVerifyLicenseKey, String instnttxnid) {
 
+        Log.i(CommonUtils.LOG_TAG, "Calling scanDocument");
+
         InstntInputValidator.validateDocumentType(documentType);
         InstntInputValidator.validateContext(context);
         InstntInputValidator.validateDocumentVerifyLicenseKey(documentVerifyLicenseKey);
@@ -126,6 +128,8 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void uploadAttachment(byte[] imageData, boolean isFront, boolean isSelfie, String instnttxnid) {
 
+        Log.i(CommonUtils.LOG_TAG, "Calling uploadAttachment");
+
         InstntInputValidator.validateImageData(imageData);
         InstntInputValidator.validateInstnttxnid(instnttxnid);
 
@@ -138,6 +142,8 @@ public class InstntSDKImpl implements InstntSDK {
      */
     @Override
     public void verifyDocuments(String documentType, String instnttxnid) {
+
+        Log.i(CommonUtils.LOG_TAG, "Calling verifyDocuments");
 
         InstntInputValidator.validateDocumentType(documentType);
         InstntInputValidator.validateInstnttxnid(instnttxnid);
@@ -153,6 +159,8 @@ public class InstntSDKImpl implements InstntSDK {
      */
     @Override
     public void submitData(Context context, WindowManager windowManager, Map<String, Object> body, String instnttxnid) {
+
+        Log.i(CommonUtils.LOG_TAG, "Calling submitData");
 
         InstntInputValidator.validateContext(context);
         InstntInputValidator.validateWindowManager(windowManager);
@@ -170,6 +178,8 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public void sendOTP(String mobileNumber, String instnttxnid) {
 
+        Log.i(CommonUtils.LOG_TAG, "Calling sendOTP");
+
         InstntInputValidator.validateMobileNumber(mobileNumber);
         InstntInputValidator.validateInstnttxnid(instnttxnid);
 
@@ -183,6 +193,8 @@ public class InstntSDKImpl implements InstntSDK {
      */
     @Override
     public void verifyOTP(String mobileNumber, String otpCode, String instnttxnid) {
+
+        Log.i(CommonUtils.LOG_TAG, "Calling verifyOTP");
 
         InstntInputValidator.validateMobileNumber(mobileNumber);
         InstntInputValidator.validateOtpCode(otpCode);
@@ -198,6 +210,8 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public String getInstnttxnid() {
 
+        Log.i(CommonUtils.LOG_TAG, "Calling getInstnttxnid");
+
         InstntInputValidator.validateFormCodes(this.formCodes);
         return this.formCodes.getInstnttxnid();
     }
@@ -208,6 +222,8 @@ public class InstntSDKImpl implements InstntSDK {
      */
     @Override
     public boolean isOTPverificationEnabled() {
+
+        Log.i(CommonUtils.LOG_TAG, "Calling isOTPverificationEnabled");
 
         InstntInputValidator.validateFormCodes(this.formCodes);
         return this.formCodes.isOtpVerification();
@@ -220,25 +236,9 @@ public class InstntSDKImpl implements InstntSDK {
     @Override
     public boolean isDocumentVerificationEnabled() {
 
+        Log.i(CommonUtils.LOG_TAG, "Calling isDocumentVerificationEnabled");
+
         InstntInputValidator.validateFormCodes(this.formCodes);
         return this.formCodes.isDocumentVerification();
     }
-
-    /*
-    private void validateSDKSetup(String instnttxnid) {
-        String defaultMessage = "Please call InstntSDK.init() method to properly initialize the SDK";
-        if(networkModule == null) {
-            throw new InstntSDKValidationException("Instnt SDK has not been initialized correctly. " + defaultMessage);
-        } else if(networkModule.getServerUrl() == null || networkModule.getServerUrl().length() == 0) {
-            throw new InstntSDKValidationException("serverURL is not setup. " + defaultMessage);
-        }
-        else if(this.instntCallbackHandler == null) {
-            throw new InstntSDKValidationException("instntCallbackHandler is not setup. " + defaultMessage);
-        } else if(formKey == null || formKey.length() == 0) {
-            throw new InstntSDKValidationException("formKey is not setup. " + defaultMessage);
-        } else if(instnttxnid == null || instnttxnid.length() == 0) {
-            throw new InstntSDKValidationException("instntTxnId is not valid. The provided instntTxnId is " + instnttxnid);
-        }
-    }
-    */
 }
