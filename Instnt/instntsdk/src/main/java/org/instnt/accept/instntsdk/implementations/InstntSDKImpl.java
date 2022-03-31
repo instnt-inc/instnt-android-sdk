@@ -87,9 +87,18 @@ public class InstntSDKImpl implements InstntSDK {
      * Initialize transaction
      */
     @Override
-    public void initTransaction() {
+    public void initTransaction(String formKey, String serverUrl, InstntCallbackHandler instntCallbackHandler) {
 
         Log.i(CommonUtils.LOG_TAG, "Calling getTransactionID");
+
+        InstntInputValidator.validateServerUrl(serverUrl);
+        InstntInputValidator.validateFormKey(formKey);
+        InstntInputValidator.validateInstntCallbackHandler(instntCallbackHandler);
+
+        this.setServerURL(serverUrl);
+        this.setFormKey(formKey);
+        this.setCallbackHandler(instntCallbackHandler);
+
         networkModule.getTransactionID(this.formKey).subscribe(response->{
             Log.i(CommonUtils.LOG_TAG, "Calling getTransactionID returns with success response");
             this.setWorkFlowDetail(response);

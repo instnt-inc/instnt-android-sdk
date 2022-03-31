@@ -125,7 +125,7 @@ public class InstntSDKImplTest implements InstntCallbackHandler {
         expect(this.networkUtilEasy.getTransactionID(isA(String.class))).andReturn(Observable.just(this.formCodes)).anyTimes();
         this.instntSDKImpl.setNetworkModule(this.networkUtilEasy);
         replay(this.networkUtilEasy);
-        this.instntSDKImpl.initTransaction();
+        this.instntSDKImpl.initTransaction(null, InstntSDKImplTest.SERVER_URL, this);
     }
 
     @Test(expected = InstntSDKValidationException.class)
@@ -134,7 +134,7 @@ public class InstntSDKImplTest implements InstntCallbackHandler {
         expect(this.networkUtilEasy.getTransactionID(isA(String.class))).andReturn(Observable.just(this.formCodes)).anyTimes();
         this.instntSDKImpl.setNetworkModule(this.networkUtilEasy);
         replay(this.networkUtilEasy);
-        this.instntSDKImpl.initTransaction();
+        this.instntSDKImpl.initTransaction(InstntSDKImplTest.FORM_KEY, null, this);
     }
 
     @Test(expected = InstntSDKValidationException.class)
@@ -143,7 +143,7 @@ public class InstntSDKImplTest implements InstntCallbackHandler {
         expect(this.networkUtilEasy.getTransactionID(isA(String.class))).andReturn(Observable.just(this.formCodes)).anyTimes();
         this.instntSDKImpl.setNetworkModule(this.networkUtilEasy);
         replay(this.networkUtilEasy);
-        this.instntSDKImpl.initTransaction();
+        this.instntSDKImpl.initTransaction(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, null);
     }
 
     @Test
@@ -152,7 +152,7 @@ public class InstntSDKImplTest implements InstntCallbackHandler {
         expect(this.networkUtilEasy.getTransactionID(isA(String.class))).andReturn(Observable.just(this.formCodes)).anyTimes();
         this.instntSDKImpl.setNetworkModule(this.networkUtilEasy);
         replay(this.networkUtilEasy);
-        this.instntSDKImpl.initTransaction();
+        this.instntSDKImpl.initTransaction(InstntSDKImplTest.FORM_KEY, InstntSDKImplTest.SERVER_URL, this);
     }
 
     @Test(expected = InstntSDKValidationException.class)

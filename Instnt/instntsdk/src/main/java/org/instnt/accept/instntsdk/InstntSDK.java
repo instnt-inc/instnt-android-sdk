@@ -18,14 +18,14 @@ public interface InstntSDK {
      */
     static InstntSDK init(String formKey, String serverUrl, InstntCallbackHandler instntCallbackHandler) {
         InstntSDK instance = new InstntSDKImpl(formKey, serverUrl, instntCallbackHandler);
-        instance.initTransaction();
+        instance.initTransaction(formKey, serverUrl, instntCallbackHandler);
         return instance;
     }
 
     /**
      * Initialize transaction
      */
-    void initTransaction();
+    void initTransaction(String formKey, String serverUrl, InstntCallbackHandler instntCallbackHandler);
 
     /**
      * Get instnt transaction id
